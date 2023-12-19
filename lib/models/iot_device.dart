@@ -22,6 +22,7 @@ class IoT_Device {
   });
 
   Future<void> swapStates() async {
+    print("swapping states now\n");
     try {
       final response = await http.get(
         Uri.parse('$URL/api/devices/$id'),
@@ -36,6 +37,7 @@ class IoT_Device {
     // ignore: unused_local_variable
     late Response? putRequest;
     try {
+      print("${value.runtimeType}");
       Map<String, dynamic>? requestBody;
       if (value is int) {
         if (value != 0) {
@@ -64,7 +66,10 @@ class IoT_Device {
         },
         body: jsonEncode(requestBody),
       );
-    } catch (e) {}
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+    print("finished swapping states\n");
   }
 
   static Future<List<IoT_Device>> get_devices(
