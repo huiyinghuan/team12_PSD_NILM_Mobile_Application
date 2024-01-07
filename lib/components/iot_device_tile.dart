@@ -4,51 +4,48 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "../models/iot_device.dart";
 
-class IoT_Device_Tile extends StatefulWidget {
+class IoT_Device_Tile extends StatelessWidget {
   final IoT_Device device;
-  final void Function()? onTap;
+  final VoidCallback onTap;
+
   const IoT_Device_Tile({
-    super.key,
+    Key? key,
     required this.device,
     required this.onTap,
-  });
-  @override
-  State<StatefulWidget> createState() => _IoT_Device_Tile_State();
-}
+  }) : super(key: key);
 
-class _IoT_Device_Tile_State extends State<IoT_Device_Tile> {
   @override
   Widget build(BuildContext context) {
+    // To determine the background color based on the device's active state
+    final Color indicatorColor = device.value != 0 ? Colors.green : Colors.red;
+
     return InkWell(
-      onTap: () {
-        widget.onTap?.call();
-      },
+      onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 2.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 198, 186, 255),
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.white, // Background color for the whole tile
+          borderRadius: BorderRadius.circular(8),
         ),
-        // Set constraints to control the size of the tile
-        constraints: const BoxConstraints(
-          maxHeight: 100, // Adjust the maximum height as needed
-          maxWidth: 200, // Adjust the maximum width as needed
-          minWidth: 200,
-          minHeight: 50,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.min, // To fit the content inside the row
           children: [
-            // Device name
-            Text(widget.device.name!, style: GoogleFonts.abel(fontSize: 20)),
-            // Device image
-            // Image.asset('images/placeholder.png', height: 20),
-            // Device Status
-            SizedBox(
-              height: 50, // Adjust the height of the status as needed
-              width: 50,
-              child: checkType(widget
-                  .device.value), // Adjust the width of the status as needed
+            // Change the background color of this container
+            Container(
+              height: 12.0, // Size of the circle
+              width: 12.0, // Size of the circle
+              decoration: BoxDecoration(
+                color: indicatorColor, // Use the indicator color
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: 8), // Spacing between the indicator and the text
+            Text(
+              '${device.name} ${device.value != 0 ? "Active" : "Inactive"}',
+              style: GoogleFonts.poppins(
+                color: Colors.black, // Text color
+              ),
             ),
           ],
         ),
