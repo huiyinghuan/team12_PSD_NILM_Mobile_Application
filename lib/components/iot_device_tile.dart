@@ -17,7 +17,7 @@ class IoT_Device_Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // To determine the background color based on the device's active state
-    final Color indicatorColor = device.value != 0 ? Colors.green : Colors.red;
+    final Color indicatorColor = (device.value != 0 && device.value != false) ? Colors.green : Colors.red;
 
     return InkWell(
       onTap: onTap,
