@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import "dart:async";
 import "dart:convert";
 import "dart:io";
 
@@ -26,12 +27,17 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> {
   late Future<List<IoT_Device>> devices;
+  late Timer updateDevicesTimer;
 
   @override
   void initState() {
     super.initState();
 
-    updateDevices();
+    updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
+    // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   updateDevices();
+    // });
+    // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
   }
 
   Future<void> updateDevices() async {
