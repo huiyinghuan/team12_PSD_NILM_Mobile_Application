@@ -15,6 +15,7 @@ import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'dart:convert';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class dashboard extends StatefulWidget {
   const dashboard({Key? key}) : super(key: key);
@@ -96,12 +97,36 @@ class _dashboardState extends State<dashboard> {
       color: Colors.grey[200],
       child: ListTile(
         leading: CircleAvatar(child: Icon(Icons.person)),
-        title: Text('Hi, $username 👋',
-            style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepOrange[800])),
-        subtitle: Text('Welcome Back'),
+        title: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: 'Hi, ',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.deepOrange[800],
+                ),
+              ),
+              TextSpan(
+                text: '$username 👋',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.w700, // Adjust the font weight for $username
+                  color: Colors.deepOrange[800],
+                ),
+              ),
+            ],
+          ),
+        ),
+        subtitle: Text(
+          'Welcome Back',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }
@@ -125,12 +150,12 @@ class _dashboardState extends State<dashboard> {
                       style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     SizedBox(width: 4), // Add spacing between text and icon
                     Icon(
-                      Icons.add_circle_outline_sharp,
+                      Ionicons.add_circle_outline,
                       color: Colors.black,
                     ),
                   ],
@@ -205,20 +230,29 @@ class _dashboardState extends State<dashboard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(date, style: GoogleFonts.poppins(fontSize: 16)),
+                  Text(date,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16, fontWeight: FontWeight.w400)),
                   SizedBox(height: 10),
                   RichText(
                     text: TextSpan(
-                      style: GoogleFonts.poppins(fontSize: 24),
+                      // style: GoogleFonts.poppins(fontSize: 24),
                       children: <TextSpan>[
                         TextSpan(
                             text: '$usageKWh',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFFD36E2F))),
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFFD36E2F),
+                            )),
                         TextSpan(
                             text: ' KWh',
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              letterSpacing: 1.0,
+                            )),
                       ],
                     ),
                   ),
