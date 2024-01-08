@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/drawer_item.dart';
 import 'package:l3homeation/pages/dashboard.dart';
+import 'package:l3homeation/pages/userProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:l3homeation/provider/navigation_provider.dart';
 import 'package:l3homeation/data/drawer_items.dart';
@@ -12,7 +13,6 @@ class NavigationDrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final safeArea =
         EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top);
-
     final provider = Provider.of<NavigationProvider>(context);
     final isCollapsed = provider.isCollapsed;
 
@@ -30,14 +30,18 @@ class NavigationDrawerWidget extends StatelessWidget {
                 child: buildHeader(isCollapsed),
               ),
               const SizedBox(height: 24),
-              buildList(items: itemsFirst, isCollapsed: isCollapsed),
+              buildList(
+                  items: itemsFirst,
+                  isCollapsed: isCollapsed,
+                  context: context),
               const SizedBox(height: 24),
               Divider(color: Colors.white70),
               const SizedBox(height: 24),
               buildList(
-                indexOffset: itemsFirst.length,
                 items: itemsSecond,
                 isCollapsed: isCollapsed,
+                context: context,
+                indexOffset: itemsFirst.length,
               ),
               Spacer(),
               buildCollapseIcon(context, isCollapsed),
@@ -52,6 +56,7 @@ class NavigationDrawerWidget extends StatelessWidget {
   Widget buildList({
     required bool isCollapsed,
     required List<DrawerItem> items,
+    required BuildContext context,
     int indexOffset = 0,
   }) =>
       ListView.separated(
@@ -62,80 +67,92 @@ class NavigationDrawerWidget extends StatelessWidget {
         separatorBuilder: (context, index) => SizedBox(height: 16),
         itemBuilder: (context, index) {
           final item = items[index];
-
           return buildMenuItem(
             isCollapsed: isCollapsed,
-            text: item.title,
-            icon: item.icon,
-            onClicked: () => selectItem(context, indexOffset + index),
+            item: item,
+            context: context,
+            itemIndex: index + indexOffset,
+            onClicked: () => selectItem(context, index + indexOffset),
           );
         },
       );
 
   void selectItem(BuildContext context, int index) {
-    final navigateTo = (page) => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => page,
-        ));
+    final provider = Provider.of<NavigationProvider>(context, listen: false);
+    provider.currentIndex = index; // Update the current index
 
-    Navigator.of(context).pop();
+    final navigateTo =
+        (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => page,
+            ));
+
+    Navigator.of(context).pop(); // Close the drawer
 
     switch (index) {
       case 0:
         navigateTo(dashboard());
         break;
+      case 3: // Assuming index 3 is where the UserProfile is located
+        navigateTo(UserProfile());
+        break;
+      // ... handle other cases as needed
     }
   }
 
   Widget buildMenuItem({
     required bool isCollapsed,
-    required String text,
-    required IconData icon,
+    required DrawerItem item,
+    required BuildContext context,
+    required int itemIndex,
     VoidCallback? onClicked,
   }) {
-    final color = Colors.black;
-    final leading = Icon(icon, color: color);
+    final provider = Provider.of<NavigationProvider>(context);
+    final isSelected = provider.currentIndex == itemIndex;
+
+    Color getIconColor() {
+      if (!isSelected) return Colors.black;
+      switch (item.title) {
+        case 'Dashboard':
+          return Colors.yellow.shade700;
+        case 'Power':
+          return Colors.green.shade800;
+        case 'Scenes':
+          return Colors.blue.shade800;
+        case 'Profile':
+          return Colors.orange.shade800;
+        default:
+          return Colors.black;
+      }
+    }
+
+    final iconColor = getIconColor();
 
     return Material(
       color: Colors.transparent,
       child: isCollapsed
           ? ListTile(
-              title: leading,
+              title: Icon(item.icon, color: iconColor),
               onTap: onClicked,
             )
           : ListTile(
-              leading: leading,
-              title: Text(text, style: TextStyle(color: color, fontSize: 16)),
+              leading: Icon(item.icon, color: iconColor),
+              title: Text(item.title,
+                  style: TextStyle(color: iconColor, fontSize: 16)),
               onTap: onClicked,
             ),
     );
   }
 
   Widget buildCollapseIcon(BuildContext context, bool isCollapsed) {
-    final double size = 52;
     final icon = isCollapsed ? Icons.arrow_forward_ios : Icons.arrow_back_ios;
-    final alignment = isCollapsed ? Alignment.center : Alignment.centerRight;
-    final margin = isCollapsed ? null : EdgeInsets.only(right: 16);
-    final width = isCollapsed ? double.infinity : size;
 
-    return Container(
-      alignment: alignment,
-      margin: margin,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          child: Container(
-            width: width,
-            height: size,
-            child: Icon(icon, color: Colors.black),
-          ),
-          onTap: () {
-            final provider =
-                Provider.of<NavigationProvider>(context, listen: false);
-
-            provider.toggleIsCollapsed();
-          },
-        ),
-      ),
+    return IconButton(
+      icon: Icon(icon, color: Colors.black),
+      onPressed: () {
+        final provider =
+            Provider.of<NavigationProvider>(context, listen: false);
+        provider.toggleIsCollapsed();
+      },
     );
   }
 
