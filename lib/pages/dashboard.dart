@@ -236,7 +236,6 @@ class _dashboardState extends State<dashboard> {
                   SizedBox(height: 10),
                   RichText(
                     text: TextSpan(
-                      // style: GoogleFonts.poppins(fontSize: 24),
                       children: <TextSpan>[
                         TextSpan(
                             text: '$usageKWh',
@@ -296,18 +295,52 @@ class _dashboardState extends State<dashboard> {
 
   Widget buildSceneCard(String title, String devices, String count) {
     return Card(
+      color: Color.fromRGBO(0, 69, 107, 1),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Icon(Icons.kitchen, size: 40), // Change to appropriate icon
-            Text(
-              '$count · $title',
-              style: GoogleFonts.poppins(),
+            //Icon(Icons.kitchen, size: 40), // Change to appropriate icon
+            Image(
+              image: AssetImage('lib/images/kitchen.png'),
+              width: 52.10625,
+              height: 53.12625,
+            ),
+
+            SizedBox(height: 10),
+            RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                      text: '$count',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        letterSpacing: 1.0,
+                      )),
+                  TextSpan(
+                      text: ' · ',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromRGBO(217, 217, 217, 1),
+                      )),
+                  TextSpan(
+                      text: '$title',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        letterSpacing: 1.0,
+                      )),
+                ],
+              ),
             ),
             Text(
               devices,
-              style: GoogleFonts.poppins(color: Colors.grey[600]),
+              style: GoogleFonts.poppins(color: Colors.white, fontSize: 13),
             ),
           ],
         ),
