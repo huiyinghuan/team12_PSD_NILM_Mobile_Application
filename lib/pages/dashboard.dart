@@ -7,6 +7,7 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:l3homeation/components/iot_device_tile.dart";
+import "package:l3homeation/pages/listDevice.dart";
 import "package:l3homeation/pages/placeholder.dart";
 import "../models/iot_device.dart";
 import "../themes/colors.dart";
@@ -138,6 +139,11 @@ class _dashboardState extends State<dashboard> {
   }
 
   Widget buildDeviceStatusSection() {
+    final navigateTo =
+        (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => page,
+            ));
+            
     return Container(
       color: Colors.grey[200],
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -160,9 +166,11 @@ class _dashboardState extends State<dashboard> {
                       ),
                     ),
                     SizedBox(width: 4), // Add spacing between text and icon
-                    Icon(
-                      Ionicons.add_circle_outline,
-                      color: Colors.black,
+                    Container(
+                      child: IconButton(
+                        icon: const Icon(Icons.add_circle_outline_outlined),
+                        onPressed: () => {navigateTo(ListDevice())},
+                      ),
                     ),
                   ],
                 ),
