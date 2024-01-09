@@ -120,6 +120,8 @@ class NavigationDrawerWidget extends StatelessWidget {
           return Colors.blue.shade800;
         case 'Profile':
           return Colors.orange.shade800;
+        case 'Searching...':
+          return Colors.red.shade800;
         default:
           return Colors.black;
       }
