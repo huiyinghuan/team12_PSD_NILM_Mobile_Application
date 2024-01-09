@@ -287,9 +287,19 @@ class _dashboardState extends State<dashboard> {
           Wrap(
             spacing: 10,
             children: <Widget>[
-              buildSceneCard('Kitchen', 'Lights; Fan', '3'),
-              buildSceneCard('Bedroom', 'ALL', '4'),
-              // Add more cards here
+              Column(
+                children: [
+                  buildSceneCard(
+                      'Kitchen', 'Lights; Fan', '3', 'lib/images/kitchen.png'),
+                ],
+              ),
+              Column(
+                children: [
+                  buildSceneCard(
+                      'Bedroom', 'ALL', '4', 'lib/images/bedroom.png'),
+                ],
+              ),
+              // Add more columns as needed
             ],
           ),
         ],
@@ -297,7 +307,8 @@ class _dashboardState extends State<dashboard> {
     );
   }
 
-  Widget buildSceneCard(String title, String devices, String count) {
+  Widget buildSceneCard(
+      String title, String devices, String count, String imagePath) {
     return Card(
       color: Color.fromRGBO(0, 69, 107, 1),
       child: Padding(
@@ -307,7 +318,7 @@ class _dashboardState extends State<dashboard> {
           children: <Widget>[
             //Icon(Icons.kitchen, size: 40), // Change to appropriate icon
             Image(
-              image: AssetImage('lib/images/kitchen.png'),
+              image: AssetImage(imagePath),
               width: 52.10625,
               height: 53.12625,
             ),
