@@ -7,11 +7,13 @@ import "../models/iot_device.dart";
 class IoT_Device_Tile extends StatelessWidget {
   final IoT_Device device;
   final VoidCallback onTap;
+  final double textSize; // Add a parameter for text size
 
   const IoT_Device_Tile({
     Key? key,
     required this.device,
     required this.onTap,
+    this.textSize = 12,
   }) : super(key: key);
 
   @override
@@ -44,6 +46,7 @@ class IoT_Device_Tile extends StatelessWidget {
             Text(
               '${device.name} ${device.value != 0 ? "Active" : "Inactive"}',
               style: GoogleFonts.poppins(
+                fontSize: textSize, // Use the text size parameter
                 color: Colors.black, // Text color
               ),
             ),

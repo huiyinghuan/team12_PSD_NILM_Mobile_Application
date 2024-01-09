@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:l3homeation/components/iot_device_tile.dart';
+import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
+import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 
 class ListDevice extends StatefulWidget {
   @override
@@ -10,92 +15,104 @@ class ListDevice extends StatefulWidget {
 }
 
 class _ListDeviceState extends State<ListDevice> {
-  final List<String> devices = [
-    'Device 1',
-    'Device 2',
-    'Device 3',
-    'Device 4',
-    'Device 5',
-    'Device 6',
-    // Add more devices as needed
-  ];
+  late Future<List<dynamic>> devices;
+
+  @override
+  void initState() {
+    super.initState();
+
+    updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
+    // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    //   updateDevices();
+    // });
+    // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
+  }
+  
+  Future<void> updateDevices() async {
+    setState(() {
+      devices = IoT_Device.get_devices(
+        base64.encode("admin:Project2023!".codeUnits),
+        "http://l3homeation.dyndns.org:2080",
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          _buildGridSliver(),
-          _buildLargeGridSliver(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          'All Devices',
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 22,
+          ),
+        ),
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      drawer: NavigationDrawerWidget(),
+      body: ListView(
+        children: <Widget>[
+          _buildDeviceList(),
         ],
       ),
     );
   }
-
-  SliverAppBar _buildAppBar() {
-    return SliverAppBar(
-      expandedHeight: 200.0,
-      pinned: true,
-      floating: true, // Set to true for the app bar to become visible as soon as the user scrolls
-      snap: true, // App bar snaps into view when scrolled up
-      flexibleSpace: FlexibleSpaceBar(
-        title: Text('List of Devices'),
-        background: Image.network(
-          'https://example.com/your_image.jpg',
-          fit: BoxFit.cover,
-        ),
+  
+  // Assuming that devices is a List<IoT_Device>
+  List<ExpansionTile> buildExpansionTiles(List<dynamic> devices) {
+  return devices.map((device) {
+    return ExpansionTile(
+      title: Text(
+        device.name, // Replace with your desired title text
+        style: TextStyle(fontSize: 18.0), // Customize title text size
       ),
-    );
-  }
-
-  SliverGrid _buildGridSliver() {
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Number of columns
-        crossAxisSpacing: 8.0, // Spacing between columns
-        mainAxisSpacing: 8.0, // Spacing between rows
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return _buildDeviceCard(devices[index]);
-        },
-        childCount: devices.length,
-      ),
-    );
-  }
-
-  SliverList _buildLargeGridSliver() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          // Replace this with your large grid widget
-          return _buildDeviceCard(devices[index], isLarge: true);
-        },
-        childCount: 1, // Only one item in the SliverList
-      ),
-    );
-  }
-
-  Widget _buildDeviceCard(String deviceName, {bool isLarge = false}) {
-    // Customize the appearance of each device card
-    return Card(
-      elevation: 2.0,
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              deviceName,
-              style: TextStyle(
-                fontSize: isLarge ? 24 : 18,
-                fontWeight: FontWeight.bold,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(18.0), // Adjust padding as needed
+          child: Row(
+            children: [
+              Text(
+                'Status: ',
+                style: TextStyle(fontSize: 18.0),
               ),
-            ),
-            // Add more details or widgets related to the device
-          ],
+              // Add other widgets for expanded text information here
+            ],
+          ),
         ),
+      ],
+    );
+  }).toList();
+}
+
+
+  // a container that holds the list of devices 
+  Container _buildDeviceList() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: FutureBuilder<List<dynamic>>(
+        future: devices,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 8),
+                Column(
+                  children: buildExpansionTiles(snapshot.data!),
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFFD36E2F),
+            ),
+          );
+        },
       ),
     );
   }
