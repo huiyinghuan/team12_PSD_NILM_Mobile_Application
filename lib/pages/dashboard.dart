@@ -148,7 +148,7 @@ class _dashboardState extends State<dashboard> {
                 Row(
                   children: [
                     Text(
-                      '${snapshot.data!.where((device) => device.value != 0).length} DEVICES ON',
+                      '${snapshot.data!.where((device) => (device.value == 99 || device.value == true)).length} DEVICES ON',
                       style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: 12,

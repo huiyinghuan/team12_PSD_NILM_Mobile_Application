@@ -11,6 +11,7 @@ class IoT_Device {
   String? credentials;
   int? id;
   dynamic value;
+  Map<String, dynamic>? propertiesMap;
 
   IoT_Device({
     required this.name,
@@ -19,6 +20,7 @@ class IoT_Device {
     required this.credentials,
     required this.id,
     required this.value,
+    required this.propertiesMap,
   });
 
   Future<void> swapStates() async {
@@ -100,6 +102,7 @@ class IoT_Device {
           credentials: credentials,
           name: response['name'],
           value: response['properties']['value'],
+          propertiesMap: response['properties'],
         );
         devices.add(new_device);
       }
