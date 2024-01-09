@@ -1,6 +1,6 @@
 // File: lib/widgets/base_layout.dart
 import 'package:flutter/material.dart';
-import 'navigation_drawer_widget.dart'; 
+import 'navigation_drawer_widget.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget child;
@@ -18,8 +18,10 @@ class BaseLayout extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
+        automaticallyImplyLeading:
+            false, // removes the hamburger icon on the nav bar
       ),
-      drawer: NavigationDrawerWidget(), 
+      drawer: NavigationDrawerWidget(),
       body: child,
     );
   }

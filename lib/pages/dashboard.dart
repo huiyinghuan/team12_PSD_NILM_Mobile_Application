@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'dart:convert';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:l3homeation/widget/base_layout.dart';
 
 class dashboard extends StatefulWidget {
   const dashboard({Key? key}) : super(key: key);
@@ -75,20 +76,9 @@ class _dashboardState extends State<dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(
-          'Dashboard',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 22,
-          ),
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      drawer: NavigationDrawerWidget(),
-      body: ListView(
+    return BaseLayout(
+      title: 'Dashboard',
+      child: ListView(
         children: <Widget>[
           buildGreetingSection(),
           buildDeviceStatusSection(),
@@ -143,7 +133,7 @@ class _dashboardState extends State<dashboard> {
         (Widget page) => Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => page,
             ));
-            
+
     return Container(
       color: Colors.grey[200],
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

@@ -35,7 +35,7 @@ class _UserProfileState extends State<UserProfile> {
           CircleAvatar(
             radius: 50,
             backgroundImage: NetworkImage(
-                'https://via.placeholder.com/150'), // Replace with actual image
+                'https://picsum.photos/id/91/200/300'), // Replace with actual image
           ),
           SizedBox(height: 8),
           Text(
@@ -278,17 +278,17 @@ class _UserProfileState extends State<UserProfile> {
       {
         'name': 'Linda Abraham',
         'imageUrl':
-            'https://via.placeholder.com/150/0000FF/808080?text=Linda+Abraham', // Replace with actual image URL
+            'https://picsum.photos/id/237/200/300', // Replace with actual image URL
       },
       {
         'name': 'Lyra Abraham',
         'imageUrl':
-            'https://via.placeholder.com/150/FF0000/FFFFFF?text=Lyra+Abraham', // Replace with actual image URL
+            'https://picsum.photos/id/129/200/300', // Replace with actual image URL
       },
       {
         'name': 'Ben Abraham',
         'imageUrl':
-            'https://via.placeholder.com/150/FFFF00/000000?text=Ben+Abraham', // Replace with actual image URL
+            'https://picsum.photos/id/173/200/300', // Replace with actual image URL
       },
       {
         'icon': Icons.add,
@@ -389,9 +389,7 @@ class _UserProfileState extends State<UserProfile> {
                   controller: _usernameController,
                   decoration: InputDecoration(
                     labelText: 'Enter Username',
-                    labelStyle: TextStyle(color: AppColors.primary2),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.primary2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     focusedBorder: OutlineInputBorder(
