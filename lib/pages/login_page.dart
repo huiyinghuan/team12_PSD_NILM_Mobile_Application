@@ -80,19 +80,19 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Email field
                 CustomTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                    autofillHints: [AutofillHints.email]),
 
                 const SizedBox(height: 25),
 
                 // Password Field
                 CustomTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                    autofillHints: [AutofillHints.password]),
 
                 const SizedBox(height: 10),
 
