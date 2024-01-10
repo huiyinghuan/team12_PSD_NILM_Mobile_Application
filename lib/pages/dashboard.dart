@@ -2,16 +2,15 @@
 
 import "dart:async";
 import "dart:convert";
-import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:l3homeation/components/iot_device_tile.dart";
+import "../components/iot_device_tile.dart";
 import "package:l3homeation/pages/listDevice.dart";
-import "package:l3homeation/pages/placeholder.dart";
 import "../models/iot_device.dart";
 import "../themes/colors.dart";
-import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
 import 'package:l3homeation/provider/navigation_provider.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +24,18 @@ class dashboard extends StatefulWidget {
 
   @override
   State<dashboard> createState() => _dashboardState();
+}
+
+// Sign out
+Future<void> signUserOut(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
+// Load data
+Future<String?> loadData(String key) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
 }
 
 class _dashboardState extends State<dashboard> {
