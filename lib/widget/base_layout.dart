@@ -12,6 +12,15 @@ class BaseLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF00456B), Color(0x00BBD6CD)],
+            ),
+          ),
+        ),
         title: Text(
           title,
           style: TextStyle(fontSize: 22),
