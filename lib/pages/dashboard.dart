@@ -1,22 +1,30 @@
-// ignore_for_file: camel_case_types
-
 import "dart:convert";
-import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:l3homeation/components/iot_device_tile.dart";
-import "package:l3homeation/pages/placeholder.dart";
+import "../components/iot_device_tile.dart";
 import "../models/iot_device.dart";
 import "../themes/colors.dart";
-import "package:http/http.dart" as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
 
 class dashboard extends StatefulWidget {
   const dashboard({super.key});
-  final String name = "Welcome back {Username}";
 
   @override
   State<dashboard> createState() => _dashboardState();
+}
+
+// Sign out
+Future<void> signUserOut(BuildContext context) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
+// Load data
+Future<String?> loadData(String key) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
 }
 
 class _dashboardState extends State<dashboard> {
@@ -50,8 +58,32 @@ class _dashboardState extends State<dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await signUserOut(context);
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
         backgroundColor: primaryColor,
-        title: Text(widget.name),
+        title: FutureBuilder<String?>(
+          future: loadData('username'),
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return Text('Welcome ${snapshot.data}',
+                    style: const TextStyle(fontSize: 20));
+              }
+            }
+          },
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment
