@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nilm_project/components/custom_button.dart';
-import 'package:nilm_project/components/custom_textfield.dart';
-import 'package:nilm_project/components/square_tile.dart';
-import 'package:nilm_project/pages/dashboard.dart';
-import 'package:nilm_project/services/httphandle.dart';
-import 'package:nilm_project/services/userpreferences.dart';
-import 'package:nilm_project/components/error_dialog.dart';
+import 'package:l3homeation/components/custom_button.dart';
+import 'package:l3homeation/components/custom_textfield.dart';
+import 'package:l3homeation/components/square_tile.dart';
+import 'package:l3homeation/pages/dashboard.dart';
+import 'package:l3homeation/services/httphandle.dart';
+import 'package:l3homeation/services/userpreferences.dart';
+import 'package:l3homeation/components/error_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});

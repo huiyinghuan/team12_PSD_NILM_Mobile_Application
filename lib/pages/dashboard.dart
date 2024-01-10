@@ -105,35 +105,55 @@ class _dashboardState extends State<dashboard> {
       color: Colors.grey[200],
       child: ListTile(
         leading: CircleAvatar(child: Icon(Icons.person)),
-        title: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: 'Hi, ',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.deepOrange[800],
-                ),
+        title: Row(
+          children: [
+            Expanded(
+              child: FutureBuilder<String?>(
+                future: loadData('username'),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Hi, ',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.deepOrange[800],
+                              ),
+                            ),
+                            TextSpan(
+                              text: '${snapshot.data} 👋',
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.deepOrange[800],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  }
+                },
               ),
-              TextSpan(
-                text: '$username 👋',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight:
-                      FontWeight.w700, // Adjust the font weight for $username
-                  color: Colors.deepOrange[800],
-                ),
-              ),
-            ],
-          ),
-        ),
-        subtitle: Text(
-          'Welcome Back',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
+            ),
+            IconButton(
+              onPressed: () async {
+                await signUserOut(context);
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+              icon: const Icon(Icons.logout),
+            ),
+          ],
         ),
       ),
     );
@@ -301,13 +321,12 @@ class _dashboardState extends State<dashboard> {
               Column(
                 children: [
                   buildSceneCard(
-                      'Kitchen', 'Lights; Fan', '3', 'lib/images/kitchen.png'),
+                      'Kitchen', 'Lights; Fan', '3', 'images/kitchen.png'),
                 ],
               ),
               Column(
                 children: [
-                  buildSceneCard(
-                      'Bedroom', 'ALL', '4', 'lib/images/bedroom.png'),
+                  buildSceneCard('Bedroom', 'ALL', '4', 'images/bedroom.png'),
                 ],
               ),
               // Add more columns as needed

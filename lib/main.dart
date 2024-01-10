@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/dashboard.dart';
+import 'pages/auth_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'provider/navigation_provider.dart';
 import 'widget/navigation_drawer_widget.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.poppinsTextTheme(textTheme),
             // Other theme properties...
           ),
-          home: dashboard(),
+          home: const AuthPage(),
         ),
       );
 }
