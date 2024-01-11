@@ -92,10 +92,9 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 0:
         navigateTo(dashboard());
         break;
-      case 3: // Assuming index 3 is where the UserProfile is located
+      case 3:
         navigateTo(UserProfile());
         break;
-      // ... handle other cases as needed
     }
   }
 
