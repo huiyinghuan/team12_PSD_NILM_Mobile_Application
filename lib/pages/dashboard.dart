@@ -1,22 +1,15 @@
 // ignore_for_file: camel_case_types
 
 import "dart:async";
-import "dart:convert";
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import 'package:l3homeation/services/userPreferences.dart';
 import "../components/iot_device_tile.dart";
 import "package:l3homeation/pages/listDevice.dart";
 import "../models/iot_device.dart";
-import "../themes/colors.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
-import 'package:l3homeation/provider/navigation_provider.dart';
-import 'package:l3homeation/widget/navigation_drawer_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:l3homeation/models/iot_device.dart';
-import 'dart:convert';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 
 class dashboard extends StatefulWidget {
@@ -32,46 +25,51 @@ Future<void> signUserOut(BuildContext context) async {
   await prefs.clear();
 }
 
-// Load data
-Future<String?> loadData(String key) async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString(key);
-}
-
 class _dashboardState extends State<dashboard> {
-  late Future<List<IoT_Device>> devices;
+  late Future<List<IoT_Device>> devices = Future.value([]);
   late Timer updateDevicesTimer;
+  String? auth;
 
   @override
   void initState() {
     super.initState();
-
-    updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
+    loadAuth().then((_) {
+      print("Got auth: $auth\n");
+      updateDevices();
+    });
+    // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
     //   updateDevices();
     // });
     // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
   }
 
+  Future<void> loadAuth() async {
+    auth = await UserPreferences.getString('auth');
+  }
+
   Future<void> updateDevices() async {
-    setState(() {
-      devices = IoT_Device.get_devices(
-        base64.encode("admin:Project2023!".codeUnits),
-        "http://l3homeation.dyndns.org:2080",
-      );
-    });
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
   }
 
   void swapper(IoT_Device device) async {
     print("Tapping device to toggle state\n");
     await device.swapStates();
-    // After swapping state, fetch devices again and rebuild UI.
-    setState(() {
-      devices = IoT_Device.get_devices(
-        base64.encode(utf8.encode("admin:Project2023!")),
-        "http://l3homeation.dyndns.org:2080",
-      );
-    });
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
   }
 
   // Dummy data for devices and usage. Fetch this from backend or service.
@@ -109,7 +107,7 @@ class _dashboardState extends State<dashboard> {
           children: [
             Expanded(
               child: FutureBuilder<String?>(
-                future: loadData('username'),
+                future: UserPreferences.getString('username'),
                 builder:
                     (BuildContext context, AsyncSnapshot<String?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

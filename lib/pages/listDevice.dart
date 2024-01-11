@@ -3,11 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:l3homeation/components/iot_device_tile.dart';
 import 'package:l3homeation/models/iot_device.dart';
-import 'package:l3homeation/themes/colors.dart';
-import 'package:l3homeation/widget/base_layout.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
+import 'package:l3homeation/services/userPreferences.dart';
 
 class ListDevice extends StatefulWidget {
   @override
@@ -15,38 +13,49 @@ class ListDevice extends StatefulWidget {
 }
 
 class _ListDeviceState extends State<ListDevice> {
-  late Future<List<dynamic>> devices;
+  late Future<List<dynamic>> devices = Future.value([]);
+  String? auth;
 
   @override
   void initState() {
     super.initState();
-
-    updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
+    loadAuth().then((_) {
+      print("Got auth: $auth\n");
+      updateDevices();
+    });
+    // updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
     //   updateDevices();
     // });
     // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
   }
-  
-  Future<void> updateDevices() async {
-    setState(() {
-      devices = IoT_Device.get_devices(
-        base64.encode("admin:Project2023!".codeUnits),
-        "http://l3homeation.dyndns.org:2080",
-      );
-    });
+
+  Future<void> loadAuth() async {
+    auth = await UserPreferences.getString('auth');
   }
-  
+
+  Future<void> updateDevices() async {
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
+  }
+
   void swapper(IoT_Device device) async {
     print("Tapping device to toggle state\n");
     await device.swapStates();
-    // After swapping state, fetch devices again and rebuild UI.
-    setState(() {
-      devices = IoT_Device.get_devices(
-        base64.encode(utf8.encode("admin:Project2023!")),
-        "http://l3homeation.dyndns.org:2080",
-      );
-    });
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
   }
 
   @override
@@ -71,11 +80,11 @@ class _ListDeviceState extends State<ListDevice> {
       ),
     );
   }
-  
+
   // Assuming that devices is a List<IoT_Device>
   List<ExpansionTile> buildExpansionTiles(List<dynamic> devices) {
     return devices.map((device) {
-      print(device.propertiesMap); 
+      print(device.propertiesMap);
       String descriptionDevice = device.propertiesMap["userDescription"];
       if (descriptionDevice == "") {
         descriptionDevice = "No description given";
@@ -90,16 +99,16 @@ class _ListDeviceState extends State<ListDevice> {
         } else {
           valueDevice = 'Locked';
         }
-      }
-      else if (valueDevice == 99 || valueDevice == true) {
+      } else if (valueDevice == 99 || valueDevice == true) {
         valueDevice = 'On';
-      } else if (valueDevice == 0 || valueDevice == false){
+      } else if (valueDevice == 0 || valueDevice == false) {
         valueDevice = 'Off';
       } else {
         valueDevice = valueDevice.toString();
       }
-      String categoriesString = categoriesDevice.join(", "); // Convert list to a single string separated by commas
-      
+      String categoriesString = categoriesDevice
+          .join(", "); // Convert list to a single string separated by commas
+
       return ExpansionTile(
         title: Text(
           device.name, // Replace with your desired title text
@@ -122,10 +131,12 @@ class _ListDeviceState extends State<ListDevice> {
                         TextSpan(
                           text: valueDevice.toString() + '\n\n',
                           style: TextStyle(
-                            color: (valueDevice == 'Off' || valueDevice == 'Unlocked') ? Colors.red : Colors.green,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold
-                          ),
+                              color: (valueDevice == 'Off' ||
+                                      valueDevice == 'Unlocked')
+                                  ? Colors.red
+                                  : Colors.green,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
                           text: 'Description Given: \n',
@@ -137,21 +148,17 @@ class _ListDeviceState extends State<ListDevice> {
                         TextSpan(
                           text: descriptionDevice + '\n\n',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold
-                          ),
+                              color: Colors.black,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold),
                         ),
-                        TextSpan(
-                          text: 'Category Chosen: '
-                        ),
+                        TextSpan(text: 'Category Chosen: '),
                         TextSpan(
                           text: categoriesString,
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold
-                          ),
+                              color: Colors.black,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -161,7 +168,9 @@ class _ListDeviceState extends State<ListDevice> {
                   alignment: Alignment.bottomRight,
                   child: Switch(
                     // This bool value toggles the switch.
-                    value: (valueDevice == 'Off' || valueDevice == 'Unlocked') ? false : true,
+                    value: (valueDevice == 'Off' || valueDevice == 'Unlocked')
+                        ? false
+                        : true,
                     activeColor: Colors.green,
                     inactiveThumbColor: Colors.red,
                     onChanged: (bool value) {
@@ -177,8 +186,7 @@ class _ListDeviceState extends State<ListDevice> {
     }).toList();
   }
 
-
-  // a container that holds the list of devices 
+  // a container that holds the list of devices
   Container _buildDeviceList() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0),

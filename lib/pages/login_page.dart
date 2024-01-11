@@ -6,6 +6,7 @@ import 'package:l3homeation/pages/dashboard.dart';
 import 'package:l3homeation/services/httphandle.dart';
 import 'package:l3homeation/services/userpreferences.dart';
 import 'package:l3homeation/components/error_dialog.dart';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -38,7 +39,12 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pop();
 
     if (response['status'] == true) {
-      await UserPreferences.setUsername(response['username']);
+      await UserPreferences.setString('username', response['username']);
+      await UserPreferences.setString(
+          'auth',
+          base64Encode(utf8
+              .encode('${emailController.text}:${passwordController.text}')));
+      print("Login successful");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => dashboard()),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'pages/auth_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'provider/navigation_provider.dart';
-import 'widget/navigation_drawer_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
