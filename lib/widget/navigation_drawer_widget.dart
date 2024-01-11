@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/drawer_item.dart';
 import 'package:l3homeation/pages/dashboard.dart';
+import 'package:l3homeation/pages/power_graph.dart';
 import 'package:l3homeation/pages/userProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:l3homeation/provider/navigation_provider.dart';
@@ -91,6 +92,9 @@ class NavigationDrawerWidget extends StatelessWidget {
     switch (index) {
       case 0:
         navigateTo(dashboard());
+        break;
+      case 1: 
+        navigateTo(PowerGraph());
         break;
       case 3:
         navigateTo(UserProfile());
