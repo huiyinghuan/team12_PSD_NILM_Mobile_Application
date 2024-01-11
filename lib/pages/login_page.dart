@@ -68,104 +68,126 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
-      body: SafeArea(
-        child: SingleChildScrollView(
-          // Add this
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-                const SquareTile(imagePath: 'images/l3homeation.png'),
-                const SizedBox(height: 50),
-
-                // Welcome back text
-                const Text(
-                  'Welcome to L3 Homeation',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 97, 97, 97), fontSize: 16),
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Background image
+          Positioned(
+            bottom: 0,
+            left: -15,
+            right: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/loginBG.png'),
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.bottomCenter,
                 ),
-
-                const SizedBox(height: 25),
-
-                // Email field
-                CustomTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                    autofillHints: [AutofillHints.email]),
-
-                const SizedBox(height: 25),
-
-                // Password Field
-                CustomTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password]),
-
-                const SizedBox(height: 10),
-
-                // Forgot password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ForgetPassword()),
-                          );
-                        },
-                        child: Text('Forgot Password?',
-                            style: TextStyle(color: Colors.grey[600])),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                // Sign in button
-                CustomButton(
-                  name: "Sign in",
-                  onTap: signInUser,
-                ),
-
-                const SizedBox(height: 50),
-
-                // Registration
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Not a member? '),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterUser()),
-                        );
-                      },
-                      child: const Text(
-                        'Sign up here',
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
-        ), // Add this
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 50),
+                    const Text(
+                      'LOGIN',
+                      style: TextStyle(
+                        color: Color.fromRGBO(0, 0, 0, 1),
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    const SquareTile(imagePath: 'images/l3homeation.png'),
+                    const SizedBox(height: 25),
+
+                    // Email field
+                    CustomTextField(
+                        controller: emailController,
+                        hintText: 'Email',
+                        obscureText: false,
+                        autofillHints: [AutofillHints.email]),
+
+                    const SizedBox(height: 25),
+
+                    // Password Field
+                    CustomTextField(
+                        controller: passwordController,
+                        hintText: 'Password',
+                        obscureText: true,
+                        autofillHints: [AutofillHints.password]),
+
+                    const SizedBox(height: 10),
+
+                    // Forgot password
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgetPassword()),
+                              );
+                            },
+                            child: Text('Forgot Password?',
+                                style: TextStyle(color: Colors.grey[600])),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 25),
+
+                    // Sign in button
+                    CustomButton(
+                      name: "Sign in",
+                      onTap: signInUser,
+                    ),
+
+                    const SizedBox(height: 50),
+
+                    // Registration
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Not a member? '),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterUser()),
+                            );
+                          },
+                          child: const Text(
+                            'Sign up here',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 500),
+                  ],
+                ),
+              ),
+            ), // Add this
+          ),
+        ],
       ),
     );
   }
