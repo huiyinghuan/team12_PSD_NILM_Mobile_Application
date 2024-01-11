@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class ErrorDialog extends StatelessWidget {
+class DialogBox extends StatelessWidget {
   final String errorText;
+  final String title;
 
-  const ErrorDialog({
+  const DialogBox({
     super.key,
     required this.errorText,
+    required this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Error'),
+      title: Text(title),
       content: Text(errorText),
       actions: <Widget>[
         TextButton(
-          child: Text('OK'),
+          child: const Text('OK'),
           onPressed: () {
             Navigator.of(context).pop();
           },

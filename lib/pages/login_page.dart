@@ -3,9 +3,11 @@ import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/pages/dashboard.dart';
+import 'package:l3homeation/pages/register_user.dart';
 import 'package:l3homeation/services/httphandle.dart';
 import 'package:l3homeation/services/userpreferences.dart';
 import 'package:l3homeation/components/error_dialog.dart';
+import 'package:l3homeation/pages/forget_password.dart';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
@@ -34,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     final AuthService _authService = AuthService(
         email: emailController.text, password: passwordController.text);
     var response = await _authService.checkLoginStatus(context);
+    print("Response: ${passwordController.text}");
 
     // Close the loading dialog
     Navigator.of(context).pop();
@@ -50,11 +53,13 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => dashboard()),
       );
     } else {
+      print("Error logging in");
       // Handle login failure
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return ErrorDialog(errorText: "Login Error. Please try again");
+          return DialogBox(
+              title: "Error", errorText: "Login Error. Please try again");
         },
       );
     }
@@ -108,8 +113,17 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('Forgot Password?',
-                          style: TextStyle(color: Colors.grey[600]))
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ForgetPassword()),
+                          );
+                        },
+                        child: Text('Forgot Password?',
+                            style: TextStyle(color: Colors.grey[600])),
+                      ),
                     ],
                   ),
                 ),
@@ -118,26 +132,36 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Sign in button
                 CustomButton(
+                  name: "Sign in",
                   onTap: signInUser,
                 ),
 
                 const SizedBox(height: 50),
 
                 // Registration
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Not a member? '),
-                    SizedBox(
+                    const Text('Not a member? '),
+                    const SizedBox(
                       width: 4,
                     ),
-                    Text(
-                      'Sign up here',
-                      style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterUser()),
+                        );
+                      },
+                      child: const Text(
+                        'Sign up here',
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      ),
                     )
                   ],
-                )
+                ),
               ],
             ),
           ),
