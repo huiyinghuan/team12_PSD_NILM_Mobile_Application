@@ -159,11 +159,11 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   Widget buildHeader(bool isCollapsed) => isCollapsed
-      ? FlutterLogo(size: 48)
+      ? Image.asset('images/L3-homeation-logo.png', width: 48)
       : Row(
           children: [
             const SizedBox(width: 24),
-            FlutterLogo(size: 48),
+            Image.asset('images/L3-homeation-logo.png', width: 48),
             const SizedBox(width: 16),
             Text(
               'By: L3Homeation',
