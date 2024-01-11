@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 
@@ -32,38 +33,71 @@ class _UserProfileState extends State<UserProfile> {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(
-                'https://picsum.photos/id/91/200/300'), // Replace with actual image
-          ),
-          SizedBox(height: 8),
-          Text(
-            'John Abraham',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-          ),
-          SizedBox(height: 16), // Add spacing before the button
-          SizedBox(
-            width: 100, // Set the width of the button
-            child: TextButton(
-              onPressed: () {
-                // To handle logout logic
-              },
-              child: Text('Logout'),
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                backgroundColor: AppColors.secondary2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      18), // Set the circular radius to 18
-                ),
-                padding: EdgeInsets.symmetric(
-                    vertical: 16), // Add padding inside the button
-              ),
-            ),
+          // CircleAvatar(
+          //   radius: 50,
+          //   backgroundImage: NetworkImage(
+          //       'https://picsum.photos/id/91/200/300'), // Replace with actual image
+          // ),
+          // SizedBox(height: 8),
+          FutureBuilder<String?>(
+            future: UserPreferences.getString('username'),
+            builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                            'https://picsum.photos/id/91/200/300'), // Replace with actual image
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        snapshot.data ??
+                            '', // Display the username from the snapshot
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                        ),
+                      ),
+
+                      // )
+                      // Text(
+                      //   'John Abraham',
+                      //   style: TextStyle(
+                      //     fontWeight: FontWeight.bold,
+                      //     fontSize: 24,
+                      //   ),
+                      // ),
+                      SizedBox(height: 16), // Add spacing before the button
+                      SizedBox(
+                        width: 100, // Set the width of the button
+                        child: TextButton(
+                          onPressed: () {
+                            // To handle logout logic
+                          },
+                          child: Text('Logout'),
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: AppColors.secondary2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  18), // Set the circular radius to 18
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16), // Add padding inside the button
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }
+            },
           ),
         ],
       ),
@@ -98,177 +132,196 @@ class _UserProfileState extends State<UserProfile> {
   bool _isPasswordVisible = false; // State variable for password visibility
 
   Widget _buildPersonalDataSection(BuildContext context) {
-    TextEditingController _nameController =
-        TextEditingController(text: 'John Abraham');
+    TextEditingController _nameController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _confirmPasswordController = TextEditingController();
+    return FutureBuilder<String?>(
+      future: UserPreferences.getString('username'),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            _nameController.text = snapshot.data ?? '';
 
-    return ListView(
-      padding: EdgeInsets.all(16.0),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 32.0),
-          child: !_isEditingData
-              ? Column(
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.primary2, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      initialValue: 'test123',
-                      // controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Leave blank to keep current password',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.primary2, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _isEditingData = true;
-                        });
-                      },
-                      child: Text('Edit Data'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary3,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        minimumSize: Size(200, 48),
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.primary2, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: !_isPasswordVisible,
-                      decoration: InputDecoration(
-                        labelText: 'New Password',
-                        hintText: 'Enter new password',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.primary2, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _confirmPasswordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Retype Password',
-                        hintText: 'Retype password to confirm change',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: AppColors.primary2, width: 2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Implement your logic for password change confirmation here
+            return ListView(
+              padding: EdgeInsets.all(16.0),
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: !_isEditingData
+                      ? Column(
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            TextFormField(
+                              initialValue: 'test123',
+                              // controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText:
+                                    'Leave blank to keep current password',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 24),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isEditingData = true;
+                                });
+                              },
+                              child: Text('Edit Data'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondary3,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                minimumSize: Size(200, 48),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                labelText: 'Name',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              decoration: InputDecoration(
+                                labelText: 'New Password',
+                                hintText: 'Enter new password',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            TextFormField(
+                              controller: _confirmPasswordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: 'Retype Password',
+                                hintText: 'Retype password to confirm change',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 24),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Implement your logic for password change confirmation here
 
-                        // After performing the logic, reset the editing state and clear the controllers
-                        setState(() {
-                          _isEditingData = false;
-                          _passwordController.clear();
-                          _confirmPasswordController.clear();
-                        });
-                      },
-                      child: Text('Confirm Change'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary3,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+                                // After performing the logic, reset the editing state and clear the controllers
+                                setState(() {
+                                  _isEditingData = false;
+                                  _passwordController.clear();
+                                  _confirmPasswordController.clear();
+                                });
+                              },
+                              child: Text('Confirm Change'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondary3,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                minimumSize: Size(200, 48),
+                              ),
+                            ),
+                          ],
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        minimumSize: Size(200, 48),
-                      ),
-                    ),
-                  ],
                 ),
-        ),
-      ],
+              ],
+            );
+          }
+        }
+      },
     );
   }
 
