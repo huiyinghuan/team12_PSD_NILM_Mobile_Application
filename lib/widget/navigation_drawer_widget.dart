@@ -106,35 +106,40 @@ class NavigationDrawerWidget extends StatelessWidget {
   // I can't fix the dashboard navigate to dashboard portion though, but the rest are popping off to the dashboard after going back
   void selectItem(BuildContext context, int index) {
     final provider = Provider.of<NavigationProvider>(context, listen: false);
-    if (provider.currentIndex == 0 && index == 0) {
+
+    // if your already on the page of the provider, of choice, then just remove the navbar
+    if (provider.currentIndex == index) {
       Navigator.of(context).pop();
       return;
     }
-    provider.currentIndex = index; // Update the current index
 
-    final navigateTo = (Widget page) {
-      // Check if the page is already in the stack
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      }
+    // Pop until the first route (Dashboard)
+    Navigator.of(context).popUntil((route) => route.isFirst);
 
-      // Navigate to the page
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
-    };
+    // Delay the pushReplacement to ensure that the popUntil completes
+    Future.delayed(Duration.zero, () {
+      // Navigate to the selected page and replace the Dashboard
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) {
+          switch (index) {
+            case 0:
+              return dashboard();
+            case 1:
+              return PowerGraph();
+            case 3:
+              return UserProfile();
+            default:
+              return dashboard(); // Default to Dashboard if the index is not handled
+          }
+        }),
+      );
 
-    Navigator.of(context).pop(); // Close the drawer
+      // Update the current index
+      provider.currentIndex = index;
+    });
 
-    switch (index) {
-      case 0:
-        navigateTo(dashboard());
-        break;
-      case 1:
-        navigateTo(PowerGraph());
-        break;
-      case 3:
-        navigateTo(UserProfile());
-        break;
-    }
+    // Close the drawer
+    Navigator.of(context).pop();
   }
 
   Widget buildMenuItem({
