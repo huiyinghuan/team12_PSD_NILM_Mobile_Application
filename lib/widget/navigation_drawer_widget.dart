@@ -106,6 +106,10 @@ class NavigationDrawerWidget extends StatelessWidget {
   // I can't fix the dashboard navigate to dashboard portion though, but the rest are popping off to the dashboard after going back
   void selectItem(BuildContext context, int index) {
     final provider = Provider.of<NavigationProvider>(context, listen: false);
+    if (provider.currentIndex == 0 && index == 0) {
+      Navigator.of(context).pop();
+      return;
+    }
     provider.currentIndex = index; // Update the current index
 
     final navigateTo = (Widget page) {
