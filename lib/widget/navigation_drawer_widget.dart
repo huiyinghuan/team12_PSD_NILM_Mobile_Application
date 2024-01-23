@@ -78,14 +78,45 @@ class NavigationDrawerWidget extends StatelessWidget {
         },
       );
 
+  // void selectItem(BuildContext context, int index) {
+  //   final provider = Provider.of<NavigationProvider>(context, listen: false);
+  //   provider.currentIndex = index; // Update the current index
+
+  //   final navigateTo =
+  //       (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+  //             builder: (context) => page,
+  //           ));
+
+  //   Navigator.of(context).pop(); // Close the drawer
+
+  //   switch (index) {
+  //     case 0:
+  //       navigateTo(dashboard());
+  //       break;
+  //     case 1:
+  //       navigateTo(PowerGraph());
+  //       break;
+  //     case 3:
+  //       navigateTo(UserProfile());
+  //       break;
+  //   }
+  // }
+
+  // Kept the old one above just incase it messes with other routing stuff
+  // I can't fix the dashboard navigate to dashboard portion though, but the rest are popping off to the dashboard after going back
   void selectItem(BuildContext context, int index) {
     final provider = Provider.of<NavigationProvider>(context, listen: false);
     provider.currentIndex = index; // Update the current index
 
-    final navigateTo =
-        (Widget page) => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => page,
-            ));
+    final navigateTo = (Widget page) {
+      // Check if the page is already in the stack
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+
+      // Navigate to the page
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => page));
+    };
 
     Navigator.of(context).pop(); // Close the drawer
 
@@ -93,7 +124,7 @@ class NavigationDrawerWidget extends StatelessWidget {
       case 0:
         navigateTo(dashboard());
         break;
-      case 1: 
+      case 1:
         navigateTo(PowerGraph());
         break;
       case 3:
