@@ -37,11 +37,6 @@ class _dashboardState extends State<dashboard> {
       print("Got auth: $auth\n");
       updateDevices();
     });
-    // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
-    // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   updateDevices();
-    // });
-    // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
   }
 
   Future<void> loadAuth() async {
@@ -110,34 +105,35 @@ class _dashboardState extends State<dashboard> {
                 future: UserPreferences.getString('username'),
                 builder:
                     (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  if (snapshot.hasData) {
+                    return RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Hi, ',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.deepOrange[800],
+                            ),
+                          ),
+                          TextSpan(
+                            text: '${snapshot.data} 👋',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.deepOrange[800],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else {
-                    if (snapshot.hasError) {
+                    {
                       return Text('Error: ${snapshot.error}');
-                    } else {
-                      return RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Hi, ',
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.deepOrange[800],
-                              ),
-                            ),
-                            TextSpan(
-                              text: '${snapshot.data} 👋',
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.deepOrange[800],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
                     }
                   }
                 },
@@ -168,16 +164,16 @@ class _dashboardState extends State<dashboard> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: FutureBuilder<List<IoT_Device>>(
         future: devices,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
+        builder:
+            (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
+          if (snapshot.hasData) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
                   children: [
                     Text(
-                      '${snapshot.data!.where((device) => (device.value == 99 || device.value == true)).length} DEVICES ON',
+                      '${snapshot.data!.where((device) => (checkDeviceValue(device) || device.value == true)).length} DEVICES ON',
                       style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: 12,
@@ -217,6 +213,15 @@ class _dashboardState extends State<dashboard> {
         },
       ),
     );
+  }
+
+  bool checkDeviceValue(IoT_Device device) {
+    if (device.value is int) {
+      if (device.value > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   Widget buildUsageSection() {
