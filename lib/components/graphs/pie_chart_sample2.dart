@@ -56,7 +56,7 @@ class PieChart2State extends State {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Indicator(
-                color: AppColors.contentColorBlue,
+                color: AppColors_Graph.contentColorBlue,
                 text: 'Lights',
                 isSquare: true,
               ),
@@ -64,7 +64,7 @@ class PieChart2State extends State {
                 height: 4,
               ),
               Indicator(
-                color: AppColors.contentColorYellow,
+                color: AppColors_Graph.contentColorYellow,
                 text: 'Security',
                 isSquare: true,
               ),
@@ -72,7 +72,7 @@ class PieChart2State extends State {
                 height: 4,
               ),
               Indicator(
-                color: AppColors.contentColorPurple,
+                color: AppColors_Graph.contentColorPurple,
                 text: 'Third',
                 isSquare: true,
               ),
@@ -80,7 +80,7 @@ class PieChart2State extends State {
                 height: 4,
               ),
               Indicator(
-                color: AppColors.contentColorGreen,
+                color: AppColors_Graph.contentColorGreen,
                 text: 'Fourth',
                 isSquare: true,
               ),
@@ -106,53 +106,53 @@ class PieChart2State extends State {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: AppColors.contentColorBlue,
+            color: AppColors_Graph.contentColorBlue,
             value: 40,
             title: '40%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
+              color: AppColors_Graph.mainTextColor1,
               shadows: shadows,
             ),
           );
         case 1:
           return PieChartSectionData(
-            color: AppColors.contentColorYellow,
+            color: AppColors_Graph.contentColorYellow,
             value: 30,
             title: '30%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
+              color: AppColors_Graph.mainTextColor1,
               shadows: shadows,
             ),
           );
         case 2:
           return PieChartSectionData(
-            color: AppColors.contentColorPurple,
+            color: AppColors_Graph.contentColorPurple,
             value: 15,
             title: '15%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
+              color: AppColors_Graph.mainTextColor1,
               shadows: shadows,
             ),
           );
         case 3:
           return PieChartSectionData(
-            color: AppColors.contentColorGreen,
+            color: AppColors_Graph.contentColorGreen,
             value: 15,
             title: '15%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.mainTextColor1,
+              color: AppColors_Graph.mainTextColor1,
               shadows: shadows,
             ),
           );

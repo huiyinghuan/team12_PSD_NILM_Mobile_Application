@@ -11,8 +11,8 @@ class LineChartSample2 extends StatefulWidget {
 
 class _LineChartSample2State extends State<LineChartSample2> {
   List<Color> gradientColors = [
-    AppColors.contentColorCyan,
-    AppColors.contentColorBlue,
+    AppColors_Graph.contentColorCyan,
+    AppColors_Graph.contentColorBlue,
   ];
 
   bool showAvg = false;
@@ -116,13 +116,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
-            color: AppColors.mainGridLineColor,
+            color: AppColors_Graph.mainGridLineColor,
             strokeWidth: 1,
           );
         },
         getDrawingVerticalLine: (value) {
           return const FlLine(
-            color: AppColors.mainGridLineColor,
+            color: AppColors_Graph.mainGridLineColor,
             strokeWidth: 1,
           );
         },

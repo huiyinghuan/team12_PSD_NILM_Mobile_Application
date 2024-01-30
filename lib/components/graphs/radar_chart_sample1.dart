@@ -5,13 +5,13 @@ import 'package:l3homeation/components/graphs/chart_sample.dart';
 class RadarChartSample1 extends StatefulWidget {
   RadarChartSample1({super.key});
 
-  final gridColor = AppColors.contentColorPurple;
-  final titleColor = AppColors.contentColorPurple;
-  final fashionColor = AppColors.contentColorRed;
-  final artColor = AppColors.contentColorCyan;
-  final boxingColor = AppColors.contentColorGreen;
-  final entertainmentColor = AppColors.contentColorWhite;
-  final offRoadColor = AppColors.contentColorYellow;
+  final gridColor = AppColors_Graph.contentColorPurple;
+  final titleColor = AppColors_Graph.contentColorPurple;
+  final fashionColor = AppColors_Graph.contentColorRed;
+  final artColor = AppColors_Graph.contentColorCyan;
+  final boxingColor = AppColors_Graph.contentColorGreen;
+  final entertainmentColor = AppColors_Graph.contentColorWhite;
+  final offRoadColor = AppColors_Graph.contentColorYellow;
 
   @override
   State<RadarChartSample1> createState() => _RadarChartSample1State();
@@ -33,7 +33,7 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
           const Text(
             'Title configuration',
             style: TextStyle(
-              color: AppColors.mainTextColor2,
+              color: AppColors_Graph.mainTextColor2,
             ),
           ),
           Row(
@@ -41,7 +41,7 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
               const Text(
                 'Angle',
                 style: TextStyle(
-                  color: AppColors.mainTextColor2,
+                  color: AppColors_Graph.mainTextColor2,
                 ),
               ),
               Slider(
@@ -71,7 +71,7 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.w300,
-                color: AppColors.mainTextColor1,
+                color: AppColors_Graph.mainTextColor1,
               ),
             ),
           ),
@@ -96,7 +96,7 @@ class _RadarChartSample1State extends State<RadarChartSample1> {
                         height: 26,
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.pageBackground
+                              ? AppColors_Graph.pageBackground
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(46),
                         ),

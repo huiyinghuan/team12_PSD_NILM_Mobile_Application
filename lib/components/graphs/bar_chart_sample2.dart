@@ -7,8 +7,8 @@ import 'package:l3homeation/components/graphs/chart_sample.dart';
 
 class BarChartSample2 extends StatefulWidget {
   BarChartSample2({super.key});
-  final Color leftBarColor = AppColors.contentColorYellow;
-  final Color rightBarColor = AppColors.contentColorRed;
+  final Color leftBarColor = AppColors_Graph.contentColorYellow;
+  final Color rightBarColor = AppColors_Graph.contentColorRed;
   final Color avgColor = Color.fromARGB(255, 255, 115, 0);
   @override
   State<StatefulWidget> createState() => BarChartSample2State();

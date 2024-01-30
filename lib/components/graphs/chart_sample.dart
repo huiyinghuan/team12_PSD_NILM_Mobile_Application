@@ -23,7 +23,7 @@ class AppAssets {
   static const flChartLogoText = 'assets/icons/fl_chart_logo_text.svg';
 }
 
-class AppColors {
+class AppColors_Graph {
   static const Color primary = contentColorCyan;
   static const Color menuBackground = Color(0xFF090912);
   static const Color itemsBackground = Color(0xFF1B2339);

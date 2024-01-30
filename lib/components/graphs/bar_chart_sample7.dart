@@ -9,12 +9,12 @@ class BarChartSample7 extends StatefulWidget {
 
   final shadowColor = const Color(0xFFCCCCCC);
   final dataList = [
-    const _BarData(AppColors.contentColorYellow, 18, 18),
-    const _BarData(AppColors.contentColorGreen, 17, 8),
-    const _BarData(AppColors.contentColorOrange, 10, 15),
-    const _BarData(AppColors.contentColorPink, 2.5, 5),
-    const _BarData(AppColors.contentColorBlue, 2, 2.5),
-    const _BarData(AppColors.contentColorRed, 2, 2),
+    const _BarData(AppColors_Graph.contentColorYellow, 18, 18),
+    const _BarData(AppColors_Graph.contentColorGreen, 17, 8),
+    const _BarData(AppColors_Graph.contentColorOrange, 10, 15),
+    const _BarData(AppColors_Graph.contentColorPink, 2.5, 5),
+    const _BarData(AppColors_Graph.contentColorBlue, 2, 2.5),
+    const _BarData(AppColors_Graph.contentColorRed, 2, 2),
   ];
 
   @override
@@ -61,7 +61,7 @@ class _BarChartSample7State extends State<BarChartSample7> {
               show: true,
               border: Border.symmetric(
                 horizontal: BorderSide(
-                  color: AppColors.borderColor.withOpacity(0.2),
+                  color: AppColors_Graph.borderColor.withOpacity(0.2),
                 ),
               ),
             ),
@@ -103,7 +103,7 @@ class _BarChartSample7State extends State<BarChartSample7> {
               show: true,
               drawVerticalLine: false,
               getDrawingHorizontalLine: (value) => FlLine(
-                color: AppColors.borderColor.withOpacity(0.2),
+                color: AppColors_Graph.borderColor.withOpacity(0.2),
                 strokeWidth: 1,
               ),
             ),

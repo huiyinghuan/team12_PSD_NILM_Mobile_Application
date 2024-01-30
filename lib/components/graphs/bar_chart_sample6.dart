@@ -5,9 +5,9 @@ import 'package:l3homeation/components/graphs/chart_sample.dart';
 class BarChartSample6 extends StatelessWidget {
   const BarChartSample6({super.key});
 
-  final pilateColor = AppColors.contentColorPurple;
-  final cyclingColor = AppColors.contentColorCyan;
-  final quickWorkoutColor = AppColors.contentColorBlue;
+  final pilateColor = AppColors_Graph.contentColorPurple;
+  final cyclingColor = AppColors_Graph.contentColorCyan;
+  final quickWorkoutColor = AppColors_Graph.contentColorBlue;
   final betweenSpace = 0.2;
 
   BarChartGroupData generateGroupData(
@@ -102,7 +102,7 @@ class BarChartSample6 extends StatelessWidget {
           const Text(
             'Activity',
             style: TextStyle(
-              color: AppColors.contentColorBlue,
+              color: AppColors_Graph.contentColorBlue,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
