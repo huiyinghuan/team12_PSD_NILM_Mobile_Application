@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:l3homeation/models/drawer_item.dart';
 import 'package:l3homeation/pages/dashboard.dart';
 import 'package:l3homeation/pages/power_graph.dart';
+import 'package:l3homeation/pages/scenes.dart';
 import 'package:l3homeation/pages/userProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:l3homeation/provider/navigation_provider.dart';
@@ -96,6 +97,9 @@ class NavigationDrawerWidget extends StatelessWidget {
   //     case 1:
   //       navigateTo(PowerGraph());
   //       break;
+  //     case 2:
+  //       navigateTo(Scenes());
+  //       break;
   //     case 3:
   //       navigateTo(UserProfile());
   //       break;
@@ -126,6 +130,8 @@ class NavigationDrawerWidget extends StatelessWidget {
               return dashboard();
             case 1:
               return PowerGraph();
+            case 2:
+              return Scenes();
             case 3:
               return UserProfile();
             default:

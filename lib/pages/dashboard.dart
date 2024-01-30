@@ -7,6 +7,7 @@ import "package:google_fonts/google_fonts.dart";
 import 'package:l3homeation/services/userPreferences.dart';
 import "../components/iot_device_tile.dart";
 import "package:l3homeation/pages/listDevice.dart";
+import "package:l3homeation/pages/scenes.dart";
 import "../models/iot_device.dart";
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
