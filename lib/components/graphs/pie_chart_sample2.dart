@@ -1,7 +1,7 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:l3homeation/components/chart_sample.dart';
+import 'package:l3homeation/components/graphs/chart_sample.dart';
 
 class PieChartSample2 extends StatefulWidget {
   const PieChartSample2({super.key});

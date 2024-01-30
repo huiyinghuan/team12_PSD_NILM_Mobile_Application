@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:l3homeation/components/chart_sample.dart';
+import 'package:l3homeation/components/graphs/chart_sample.dart';
 
 class BarChartSample6 extends StatelessWidget {
   const BarChartSample6({super.key});
