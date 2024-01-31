@@ -16,6 +16,7 @@ class IoT_Scene {
   dynamic content;
   int id;
   int? roomid;
+  String wholeJSON;
 
   // for API Call
   String URL;
@@ -34,6 +35,7 @@ class IoT_Scene {
     required this.updated,
     required this.description,
     required this.content,
+    required this.wholeJSON,
 
     required this.URL,
     required this.credentials,
@@ -89,6 +91,22 @@ class IoT_Scene {
       return response_put;
   }
 
+  Future<Response> change_description(String new_description) async {
+    // fetch data and change only description
+    Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
+      wholeJSON['description'] = new_description;
+      late Response? response_put;
+      response_put = await http.put(
+        Uri.parse(URL + '/api/scenes/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(wholeJSON),
+      );
+
+    return response_put;
+  }
+
   static Future<List<IoT_Scene>> get_scenes(
       String credentials, String URL) async {
     List<IoT_Scene> scenes = [];
@@ -114,6 +132,7 @@ class IoT_Scene {
           },
           URL: URL,
           credentials: credentials,
+          wholeJSON: jsonEncode(response),
         );
       } else {
         new_scene = IoT_Scene(
@@ -134,6 +153,7 @@ class IoT_Scene {
           // },
           URL: URL,
           credentials: credentials,
+          wholeJSON: jsonEncode(response),
         );
       }
       scenes.add(new_scene);
@@ -153,7 +173,7 @@ class IoT_Scene {
       },
     );
 
-    List<dynamic> jsonResponses = jsonDecode(response.body);
+    List<dynamic> jsonResponses = id == null ? await jsonDecode(response.body) : [jsonDecode(response.body)];
     return jsonResponses;
   }
 
