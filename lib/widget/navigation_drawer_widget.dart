@@ -91,7 +91,10 @@ class NavigationDrawerWidget extends StatelessWidget {
 
     // Pop until the first route (Dashboard)
     Navigator.of(context).popUntil((route) => route.isFirst);
-
+    // Damn scuffed but it works, push everything away then pushes back the Dashboard as the first base route
+    // Otherwise the app just crashes because it pushes off the entire stack including the app lifecycle
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Dashboard()));
     // Delay the pushReplacement to ensure that the popUntil completes
     Future.delayed(Duration.zero, () {
       // Navigate to the selected page and replace the Dashboard
