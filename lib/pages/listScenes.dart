@@ -4,16 +4,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/pages/eachScene.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:l3homeation/services/userPreferences.dart';
 
-class Scenes extends StatefulWidget {
+class listScenes extends StatefulWidget {
   @override
-  _ScenesState createState() => _ScenesState();
+  _listScenesState createState() => _listScenesState();
 }
 
-class _ScenesState extends State<Scenes> {
+class _listScenesState extends State<listScenes> {
   late Future<List<dynamic>> scenes = Future.value([]);
   String? auth;
 
@@ -61,6 +62,11 @@ class _ScenesState extends State<Scenes> {
 
   @override
   Widget build(BuildContext context) {
+  final navigateTo =
+      (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => page,
+          ));
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -76,16 +82,16 @@ class _ScenesState extends State<Scenes> {
       drawer: NavigationDrawerWidget(),
       body: ListView(
         children: <Widget>[
-          _buildSceneList(),
+          _buildSceneList(navigateTo),
         ],
       ),
     );
   }
 
   // Assuming that scenes is a List<IoT_Scene>
-  List<ExpansionTile> buildExpansionTiles(List<dynamic> scenes) {
+  List<ExpansionTile> buildExpansionTiles(List<dynamic> scenes, navigateTo) {
     return scenes.map((scene) {
-      print(scene);
+      print(scene.toString_IOT());
       dynamic enableScene = scene.enable;
 
       return ExpansionTile(
@@ -137,6 +143,15 @@ class _ScenesState extends State<Scenes> {
                       swapper(scene);
                     },
                   ),
+                  IconButton(
+                    // This bool value toggles the switch.
+                    icon: const Icon(Icons.edit),
+                    onPressed: (enableScene) ? () {
+                      print('directing to next page');
+                      navigateTo(eachScene(scene: scene));
+                    } : null,
+                    color: (enableScene) ? AppColors.secondary1 : Colors.grey,
+                  ),
                 ],
               ),
             ),
@@ -145,13 +160,13 @@ class _ScenesState extends State<Scenes> {
               child: ButtonBar(
                 children: [
                   TextButton(
-                    onPressed: () {
-                      print("Activate Scene Now");
-                    },
-                    child: const Text(
+                    onPressed: (enableScene) ? () => {
+                      scene.activate_scenes(),
+                    } : null,
+                    child: Text(
                       'Activate Scene Now',
                       style: TextStyle(
-                        color: AppColors.secondary1,
+                        color: (enableScene) ? AppColors.secondary1 : Colors.grey,
                         fontSize: 18.0,
                       ),
                     ),
@@ -166,7 +181,7 @@ class _ScenesState extends State<Scenes> {
   }
 
   // a container that holds the list of scenes
-  Container _buildSceneList() {
+  Container _buildSceneList(navigateTo) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0),
       child: FutureBuilder<List<dynamic>>(
@@ -178,7 +193,7 @@ class _ScenesState extends State<Scenes> {
               children: <Widget>[
                 const SizedBox(height: 8),
                 Column(
-                  children: buildExpansionTiles(snapshot.data!),
+                  children: buildExpansionTiles(snapshot.data!, navigateTo),
                 ),
               ],
             );

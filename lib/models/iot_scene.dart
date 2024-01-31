@@ -74,6 +74,21 @@ class IoT_Scene {
     print("finished swapping states\n");
   }
 
+  String toString_IOT() {
+    return "IoT_Scene: $name, $description, $type, $mode, $icon, $enable, $created, $updated, $content, $id, $roomid";
+  }
+
+  Future<Response> activate_scenes() async {
+      late Response? response_put;
+      response_put = await http.get(
+        Uri.parse(URL + '/api/scenes/$id/execute'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+      );
+      return response_put;
+  }
+
   static Future<List<IoT_Scene>> get_scenes(
       String credentials, String URL) async {
     List<IoT_Scene> scenes = [];
