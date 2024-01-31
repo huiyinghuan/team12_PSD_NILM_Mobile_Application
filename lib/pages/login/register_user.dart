@@ -17,6 +17,11 @@ class _RegisterUserState extends State<RegisterUser> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+  final snackBar = const SnackBar(
+    content: Text("Registration Successful! Please login again"),
+    duration: Duration(seconds: 2),
+  );
+
   // Sign up user method
   void signUpUser() async {
     // Loading circle
@@ -34,13 +39,20 @@ class _RegisterUserState extends State<RegisterUser> {
     print("Sign up test successful");
 
     // Handle login failure
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const DialogBox(
-            title: "Success",
-            errorText: "Registration Successful. Please login again");
-      },
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return const DialogBox(
+    //         title: "Success",
+    //         errorText: "Registration Successful. Please login again");
+    //   },
+    // );
+
+    // Changed message to a snackbar so it looks cleaner and can bring user to the login_page()
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 
@@ -113,7 +125,7 @@ class _RegisterUserState extends State<RegisterUser> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => LoginPage()),
                         );

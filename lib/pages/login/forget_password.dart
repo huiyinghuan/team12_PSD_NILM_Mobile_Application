@@ -87,13 +87,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Remembered your password? '),
+                    const Text('Remembered your password? Go to: '),
                     const SizedBox(
                       width: 4,
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => LoginPage()),
                         );

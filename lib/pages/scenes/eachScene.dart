@@ -22,7 +22,7 @@ class eachScene extends StatefulWidget {
 class _eachSceneState extends State<eachScene> {
   final dynamic scene;
   List<String> tableAttributes = [
-    'Description', 
+    'Description',
     'Type',
     'Icon',
     'Mode',
@@ -113,10 +113,13 @@ class _eachSceneState extends State<eachScene> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-                child: SingleChildScrollView( // make scrollable below.
-                  child: Column( // column got 2 children. 1 top row and 1 bottom datatable
+                child: SingleChildScrollView(
+                  // make scrollable below.
+                  child: Column(
+                    // column got 2 children. 1 top row and 1 bottom datatable
                     children: [
-                      Row( // top row. icon and name
+                      Row(
+                        // top row. icon and name
                         children: [
                           const Image(
                             // image: AssetImage('images/icons/${scene.icon}.png'), i have no idea why this wont work.
@@ -124,7 +127,8 @@ class _eachSceneState extends State<eachScene> {
                             color: AppColors.primary3,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 20.0), // Add desired padding here
+                            padding: const EdgeInsets.only(
+                                left: 20.0), // Add desired padding here
                             child: Text(
                               scene.name,
                               style: const TextStyle(
@@ -135,7 +139,8 @@ class _eachSceneState extends State<eachScene> {
                           ),
                         ],
                       ),
-                      Padding( // padding for the datatable
+                      Padding(
+                        // padding for the datatable
                         padding: const EdgeInsets.only(top: 20.0),
                         child: Center(
                           child: SingleChildScrollView(
@@ -145,8 +150,10 @@ class _eachSceneState extends State<eachScene> {
                               children: [
                                 FutureBuilder<List<DataRow>>(
                                   future: buildDataRows(),
-                                  builder: (BuildContext context, AsyncSnapshot<List<DataRow>> snapshot) {
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<DataRow>> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
                                       return CircularProgressIndicator();
                                     } else if (snapshot.hasError) {
                                       return Text('Error: ${snapshot.error}');
@@ -160,7 +167,8 @@ class _eachSceneState extends State<eachScene> {
                                               children: [
                                                 Text('Data Information'),
                                                 Padding(
-                                                  padding: EdgeInsets.only(left: 10.0),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10.0),
                                                   child: Icon(Icons.edit),
                                                 )
                                               ],
@@ -205,7 +213,7 @@ class _eachSceneState extends State<eachScene> {
           ),
         ));
   }
-  
+
   // for data table edit data custom popup box
   Future<void> showCustomDialog(String title, String content, int i) async {
     print(content);
@@ -252,7 +260,8 @@ class _eachSceneState extends State<eachScene> {
             TextButton(
               onPressed: () {
                 if (i == 0) {
-                  Future<Response> changeResponse = scene.change_description(new_desc);
+                  Future<Response> changeResponse =
+                      scene.change_description(new_desc);
                   changeResponse.then((value) {
                     if (value.statusCode == 204) {
                       scene.description = new_desc;
@@ -270,6 +279,7 @@ class _eachSceneState extends State<eachScene> {
       },
     );
   }
+
   // for data table
   Future<List<DataRow>> buildDataRows() async {
     List<DataRow> dataRows = [];
@@ -303,15 +313,13 @@ class _eachSceneState extends State<eachScene> {
       case 4:
         return scene.enable.toString();
       case 5:
-        return 
-          DateFormat('HH:mm | dd/MM/yyyy').format(
-            DateTime.fromMillisecondsSinceEpoch(scene.created * 1000),
-          );
+        return DateFormat('HH:mm | dd/MM/yyyy').format(
+          DateTime.fromMillisecondsSinceEpoch(scene.created * 1000),
+        );
       case 6:
-        return 
-          DateFormat('HH:mm | dd/MM/yyyy').format(
-            DateTime.fromMillisecondsSinceEpoch(scene.updated * 1000),
-          );
+        return DateFormat('HH:mm | dd/MM/yyyy').format(
+          DateTime.fromMillisecondsSinceEpoch(scene.updated * 1000),
+        );
       case 7:
         return scene.content.toString();
       case 8:
