@@ -3,22 +3,20 @@ import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/error_dialog.dart';
-import 'package:l3homeation/pages/login_page.dart';
+import 'package:l3homeation/pages/login/login_page.dart';
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({super.key});
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({super.key});
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
+class _ForgetPasswordState extends State<ForgetPassword> {
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
   // Sign up user method
-  void signUpUser() async {
+  void resetPassword() async {
     // Loading circle
     showDialog(
         context: context,
@@ -31,7 +29,7 @@ class _RegisterUserState extends State<RegisterUser> {
     // Close the loading dialog
     Navigator.of(context).pop();
 
-    print("Sign up test successful");
+    print("Reset test successful");
 
     // Handle login failure
     showDialog(
@@ -39,7 +37,7 @@ class _RegisterUserState extends State<RegisterUser> {
       builder: (BuildContext context) {
         return const DialogBox(
             title: "Success",
-            errorText: "Registration Successful. Please login again");
+            errorText: "Password Reset. Please check your email");
       },
     );
   }
@@ -61,7 +59,7 @@ class _RegisterUserState extends State<RegisterUser> {
 
                 // Welcome back text
                 const Text(
-                  'Registration',
+                  'Forget Password',
                   style: TextStyle(
                       color: Color.fromARGB(255, 97, 97, 97), fontSize: 16),
                 ),
@@ -75,30 +73,12 @@ class _RegisterUserState extends State<RegisterUser> {
                     obscureText: false,
                     autofillHints: [AutofillHints.email]),
 
-                const SizedBox(height: 15),
-
-                // Password Field
-                CustomTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password]),
-
-                const SizedBox(height: 15),
-
-                // Confirm Password Field
-                CustomTextField(
-                    controller: confirmPasswordController,
-                    hintText: 'Confirm Password',
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password]),
-
                 const SizedBox(height: 25),
 
                 // Sign in button
                 CustomButton(
-                  name: "Sign In",
-                  onTap: signUpUser,
+                  name: "Reset Password",
+                  onTap: resetPassword,
                 ),
 
                 const SizedBox(height: 50),
@@ -107,7 +87,7 @@ class _RegisterUserState extends State<RegisterUser> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Already have an account? '),
+                    const Text('Remembered your password? '),
                     const SizedBox(
                       width: 4,
                     ),

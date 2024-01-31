@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/drawer_item.dart';
-import 'package:l3homeation/pages/dashboard.dart';
-import 'package:l3homeation/pages/power_graph.dart';
-import 'package:l3homeation/pages/scenes.dart';
-import 'package:l3homeation/pages/userProfile.dart';
+import 'package:l3homeation/pages/dashboard/dashboard.dart';
+import 'package:l3homeation/pages/charts/power_graph.dart';
+import 'package:l3homeation/pages/devices/listDevice.dart';
+import 'package:l3homeation/pages/scenes/listScenes.dart';
+import 'package:l3homeation/pages/profile/userProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:l3homeation/provider/navigation_provider.dart';
 import 'package:l3homeation/data/drawer_items.dart';
@@ -127,15 +128,15 @@ class NavigationDrawerWidget extends StatelessWidget {
         MaterialPageRoute(builder: (context) {
           switch (index) {
             case 0:
-              return dashboard();
+              return Dashboard();
             case 1:
               return PowerGraph();
             case 2:
-              return Scenes();
+              return listScenes();
             case 3:
               return UserProfile();
             default:
-              return dashboard(); // Default to Dashboard if the index is not handled
+              return Dashboard(); // Default to Dashboard if the index is not handled
           }
         }),
       );

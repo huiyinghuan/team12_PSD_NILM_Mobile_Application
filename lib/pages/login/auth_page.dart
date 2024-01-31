@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dashboard.dart';
+import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +24,7 @@ class AuthPage extends StatelessWidget {
               return Text('Error: ${snapshot.error}');
             } else {
               if (snapshot.data == true) {
-                return const dashboard();
+                return const Dashboard();
               } else {
                 return LoginPage();
               }

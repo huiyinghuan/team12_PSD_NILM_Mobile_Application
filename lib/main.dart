@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:l3homeation/pages/power_graph.dart';
-import 'package:l3homeation/pages/listScenes.dart';
-import 'pages/auth_page.dart';
+import 'package:l3homeation/pages/charts/power_graph.dart';
+import 'package:l3homeation/pages/scenes/listScenes.dart';
+import 'package:l3homeation/pages/login/auth_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'provider/navigation_provider.dart';
 import 'package:flutter/services.dart';
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.poppinsTextTheme(textTheme),
             // Other theme properties...
           ),
-          // home: const AuthPage(),
-          home: listScenes(),
+          home: const AuthPage(),
+          // home: listScenes(),
         ),
       );
 }

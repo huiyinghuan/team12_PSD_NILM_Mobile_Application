@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/components/square_tile.dart';
-import 'package:l3homeation/pages/dashboard.dart';
-import 'package:l3homeation/pages/register_user.dart';
+import 'package:l3homeation/pages/dashboard/dashboard.dart';
+import 'package:l3homeation/pages/login/register_user.dart';
 import 'package:l3homeation/services/httphandle.dart';
 import 'package:l3homeation/services/userpreferences.dart';
 import 'package:l3homeation/components/error_dialog.dart';
-import 'package:l3homeation/pages/forget_password.dart';
+import 'package:l3homeation/pages/login/forget_password.dart';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       print("Login successful");
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => dashboard()),
+        MaterialPageRoute(builder: (context) => Dashboard()),
       );
     } else {
       print("Error logging in");

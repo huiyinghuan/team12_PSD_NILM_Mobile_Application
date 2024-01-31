@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';
-import 'package:l3homeation/pages/eachScene.dart';
+import 'package:l3homeation/pages/scenes/eachScene.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:l3homeation/services/userPreferences.dart';
@@ -62,10 +62,10 @@ class _listScenesState extends State<listScenes> {
 
   @override
   Widget build(BuildContext context) {
-  final navigateTo =
-      (Widget page) => Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => page,
-          ));
+    final navigateTo =
+        (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => page,
+            ));
 
     return Scaffold(
       appBar: AppBar(
@@ -100,81 +100,88 @@ class _listScenesState extends State<listScenes> {
           style: const TextStyle(fontSize: 18.0), // Customize title text size
         ),
         children: [
-          Column(children: [
-            
-            Padding(
-              padding: const EdgeInsets.all(18.0), // Adjust padding as needed
-              child: Row(
-                children: [
-                  Flexible(
-                    child: RichText(
-                      text: const TextSpan(
-                        text: 'Status: ',
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(18.0), // Adjust padding as needed
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: RichText(
+                        text: const TextSpan(
+                          text: 'Status: ',
+                          style: TextStyle(
+                            color: AppColors.secondary1,
+                            fontSize: 18.0,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'hhello \n\n',
+                              style: TextStyle(
+                                color: AppColors.secondary1,
+                                fontSize: 18.0,
+                                fontWeight: (FontWeight.bold),
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Enable Trigger Scene: \n',
+                              // style: TextStyle(
+                              //   color: Colors.black,
+                              //   fontSize: 14.0,
+                              // ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      // This bool value toggles the switch.
+                      value: enableScene,
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.red,
+                      onChanged: (bool value) {
+                        swapper(scene);
+                      },
+                    ),
+                    IconButton(
+                      // This bool value toggles the switch.
+                      icon: const Icon(Icons.edit),
+                      onPressed: (enableScene)
+                          ? () {
+                              print('directing to next page');
+                              navigateTo(eachScene(scene: scene));
+                            }
+                          : null,
+                      color: (enableScene) ? AppColors.secondary1 : Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: ButtonBar(
+                  children: [
+                    TextButton(
+                      onPressed: (enableScene)
+                          ? () => {
+                                scene.activate_scenes(),
+                              }
+                          : null,
+                      child: Text(
+                        'Activate Scene Now',
                         style: TextStyle(
-                          color: AppColors.secondary1,
+                          color: (enableScene)
+                              ? AppColors.secondary1
+                              : Colors.grey,
                           fontSize: 18.0,
                         ),
-                        children: [
-                          TextSpan(
-                            text: 'hhello \n\n',
-                            style: TextStyle(
-                              color: AppColors.secondary1,
-                              fontSize: 18.0,
-                              fontWeight: (FontWeight.bold),
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Enable Trigger Scene: \n',
-                            // style: TextStyle(
-                            //   color: Colors.black,
-                            //   fontSize: 14.0,
-                            // ),
-                          ),
-                        ],
                       ),
                     ),
-                  ),  
-                  Switch(
-                    // This bool value toggles the switch.
-                    value: enableScene,
-                    activeColor: Colors.green,
-                    inactiveThumbColor: Colors.red,
-                    onChanged: (bool value) {
-                      swapper(scene);
-                    },
-                  ),
-                  IconButton(
-                    // This bool value toggles the switch.
-                    icon: const Icon(Icons.edit),
-                    onPressed: (enableScene) ? () {
-                      print('directing to next page');
-                      navigateTo(eachScene(scene: scene));
-                    } : null,
-                    color: (enableScene) ? AppColors.secondary1 : Colors.grey,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: ButtonBar(
-                children: [
-                  TextButton(
-                    onPressed: (enableScene) ? () => {
-                      scene.activate_scenes(),
-                    } : null,
-                    child: Text(
-                      'Activate Scene Now',
-                      style: TextStyle(
-                        color: (enableScene) ? AppColors.secondary1 : Colors.grey,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],)
+            ],
+          )
         ],
       );
     }).toList();

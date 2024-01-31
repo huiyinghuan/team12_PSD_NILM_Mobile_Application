@@ -3,20 +3,22 @@ import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/error_dialog.dart';
-import 'package:l3homeation/pages/login_page.dart';
+import 'package:l3homeation/pages/login/login_page.dart';
 
-class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
+class RegisterUser extends StatefulWidget {
+  const RegisterUser({super.key});
 
   @override
-  State<ForgetPassword> createState() => _ForgetPasswordState();
+  State<RegisterUser> createState() => _RegisterUserState();
 }
 
-class _ForgetPasswordState extends State<ForgetPassword> {
+class _RegisterUserState extends State<RegisterUser> {
   final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   // Sign up user method
-  void resetPassword() async {
+  void signUpUser() async {
     // Loading circle
     showDialog(
         context: context,
@@ -29,7 +31,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     // Close the loading dialog
     Navigator.of(context).pop();
 
-    print("Reset test successful");
+    print("Sign up test successful");
 
     // Handle login failure
     showDialog(
@@ -37,7 +39,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       builder: (BuildContext context) {
         return const DialogBox(
             title: "Success",
-            errorText: "Password Reset. Please check your email");
+            errorText: "Registration Successful. Please login again");
       },
     );
   }
@@ -59,7 +61,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                 // Welcome back text
                 const Text(
-                  'Forget Password',
+                  'Registration',
                   style: TextStyle(
                       color: Color.fromARGB(255, 97, 97, 97), fontSize: 16),
                 ),
@@ -73,12 +75,30 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     obscureText: false,
                     autofillHints: [AutofillHints.email]),
 
+                const SizedBox(height: 15),
+
+                // Password Field
+                CustomTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                    autofillHints: [AutofillHints.password]),
+
+                const SizedBox(height: 15),
+
+                // Confirm Password Field
+                CustomTextField(
+                    controller: confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                    autofillHints: [AutofillHints.password]),
+
                 const SizedBox(height: 25),
 
                 // Sign in button
                 CustomButton(
-                  name: "Reset Password",
-                  onTap: resetPassword,
+                  name: "Sign In",
+                  onTap: signUpUser,
                 ),
 
                 const SizedBox(height: 50),
