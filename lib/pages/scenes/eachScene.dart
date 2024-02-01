@@ -37,7 +37,7 @@ class _eachSceneState extends State<eachScene> {
   _eachSceneState({required this.scene});
 
   late Future<List<dynamic>> scenes = Future.value([]);
-  late Future<List<IoT_Device>> devices = Future.value([]);
+  Future<List<IoT_Device>> devices = Future.value([]);
   String? auth;
 
   @override
@@ -73,14 +73,13 @@ class _eachSceneState extends State<eachScene> {
 
   Future<void> updateDevices() async {
     if (auth != null) {
-      print('update devices');
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
           "http://l3homeation.dyndns.org:2080",
         );
       });
-    }
+    };
   }
 
   void swapper(IoT_Scene scene) async {
@@ -218,7 +217,17 @@ class _eachSceneState extends State<eachScene> {
               ),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              buildListView(),
+              //buildListView(),
+              ListView.builder(
+                itemCount: 25,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    tileColor:
+                        index.isOdd ? AppColors.primary1 : AppColors.primary2,
+                    title: Text('Edit Basic Config $index'),
+                  );
+                },
+              ),
               //---------------------------------SECOND TAB---------------------------------
               //---------------------------------THIRD TAB---------------------------------
               ListView.builder(
@@ -361,9 +370,6 @@ class _eachSceneState extends State<eachScene> {
   //####################################################################################
   //---------------------------------SECOND TAB FUNCTION---------------------------------
   ListView buildListView() {
-    devices.then((value) => 
-      print(value)
-    );
     return ListView(
       children: [
         FutureBuilder<List<IoT_Device>>(
@@ -372,13 +378,8 @@ class _eachSceneState extends State<eachScene> {
             if (snapshot.hasData) {
               // If the Future has completed successfully, build the ListView.
               // List<IoT_Device> deviceList = snapshot.data!;
-              print('ssdsdaddddddd');
-              print(snapshot.data);
               return ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
-                  print('ssdsdaddddddd');
-                  print(snapshot.data![index].name!);
-                  print(context);
                   return ListTile(
                     tileColor: (snapshot.data![index].value == true)
                         ? AppColors.primary1
