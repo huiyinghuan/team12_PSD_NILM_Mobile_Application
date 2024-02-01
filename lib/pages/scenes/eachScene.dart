@@ -68,6 +68,7 @@ class _eachSceneState extends State<eachScene> {
         );
       });
     }
+    print("${scene.icon}");
   }
 
   Future<void> updateDevices() async {
@@ -84,7 +85,9 @@ class _eachSceneState extends State<eachScene> {
 
   void swapper(IoT_Scene scene) async {
     print("Tapping scene to toggle state\n");
+    print("Hello world");
     await scene.swapStates();
+    print("${scene.icon}");
     updateScenes();
   }
 
@@ -135,10 +138,21 @@ class _eachSceneState extends State<eachScene> {
                       Row(
                         // top row. icon and name
                         children: [
-                          const Image(
-                            // image: AssetImage('images/icons/${scene.icon}.png'), i have no idea why this wont work.
-                            image: AssetImage('images/kitchen.png'),
-                            color: AppColors.primary3,
+                          Container(
+                            width: 100,
+                            height: 100,
+                            child: Image(
+                              image: AssetImage(
+                                scene.icon != null
+                                    ? 'images/icons/${scene.icon}.png'
+                                    : 'images/kitchen.png',
+                              ),
+                              fit: BoxFit
+                                  .cover, // to prevent overflow from too large image and also fix the image size to 100 by 100 px
+                              color: scene.icon != null
+                                  ? null
+                                  : AppColors.primary3,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -226,7 +240,7 @@ class _eachSceneState extends State<eachScene> {
   //---------------------------------FIRST TAB FUNCTION---------------------------------
   // for data table edit data custom popup box
   Future<void> showCustomDialog(String title, String content, int i) async {
-    print(content);
+    // print(content);
     String new_desc = '';
     showDialog<void>(
       context: context,
@@ -278,7 +292,7 @@ class _eachSceneState extends State<eachScene> {
                     if (value.statusCode == 204) {
                       scene.description = new_desc;
                       updateScenes();
-                      print('changed description to $new_desc');
+                      // print('changed description to $new_desc');
                     }
                   });
                 }

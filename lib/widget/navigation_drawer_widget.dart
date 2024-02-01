@@ -80,35 +80,6 @@ class NavigationDrawerWidget extends StatelessWidget {
         },
       );
 
-  // void selectItem(BuildContext context, int index) {
-  //   final provider = Provider.of<NavigationProvider>(context, listen: false);
-  //   provider.currentIndex = index; // Update the current index
-
-  //   final navigateTo =
-  //       (Widget page) => Navigator.of(context).push(MaterialPageRoute(
-  //             builder: (context) => page,
-  //           ));
-
-  //   Navigator.of(context).pop(); // Close the drawer
-
-  //   switch (index) {
-  //     case 0:
-  //       navigateTo(dashboard());
-  //       break;
-  //     case 1:
-  //       navigateTo(PowerGraph());
-  //       break;
-  //     case 2:
-  //       navigateTo(Scenes());
-  //       break;
-  //     case 3:
-  //       navigateTo(UserProfile());
-  //       break;
-  //   }
-  // }
-
-  // Kept the old one above just incase it messes with other routing stuff
-  // I can't fix the dashboard navigate to dashboard portion though, but the rest are popping off to the dashboard after going back
   void selectItem(BuildContext context, int index) {
     final provider = Provider.of<NavigationProvider>(context, listen: false);
 
@@ -120,7 +91,10 @@ class NavigationDrawerWidget extends StatelessWidget {
 
     // Pop until the first route (Dashboard)
     Navigator.of(context).popUntil((route) => route.isFirst);
-
+    // Damn scuffed but it works, push everything away then pushes back the Dashboard as the first base route
+    // Otherwise the app just crashes because it pushes off the entire stack including the app lifecycle
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Dashboard()));
     // Delay the pushReplacement to ensure that the popUntil completes
     Future.delayed(Duration.zero, () {
       // Navigate to the selected page and replace the Dashboard

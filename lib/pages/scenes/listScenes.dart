@@ -49,6 +49,7 @@ class _listScenesState extends State<listScenes> {
 
   void swapper(IoT_Scene scene) async {
     print("Tapping scene to toggle state\n");
+    print("${scene.icon}");
     await scene.swapStates();
     if (auth != null) {
       setState(() {
@@ -91,7 +92,7 @@ class _listScenesState extends State<listScenes> {
   // Assuming that scenes is a List<IoT_Scene>
   List<ExpansionTile> buildExpansionTiles(List<dynamic> scenes, navigateTo) {
     return scenes.map((scene) {
-      print(scene.toString_IOT());
+      // print(scene.toString_IOT());
       dynamic enableScene = scene.enable;
       
       return ExpansionTile(

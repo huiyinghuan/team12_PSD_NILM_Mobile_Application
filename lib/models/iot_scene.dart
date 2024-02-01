@@ -36,7 +36,6 @@ class IoT_Scene {
     required this.description,
     required this.content,
     required this.wholeJSON,
-
     required this.URL,
     required this.credentials,
   });
@@ -46,13 +45,13 @@ class IoT_Scene {
     print("check current state: $enable\n");
     try {
       List<dynamic> jsonResponse = await fetchScenes(credentials, URL, id);
-      
+
       // check if online value is same as local value, if not, update local value
       var onlinevalue = jsonResponse[0]['enabled'];
       if (onlinevalue != enable) {
-        print("online enable is not same as local enable\n");
-        print("online enable: $onlinevalue\n");
-        print("do not swap state, but update the interface enable and local enable");
+        // print("online enable is not same as local enable\n");
+        // print("online enable: $onlinevalue\n");
+        // print("do not swap state, but update the interface enable and local enable");
         enable = onlinevalue;
         return;
       }
@@ -65,10 +64,8 @@ class IoT_Scene {
       print("${enable.runtimeType}");
 
       // swap the state. send request to backend
-      response_put = await putRequest(
-                            credentials, URL, id, 
-                            {'enabled': !enable}
-                          );
+      response_put =
+          await putRequest(credentials, URL, id, {'enabled': !enable});
     } catch (e) {
       print("Http put request failed\n");
       print(e);
@@ -81,28 +78,28 @@ class IoT_Scene {
   }
 
   Future<Response> activate_scenes() async {
-      late Response? response_put;
-      response_put = await http.get(
-        Uri.parse(URL + '/api/scenes/$id/execute'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-      );
-      return response_put;
+    late Response? response_put;
+    response_put = await http.get(
+      Uri.parse(URL + '/api/scenes/$id/execute'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+    );
+    return response_put;
   }
 
   Future<Response> change_description(String new_description) async {
     // fetch data and change only description
     Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
-      wholeJSON['description'] = new_description;
-      late Response? response_put;
-      response_put = await http.put(
-        Uri.parse(URL + '/api/scenes/$id'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-        body: jsonEncode(wholeJSON),
-      );
+    wholeJSON['description'] = new_description;
+    late Response? response_put;
+    response_put = await http.put(
+      Uri.parse(URL + '/api/scenes/$id'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+      body: jsonEncode(wholeJSON),
+    );
 
     return response_put;
   }
@@ -113,12 +110,12 @@ class IoT_Scene {
     List<dynamic> jsonResponses = await fetchScenes(credentials, URL, null);
     for (Map<String, dynamic> response in jsonResponses) {
       IoT_Scene new_scene;
-      if (response['type'] == 'scenario') {  
+      if (response['type'] == 'scenario') {
         new_scene = IoT_Scene(
           id: response['id'],
           name: response['name'],
           description: response['description'],
-          type:response['type'],
+          type: response['type'],
           roomid: response['roomId'],
           mode: response['automatic'],
           icon: response['icon'],
@@ -139,7 +136,7 @@ class IoT_Scene {
           id: response['id'],
           name: response['name'],
           description: response['description'],
-          type:response['type'],
+          type: response['type'],
           roomid: response['roomId'],
           mode: response['automatic'],
           icon: response['icon'],
@@ -163,7 +160,9 @@ class IoT_Scene {
   }
 
   static Future<List<dynamic>> fetchScenes(
-    String credentials, String baseURL, int? id,
+    String credentials,
+    String baseURL,
+    int? id,
   ) async {
     String url = id == null ? '$baseURL/api/scenes' : '$baseURL/api/scenes/$id';
     final response = await http.get(
@@ -173,12 +172,17 @@ class IoT_Scene {
       },
     );
 
-    List<dynamic> jsonResponses = id == null ? await jsonDecode(response.body) : [jsonDecode(response.body)];
+    List<dynamic> jsonResponses = id == null
+        ? await jsonDecode(response.body)
+        : [jsonDecode(response.body)];
     return jsonResponses;
   }
 
   static Future<Response> putRequest(
-    String credentials, String baseURL, int id, dynamic requestBody,
+    String credentials,
+    String baseURL,
+    int id,
+    dynamic requestBody,
   ) {
     final response = http.put(
       Uri.parse('$baseURL/api/scenes/$id'),
@@ -190,5 +194,4 @@ class IoT_Scene {
 
     return response;
   }
-
 }
