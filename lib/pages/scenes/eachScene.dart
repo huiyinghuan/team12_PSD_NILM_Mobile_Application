@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:l3homeation/services/userPreferences.dart';
@@ -36,6 +37,7 @@ class _eachSceneState extends State<eachScene> {
   _eachSceneState({required this.scene});
 
   late Future<List<dynamic>> scenes = Future.value([]);
+  late Future<List<IoT_Device>> devices = Future.value([]);
   String? auth;
 
   @override
@@ -44,6 +46,7 @@ class _eachSceneState extends State<eachScene> {
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateScenes();
+      updateDevices();
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -60,6 +63,18 @@ class _eachSceneState extends State<eachScene> {
     if (auth != null) {
       setState(() {
         scenes = IoT_Scene.get_scenes(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
+  }
+
+  Future<void> updateDevices() async {
+    if (auth != null) {
+      print('update devices');
+      setState(() {
+        devices = IoT_Device.get_devices(
           auth!,
           "http://l3homeation.dyndns.org:2080",
         );
@@ -111,12 +126,11 @@ class _eachSceneState extends State<eachScene> {
           drawer: NavigationDrawerWidget(),
           body: TabBarView(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-                child: SingleChildScrollView(
-                  // make scrollable below.
-                  child: Column(
-                    // column got 2 children. 1 top row and 1 bottom datatable
+              //---------------------------------FIRST TAB---------------------------------
+              SingleChildScrollView(
+                child: Padding( // make scrollable below.
+                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+                  child: Column( // column got 2 children. 1 top row and 1 bottom datatable
                     children: [
                       Row(
                         // top row. icon and name
@@ -139,12 +153,11 @@ class _eachSceneState extends State<eachScene> {
                           ),
                         ],
                       ),
-                      Padding(
-                        // padding for the datatable
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                      Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding( // padding for the datatable
+                            padding: const EdgeInsets.only(top: 20.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -189,16 +202,11 @@ class _eachSceneState extends State<eachScene> {
                   ),
                 ),
               ),
-              ListView.builder(
-                itemCount: 25,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    tileColor:
-                        index.isOdd ? AppColors.primary1 : AppColors.primary2,
-                    title: Text('Edit Devices $index'),
-                  );
-                },
-              ),
+              //---------------------------------FIRST TAB---------------------------------
+              //---------------------------------SECOND TAB---------------------------------
+              buildListView(),
+              //---------------------------------SECOND TAB---------------------------------
+              //---------------------------------THIRD TAB---------------------------------
               ListView.builder(
                 itemCount: 25,
                 itemBuilder: (BuildContext context, int index) {
@@ -209,11 +217,13 @@ class _eachSceneState extends State<eachScene> {
                   );
                 },
               ),
+              //---------------------------------THIRD TAB---------------------------------
             ],
           ),
         ));
   }
-
+  
+  //---------------------------------FIRST TAB FUNCTION---------------------------------
   // for data table edit data custom popup box
   Future<void> showCustomDialog(String title, String content, int i) async {
     print(content);
@@ -230,7 +240,9 @@ class _eachSceneState extends State<eachScene> {
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text('Original: \n$content'),
+                        child: SingleChildScrollView(
+                          child: Text('Original: \n$content'),
+                        ),
                       ),
                     ),
                     const Card(
@@ -289,7 +301,10 @@ class _eachSceneState extends State<eachScene> {
       dataRows.add(DataRow(cells: [
         DataCell(Text(tableAttributes[i])),
         DataCell(
-          Text(data_cell),
+          Text(
+            data_cell,
+            maxLines: 1,
+          ),
           onTap: () async {
             showCustomDialog('Edit ' + tableAttributes[i], data_cell, i);
           },
@@ -328,4 +343,61 @@ class _eachSceneState extends State<eachScene> {
         return 'Unknown Column';
     }
   }
+  //---------------------------------FIRST TAB FUNCTION---------------------------------
+  //####################################################################################
+  //---------------------------------SECOND TAB FUNCTION---------------------------------
+  ListView buildListView() {
+    devices.then((value) => 
+      print(value)
+    );
+    return ListView(
+      children: [
+        FutureBuilder<List<IoT_Device>>(
+          future: devices,
+          builder: (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
+            if (snapshot.hasData) {
+              // If the Future has completed successfully, build the ListView.
+              // List<IoT_Device> deviceList = snapshot.data!;
+              print('ssdsdaddddddd');
+              print(snapshot.data);
+              return ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  print('ssdsdaddddddd');
+                  print(snapshot.data![index].name!);
+                  print(context);
+                  return ListTile(
+                    tileColor: (snapshot.data![index].value == true)
+                        ? AppColors.primary1
+                        : AppColors.primary2,
+                    title: Text(snapshot.data![index].name!),
+                    trailing: Switch(
+                      value: snapshot.data![index].value,
+                      onChanged: (value) {
+                        setState(() {
+                          snapshot.data![index].value = value;
+                          snapshot.data![index].swapStates();
+                        });
+                      },
+                    ),
+                  );
+                },
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return Text(
+                'Failed to load devices',
+                style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  //---------------------------------SECOND TAB FUNCTION---------------------------------
+  //####################################################################################  
+  //---------------------------------THIRD TAB FUNCTION---------------------------------
+  //---------------------------------THIRD TAB FUNCTION---------------------------------
 }

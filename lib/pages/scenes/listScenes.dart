@@ -82,7 +82,7 @@ class _listScenesState extends State<listScenes> {
       drawer: NavigationDrawerWidget(),
       body: ListView(
         children: <Widget>[
-          _buildSceneList(navigateTo),
+          _buildSceneList(navigateTo), //passing the navigateTo function to buildExpansionTiles
         ],
       ),
     );
@@ -93,7 +93,7 @@ class _listScenesState extends State<listScenes> {
     return scenes.map((scene) {
       print(scene.toString_IOT());
       dynamic enableScene = scene.enable;
-
+      
       return ExpansionTile(
         title: Text(
           scene.name, // Replace with your desired title text
@@ -198,7 +198,6 @@ class _listScenesState extends State<listScenes> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const SizedBox(height: 8),
                 Column(
                   children: buildExpansionTiles(snapshot.data!, navigateTo),
                 ),

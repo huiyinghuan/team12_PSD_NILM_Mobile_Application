@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.poppinsTextTheme(textTheme),
             // Other theme properties...
           ),
-          home: const AuthPage(),
-          // home: listScenes(),
+          // home: const AuthPage(),
+          home: listScenes(),
         ),
       );
 }
