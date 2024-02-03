@@ -79,7 +79,9 @@ class _eachSceneState extends State<eachScene> {
           "http://l3homeation.dyndns.org:2080",
         );
       });
-    };
+    }
+    ;
+    print(devices);
   }
 
   void swapper(IoT_Scene scene) async {
@@ -130,9 +132,11 @@ class _eachSceneState extends State<eachScene> {
             children: <Widget>[
               //---------------------------------FIRST TAB---------------------------------
               SingleChildScrollView(
-                child: Padding( // make scrollable below.
+                child: Padding(
+                  // make scrollable below.
                   padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
-                  child: Column( // column got 2 children. 1 top row and 1 bottom datatable
+                  child: Column(
+                    // column got 2 children. 1 top row and 1 bottom datatable
                     children: [
                       Row(
                         // top row. icon and name
@@ -169,7 +173,8 @@ class _eachSceneState extends State<eachScene> {
                       Center(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          child: Padding( // padding for the datatable
+                          child: Padding(
+                            // padding for the datatable
                             padding: const EdgeInsets.only(top: 20.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -217,17 +222,17 @@ class _eachSceneState extends State<eachScene> {
               ),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              //buildListView(),
-              ListView.builder(
-                itemCount: 25,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    tileColor:
-                        index.isOdd ? AppColors.primary1 : AppColors.primary2,
-                    title: Text('Edit Basic Config $index'),
-                  );
-                },
-              ),
+              buildListView(),
+              // ListView.builder(
+              //   itemCount: 25,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return ListTile(
+              //       tileColor:
+              //           index.isOdd ? AppColors.primary1 : AppColors.primary2,
+              //       title: Text('Edit Basic Config $index'),
+              //     );
+              //   },
+              // ),
               //---------------------------------SECOND TAB---------------------------------
               //---------------------------------THIRD TAB---------------------------------
               ListView.builder(
@@ -245,7 +250,7 @@ class _eachSceneState extends State<eachScene> {
           ),
         ));
   }
-  
+
   //---------------------------------FIRST TAB FUNCTION---------------------------------
   // for data table edit data custom popup box
   Future<void> showCustomDialog(String title, String content, int i) async {
@@ -366,19 +371,25 @@ class _eachSceneState extends State<eachScene> {
         return 'Unknown Column';
     }
   }
+
   //---------------------------------FIRST TAB FUNCTION---------------------------------
   //####################################################################################
   //---------------------------------SECOND TAB FUNCTION---------------------------------
+
   ListView buildListView() {
     return ListView(
       children: [
         FutureBuilder<List<IoT_Device>>(
           future: devices,
-          builder: (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
             if (snapshot.hasData) {
+              print(devices);
               // If the Future has completed successfully, build the ListView.
               // List<IoT_Device> deviceList = snapshot.data!;
               return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     tileColor: (snapshot.data![index].value == true)
@@ -386,10 +397,10 @@ class _eachSceneState extends State<eachScene> {
                         : AppColors.primary2,
                     title: Text(snapshot.data![index].name!),
                     trailing: Switch(
-                      value: snapshot.data![index].value,
+                      value: assignValue(snapshot.data![index]),
                       onChanged: (value) {
                         setState(() {
-                          snapshot.data![index].value = value;
+                          snapshot.data![index].value is int ? value : 0;
                           snapshot.data![index].swapStates();
                         });
                       },
@@ -397,12 +408,14 @@ class _eachSceneState extends State<eachScene> {
                   );
                 },
               );
+              // return Text("hello world");
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
               return Text(
                 'Failed to load devices',
-                style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+                style:
+                    GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
               );
             }
           },
@@ -411,8 +424,15 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
+  bool assignValue(IoT_Device device) {
+    if (device.value is int) {
+      return device.value != 0 ? true : false;
+    }
+    return device.value ? true : false;
+  }
+
   //---------------------------------SECOND TAB FUNCTION---------------------------------
-  //####################################################################################  
+  //####################################################################################
   //---------------------------------THIRD TAB FUNCTION---------------------------------
   //---------------------------------THIRD TAB FUNCTION---------------------------------
 }
