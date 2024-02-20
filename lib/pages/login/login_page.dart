@@ -107,13 +107,48 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 35),
 
                     // Email field
-                    CustomTextField(
-                        controller: emailController,
-                        hintText: 'Email',
-                        obscureText: false,
-                        autofillHints: [AutofillHints.email]),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30),
+                          child: Text(
+                            'Email', // Your label text
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        CustomTextField(
+                          controller: emailController,
+                          hintText: 'Email',
+                          obscureText: false,
+                          autofillHints: [AutofillHints.email],
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 187, 187, 187)),
+                                borderRadius: BorderRadius.circular(20)),
+                            fillColor: Color.fromARGB(255, 236, 236, 236),
+                            filled: true,
+                            hintText: 'Email',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
-                    const SizedBox(height: 55),
+                    const SizedBox(height: 35),
 
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
