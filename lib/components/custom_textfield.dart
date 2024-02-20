@@ -5,14 +5,17 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final Iterable<String>? autofillHints;
+  final InputDecoration? decoration;
 
   const CustomTextField({
-    super.key,
+    Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
     this.autofillHints,
-  });
+    this.decoration,
+  }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         obscureText: obscureText,
         autofillHints: autofillHints,
-        decoration: InputDecoration(
+        decoration: decoration ?? InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),
