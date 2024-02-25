@@ -84,30 +84,64 @@ class IoT_Device {
 
   static Future<List<IoT_Device>> get_devices(
       String credentials, String URL) async {
-    List<IoT_Device> devices = [];
-    final response = await http.get(
-      Uri.parse('$URL/api/devices/'),
-      // Send authorization headers to the backend.
-      headers: {
-        HttpHeaders.authorizationHeader: 'Basic $credentials',
-      },
-    );
-    List<dynamic> jsonResponses = jsonDecode(response.body);
-    for (Map<String, dynamic> response in jsonResponses) {
-      if (response['properties'].containsKey('value') &&
-          response['visible'] == true) {
-        IoT_Device new_device = IoT_Device(
-          id: response['id'],
-          URL: URL,
-          credentials: credentials,
-          name: response['name'],
-          value: response['properties']['value'],
-          propertiesMap: response['properties'],
+        List<IoT_Device> devices = [];
+        final response = await http.get(
+          Uri.parse('$URL/api/devices/'),
+          // Send authorization headers to the backend.
+          headers: {
+            HttpHeaders.authorizationHeader: 'Basic $credentials',
+          },
         );
-        devices.add(new_device);
+        List<dynamic> jsonResponses = jsonDecode(response.body);
+        for (Map<String, dynamic> response in jsonResponses) {
+          if (response['properties'].containsKey('value') &&
+              response['visible'] == true) {
+            IoT_Device new_device = IoT_Device(
+              id: response['id'],
+              URL: URL,
+              credentials: credentials,
+              name: response['name'],
+              value: response['properties']['value'],
+              propertiesMap: response['properties'],
+            );
+            devices.add(new_device);
+          }
+        }
+        return devices;
+  }
+
+  static Future<List<IoT_Device>> get_devices_by_ids(
+      String credentials, String URL, List<int?> ids) async {
+    List<IoT_Device> devices = [];
+    if (ids.isEmpty) {
+      return devices;
+    } else {
+      for (int? id in ids) {
+        if (id != null) {
+          final response = await http.get(
+            Uri.parse('$URL/api/devices/$id'),
+            // Send authorization headers to the backend.
+            headers: {
+              HttpHeaders.authorizationHeader: 'Basic $credentials',
+            },
+          );
+          dynamic jsonResponses = jsonDecode(response.body);
+          if (jsonResponses['properties'].containsKey('value') &&
+              jsonResponses['visible'] == true) {
+            IoT_Device new_device = IoT_Device(
+              id: jsonResponses['id'],
+              URL: URL,
+              credentials: credentials,
+              name: jsonResponses['name'],
+              value: jsonResponses['properties']['value'],
+              propertiesMap: jsonResponses['properties'],
+            );
+            devices.add(new_device);
+          }
+        }
       }
-    }
     return devices;
+    }
   }
 
   static Future<List<dynamic>> fetchDevices(

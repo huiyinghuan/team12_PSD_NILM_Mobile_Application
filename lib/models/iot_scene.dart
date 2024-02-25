@@ -4,6 +4,8 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:l3homeation/models/iot_device.dart';
+
 class IoT_Scene {
   String? name;
   String? description;
@@ -104,6 +106,32 @@ class IoT_Scene {
     return response_put;
   }
 
+  Future<Response> change_action_state(String action_state, int index) async {
+    // fetch data and change only description
+    
+    Map<String, dynamic> jsonData = jsonDecode(wholeJSON);
+    // Modify the specific value in the JSON structure
+    List<dynamic> content = jsonDecode(jsonData['content']);
+    Map<String, dynamic> action = content[0]['actions'][index];
+    action['action'] = action_state;
+
+    content[0]['actions'][index] = action;
+    jsonData['content'] = jsonEncode(content);
+    // Convert the modified JSON back to a string
+    String updatedJSON = jsonEncode(jsonData);
+
+    late Response? response_put;
+    response_put = await http.put(
+      Uri.parse(URL + '/api/scenes/$id'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+      body: updatedJSON,
+    );
+    print("response_put: ${response_put.statusCode}");
+    return response_put;
+  }
+
   static Future<List<IoT_Scene>> get_scenes(
       String credentials, String URL) async {
     List<IoT_Scene> scenes = [];
@@ -164,7 +192,7 @@ class IoT_Scene {
     String baseURL,
     int? id,
   ) async {
-    String url = id == null ? '$baseURL/api/scenes' : '$baseURL/api/scenes/$id';
+    String url = id == null ? '$baseURL/api/scenes?alexaProhibited=true' : '$baseURL/api/scenes/$id';
     final response = await http.get(
       Uri.parse(url),
       headers: {

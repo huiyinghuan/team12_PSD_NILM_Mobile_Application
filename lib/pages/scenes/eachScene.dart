@@ -37,7 +37,8 @@ class _eachSceneState extends State<eachScene> {
   _eachSceneState({required this.scene});
 
   late Future<List<dynamic>> scenes = Future.value([]);
-  Future<List<IoT_Device>> devices = Future.value([]);
+  late Future<List<IoT_Device>> devices = Future.value([]);
+  bool isDataLoaded = false;
   String? auth;
 
   @override
@@ -46,7 +47,7 @@ class _eachSceneState extends State<eachScene> {
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateScenes();
-      updateDevices();
+      // updateDevices();
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -71,16 +72,16 @@ class _eachSceneState extends State<eachScene> {
     print("${scene.icon}");
   }
 
-  Future<void> updateDevices() async {
+  Future<void> updateDevices(List<int?> id) async {
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.get_devices_by_ids(
           auth!,
           "http://l3homeation.dyndns.org:2080",
+          id,
         );
       });
     }
-    ;
     print(devices);
   }
 
@@ -92,8 +93,21 @@ class _eachSceneState extends State<eachScene> {
     updateScenes();
   }
 
+  // Function to forcefully refresh the screen
+  void refreshScreen() {
+    setState(() {
+      // Set some state that might have changed
+      isDataLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+    final navigateTo =
+        (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => page,
+            ));
     return DefaultTabController(
         initialIndex: 1,
         length: 3,
@@ -222,7 +236,7 @@ class _eachSceneState extends State<eachScene> {
               ),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              buildListView(),
+              buildListView(navigateTo),
               // ListView.builder(
               //   itemCount: 25,
               //   itemBuilder: (BuildContext context, int index) {
@@ -376,33 +390,77 @@ class _eachSceneState extends State<eachScene> {
   //####################################################################################
   //---------------------------------SECOND TAB FUNCTION---------------------------------
 
-  ListView buildListView() {
+  ListView buildListView(navigateTo) {
+    List<int> collatedDeviceIds = [];
+    List actions = jsonDecode(scene.content)[0]['actions'];
+    for (var action in actions) {
+      if (action['group'] == 'device') {
+        collatedDeviceIds.add(action['id']);
+      }
+    }
+    updateDevices(collatedDeviceIds);
     return ListView(
       children: [
+        Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+            'Do the following:',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              color: Colors.grey[600],
+            ),
+            )
+        ),
         FutureBuilder<List<IoT_Device>>(
-          future: devices,
+          future: devices, // listing of all devices for that scene 
           builder:
               (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
             if (snapshot.hasData) {
-              print(devices);
               // If the Future has completed successfully, build the ListView.
               // List<IoT_Device> deviceList = snapshot.data!;
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (BuildContext context, int index) {
+                  // dict to change state. turnOff : turnOn, close : open, unsecure : secure
+                  Map changestate = {
+                    'turnOff': 'turnOn',
+                    'close': 'open',
+                    'unsecure': 'secure',
+                    'turnOn': 'turnOff',
+                    'open': 'close',
+                    'secure': 'unsecure'
+                  };
+                  late bool Offoron = 
+                    (actions[index]['action']) == 'turnOff' || 
+                    (actions[index]['action']) == 'close' || 
+                    (actions[index]['action']) == 'unsecure' ? false : true;
                   return ListTile(
-                    tileColor: (snapshot.data![index].value == true)
+                    tileColor: (index % 2 == 1)
                         ? AppColors.primary1
                         : AppColors.primary2,
                     title: Text(snapshot.data![index].name!),
                     trailing: Switch(
-                      value: assignValue(snapshot.data![index]),
-                      onChanged: (value) {
+                      value: Offoron,
+                      onChanged: (Offoron) {
                         setState(() {
-                          snapshot.data![index].value is int ? value : 0;
-                          snapshot.data![index].swapStates();
+                          Future<Response> changeResponse =
+                            scene.change_action_state(
+                              changestate[actions[index]['action']],
+                              index,
+                            );
+                            changeResponse.then((value) {
+                            if (value.statusCode == 204) {
+                              Offoron = !Offoron;
+                              actions[index]['action'] = changestate[actions[index]['action']];
+                              updateScenes();
+                              updateDevices(collatedDeviceIds);
+                              // navigateTo(eachScene(scene: scene));
+                              // print('changed description to $new_desc');
+                            }
+                          });
                         });
+                        // updateDevices(collatedDeviceIds);
                       },
                     ),
                   );
