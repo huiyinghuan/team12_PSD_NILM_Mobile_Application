@@ -109,16 +109,25 @@ class IoT_Scene {
   Future<Response> change_action_state(String action_state, int index) async {
     // fetch data and change only description
     
-    Map<String, dynamic> jsonData = jsonDecode(wholeJSON);
-    // Modify the specific value in the JSON structure
-    List<dynamic> content = jsonDecode(jsonData['content']);
-    Map<String, dynamic> action = content[0]['actions'][index];
-    action['action'] = action_state;
 
-    content[0]['actions'][index] = action;
-    jsonData['content'] = jsonEncode(content);
+    // content updates
+    List jsonData = jsonDecode(content);
+    Map<String, dynamic> action = jsonData[0]['actions'][index];
+    action['action'] = action_state;
+    print('action_state: $content');
+    jsonData[0]['actions'][index] = action;
+    content = jsonEncode(jsonData);
+    print('action_state: $content');
+
+    // wholeJSON updates
+    Map<String, dynamic> jsonData2 = jsonDecode(wholeJSON);
+    List<dynamic> content2 = jsonDecode(jsonData2['content']);
+    Map<String, dynamic> action2 = content2[0]['actions'][index];
+    action2['action'] = action_state;
+    content2[0]['actions'][index] = action2;
+    jsonData2['content'] = jsonEncode(content2);
     // Convert the modified JSON back to a string
-    String updatedJSON = jsonEncode(jsonData);
+    String updatedJSON = jsonEncode(jsonData2);
 
     late Response? response_put;
     response_put = await http.put(

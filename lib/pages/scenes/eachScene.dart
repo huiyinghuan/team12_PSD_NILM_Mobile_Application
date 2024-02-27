@@ -22,6 +22,8 @@ class eachScene extends StatefulWidget {
 
 class _eachSceneState extends State<eachScene> {
   final dynamic scene;
+  List<bool> isAllowed = [];
+
   List<String> tableAttributes = [
     'Description',
     'Type',
@@ -431,18 +433,19 @@ class _eachSceneState extends State<eachScene> {
                     'open': 'close',
                     'secure': 'unsecure'
                   };
-                  late bool Offoron = 
+                  bool Offoron = 
                     (actions[index]['action']) == 'turnOff' || 
                     (actions[index]['action']) == 'close' || 
                     (actions[index]['action']) == 'unsecure' ? false : true;
+                  isAllowed.add(Offoron);
                   return ListTile(
                     tileColor: (index % 2 == 1)
                         ? AppColors.primary1
                         : AppColors.primary2,
                     title: Text(snapshot.data![index].name!),
                     trailing: Switch(
-                      value: Offoron,
-                      onChanged: (Offoron) {
+                      value: isAllowed[index],
+                      onChanged: (value) {
                         setState(() {
                           Future<Response> changeResponse =
                             scene.change_action_state(
@@ -451,10 +454,8 @@ class _eachSceneState extends State<eachScene> {
                             );
                             changeResponse.then((value) {
                             if (value.statusCode == 204) {
-                              Offoron = !Offoron;
-                              actions[index]['action'] = changestate[actions[index]['action']];
+                              isAllowed[index] = !isAllowed[index];
                               updateScenes();
-                              updateDevices(collatedDeviceIds);
                               // navigateTo(eachScene(scene: scene));
                               // print('changed description to $new_desc');
                             }
