@@ -98,6 +98,17 @@ class _eachSceneState extends State<eachScene> {
     print(devices_in_scene);
   }
 
+  Future<void> removeDeviceFromScene(int index) async {
+    if (auth != null) {
+      setState(() {
+        devices_in_scene = devices_in_scene.then((existingDevices) {
+          // Remove the device at index from existingDevices
+          return existingDevices..removeAt(index);
+        });
+      });
+    }
+  }
+
   Future<void> addSceneActionDevices(int? id) async {
     if (auth != null) {
       try {
@@ -612,13 +623,58 @@ class _eachSceneState extends State<eachScene> {
           ? AppColors.primary1
           : AppColors.primary2,
       title: Text(snapshot.data![index].name!),
+      onLongPress: () => {
+        if (snapshot.data!.length > 1 && index != 0 ) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Remove Device'),
+                content: Text('Are you sure you want to remove ${snapshot.data![index].name}?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        Future<Response> changeResponse = scene.remove_devices_from_action(index);
+                        changeResponse.then((value) {
+                          if (value.statusCode == 204) {
+                            updateScenes();
+                            isAllowed_Scene_Actions.removeAt(index);
+                            removeDeviceFromScene(index);
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    child: const Text('Yes'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('No'),
+                  ),
+                ],
+              );
+            },
+          ),
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              if (index == 0){
+                return customDialog("First Main device is not able to remove from the scene.");
+              } else {
+                return customDialog("Cannot remove the last device from the scene.");
+              }
+            },
+          ),
+        }
+      },
       trailing: Switch(
         value: isAllowed_Scene_Actions[index],
         onChanged: (value) {
           setState(() {
-            print('Tapping device to toggle state\n');
-            print('beforestate: ${actions[index]['action']}');
-            print('afterstate: ${stateToChangeTo[actions[index]['action']]}');
             Future<Response> changeResponse = scene.change_action_state(
               stateToChangeTo[actions[index]['action']],
               index,
@@ -635,6 +691,20 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
+  AlertDialog customDialog(String customText) {
+    return AlertDialog(
+      title: Text('Device not Removed'),
+      content: Text(customText),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('OK'),
+        ),
+      ],
+    );
+  }
   //---------------------------------SECOND TAB FUNCTION---------------------------------
   //####################################################################################
   //---------------------------------THIRD TAB FUNCTION---------------------------------
@@ -654,3 +724,4 @@ class _eachSceneState extends State<eachScene> {
 
   //---------------------------------THIRD TAB FUNCTION---------------------------------
 }
+

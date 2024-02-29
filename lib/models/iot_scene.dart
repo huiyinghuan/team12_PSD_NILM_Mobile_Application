@@ -48,12 +48,8 @@ class IoT_Scene {
     try {
       List<dynamic> jsonResponse = await fetchScenes(credentials, URL, id);
 
-      // check if online value is same as local value, if not, update local value
       var onlinevalue = jsonResponse[0]['enabled'];
       if (onlinevalue != enable) {
-        // print("online enable is not same as local enable\n");
-        // print("online enable: $onlinevalue\n");
-        // print("do not swap state, but update the interface enable and local enable");
         enable = onlinevalue;
         return;
       }
@@ -63,9 +59,6 @@ class IoT_Scene {
     // ignore: unused_local_variable
     late Response? response_put;
     try {
-      print("${enable.runtimeType}");
-
-      // swap the state. send request to backend
       response_put =
           await putRequest(credentials, URL, id, {'enabled': !enable});
     } catch (e) {
@@ -90,33 +83,33 @@ class IoT_Scene {
     return response_put;
   }
 
-  Future<Response> change_description(String new_description) async {
-    // fetch data and change only description
-    Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
-    wholeJSON['description'] = new_description;
-    late Response? response_put;
+  Future<Response> putmethod(String updatedJSON) async {
+    late Response response_put;
     response_put = await http.put(
       Uri.parse(URL + '/api/scenes/$id'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
-      body: jsonEncode(wholeJSON),
+      body: updatedJSON,
     );
+    return response_put;
+  }
 
+  Future<Response> change_description(String new_description) async {
+    // fetch data and change only description
+    Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
+    wholeJSON['description'] = new_description;
+    Response response_put = await putmethod(jsonEncode(wholeJSON));
     return response_put;
   }
 
   Future<Response> change_action_state(String action_state, int index) async {
-    // fetch data and change only description
     // content updates
-
     List jsonData = jsonDecode(content);
     Map<String, dynamic> action = jsonData[0]['actions'][index];
     action['action'] = action_state;
-    print('action_state: $content');
     jsonData[0]['actions'][index] = action;
     content = jsonEncode(jsonData);
-    print('action_state: $content');
 
     // wholeJSON updates
     Map<String, dynamic> jsonData2 = jsonDecode(wholeJSON);
@@ -129,36 +122,27 @@ class IoT_Scene {
     String updatedJSON = jsonEncode(jsonData2);
     wholeJSON = updatedJSON;
 
-    late Response? response_put;
-    response_put = await http.put(
-      Uri.parse(URL + '/api/scenes/$id'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Basic $credentials',
-      },
-      body: updatedJSON,
-    );
-    print("response_put: ${response_put.statusCode}");
+    Response response_put = await putmethod(updatedJSON);
     return response_put;
   }
 
   Future<Response> add_devices_into_action(IoT_Device new_device) async {// fetch data and change only description
-  
-    print('in add_devices_into_action');
     var dict = {
       "group": "device",
       "type": "single",
       "id": new_device.id,
-      "action": (new_device.runtimeType == bool) ? "Close" : "TurnOff",
+      "action": (new_device.runtimeType == bool) ? "close" : "turnOff",
       "args": [],
     };
     // content updates
     var jsonData = jsonDecode(content);
-    var oldDataAction = (jsonData[0])['actions']; // problem
+    var oldDataAction = (jsonData[0])['actions'];
     oldDataAction ??= []; 
     oldDataAction.add(dict); // entered at the last row of data
     (jsonData[0])['actions'] = oldDataAction;
-    content = jsonEncode(jsonData);
+    content = jsonEncode(jsonData); // put it back
 
+    // wholeJSON updates
     var jsonData2 = jsonDecode(wholeJSON);
     var content2 = jsonDecode(jsonData2['content']);
     var oldDataAction2 = content2[0]['actions'];
@@ -172,18 +156,30 @@ class IoT_Scene {
     String updatedJSON = jsonEncode(jsonData2);
     wholeJSON = updatedJSON;
 
-    print('in half of add_devices_into_action');
-    print('updatedJSON: $updatedJSON');
+    Response response_put = await putmethod(updatedJSON);
+    return response_put;
+  }
 
-    late Response? response_put;
-    response_put = await http.put(
-      Uri.parse(URL + '/api/scenes/$id'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Basic $credentials',
-      },
-      body: updatedJSON,
-    );
-    print("response_put: ${response_put.statusCode}");
+  Future<Response> remove_devices_from_action(int index) async {
+    // content updates
+    List jsonData = jsonDecode(content);
+    List<dynamic> oldDataAction = jsonData[0]['actions'];
+    oldDataAction.removeAt(index);
+    jsonData[0]['actions'] = oldDataAction;
+    content = jsonEncode(jsonData);
+
+    // wholeJSON updates
+    Map<String, dynamic> jsonData2 = jsonDecode(wholeJSON);
+    List<dynamic> content2 = jsonDecode(jsonData2['content']);
+    List<dynamic> oldDataAction2 = content2[0]['actions'];
+    oldDataAction2.removeAt(index);
+    content2[0]['actions'] = oldDataAction2;
+    jsonData2['content'] = jsonEncode(content2);
+    // Convert the modified JSON back to a string
+    String updatedJSON = jsonEncode(jsonData2);
+    wholeJSON = updatedJSON;
+
+    Response response_put = await putmethod(updatedJSON);
     return response_put;
   }
 
