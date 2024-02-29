@@ -39,6 +39,7 @@ class _eachSceneState extends State<eachScene> {
   _eachSceneState({required this.scene});
 
   late Future<List<dynamic>> scenes = Future.value([]);
+  Future<List<IoT_Device>> devices = Future.value([]);
   late Future<List<IoT_Device>> devices_in_scene = Future.value([]);
   String? auth;
 
@@ -48,7 +49,7 @@ class _eachSceneState extends State<eachScene> {
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateScenes();
-      // updateDevices();
+      updateDevices();
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -73,7 +74,18 @@ class _eachSceneState extends State<eachScene> {
     print("${scene.icon}");
   }
 
-  Future<void> updateDevices(List<int?> id) async {
+  Future<void> updateDevices() async {
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
+  }
+
+  Future<void> updateSceneActionDevices(List<int?> id) async {
     if (auth != null) {
       setState(() {
         devices_in_scene = IoT_Device.get_devices_by_ids(
@@ -86,6 +98,28 @@ class _eachSceneState extends State<eachScene> {
     print(devices_in_scene);
   }
 
+  Future<void> addSceneActionDevices(int? id) async {
+    if (auth != null) {
+      try {
+        // Assuming get_devices_by_ids is an async function that returns List<IoT_Device>
+        var moreDevices = await IoT_Device.get_devices_by_ids(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+          [id],
+        );
+
+        setState(() {
+          devices_in_scene = devices_in_scene.then((existingDevices) {
+            // Combine existing devices with moreDevices
+            return [...existingDevices, ...moreDevices];
+          });
+        });
+      } catch (error) {
+        // Handle any errors from IoT_Device.get_devices_by_ids
+        print("Error fetching devices: $error");
+      }
+    }
+  }
   void swapper(IoT_Scene scene) async {
     print("Tapping scene to toggle state\n");
     print("Hello world");
@@ -144,19 +178,10 @@ class _eachSceneState extends State<eachScene> {
               buildFirstTab(),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              buildSecondTab(navigateTo),
+              buildSecondTab(),
               //---------------------------------SECOND TAB---------------------------------
               //---------------------------------THIRD TAB---------------------------------
-              ListView.builder(
-                itemCount: 25,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    tileColor:
-                        index.isOdd ? AppColors.primary1 : AppColors.primary2,
-                    title: Text('Edit Basic Config $index'),
-                  );
-                },
-              ),
+              buildThirdTab(),
               //---------------------------------THIRD TAB---------------------------------
             ],
           ),
@@ -388,15 +413,15 @@ class _eachSceneState extends State<eachScene> {
   //####################################################################################
   //---------------------------------SECOND TAB FUNCTION---------------------------------
 
-  ListView buildSecondTab(navigateTo) {
-    List<int> collatedDeviceIds = [];
+  ListView buildSecondTab() {
+  List<int> collatedDeviceIds = [];
     List actions = jsonDecode(scene.content)[0]['actions'];
     for (var action in actions) {
       if (action['group'] == 'device') {
         collatedDeviceIds.add(action['id']);
       }
     }
-    updateDevices(collatedDeviceIds);
+    updateSceneActionDevices(collatedDeviceIds);
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
@@ -454,28 +479,106 @@ class _eachSceneState extends State<eachScene> {
   }
 
   ListTile Body_addDeviceRow(int index) {
+    var selectedDeviceInDropdown;
+    late var isEmpty = false;
     return ListTile(
-      tileColor: (index % 2 == 1)
-          ? AppColors.primary1
-          : AppColors.primary2,
-      title: const Text('Add New Device'), // Customize the text as needed
+      tileColor: AppColors.primary5,
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Add New Device',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(width: 8), // Add some spacing between the text and icon
+          Icon(Icons.add_circle_rounded, color: AppColors.secondary5),
+        ],
+      ),
       onTap: () {
         // Show the prompt dialog
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Add New Device'), // Customize the dialog title
-              content: const Text('Prompt content'), // Customize the dialog content
+              title: const Text('Add New Device'),
+              content: FutureBuilder<List<IoT_Device>>(
+                future: devices,
+                builder: (context, devicesSnapshot) {
+                  if (devicesSnapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (devicesSnapshot.hasError) {
+                    return const Text('Error loading devices');
+                  } else {
+                    return FutureBuilder<List<IoT_Device>>(
+                      future: devices_in_scene,
+                      builder: (context, sceneSnapshot) {
+                        if (sceneSnapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (sceneSnapshot.hasError) {
+                          return const Text('Error loading scene devices');
+                        } else {
+                          // Filter out devices that are already in scene
+                          final List<IoT_Device> filteredDevices = devicesSnapshot.data!
+                              .where((device) =>
+                                  !sceneSnapshot.data!.any((sceneDevice) => sceneDevice.id == device.id))
+                              .toList();
+
+                          if (filteredDevices.isEmpty) {
+                            isEmpty = true;
+                            return const Center(
+                              heightFactor: 3,
+                              child: Text(
+                                'No devices left to add',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            );
+                          }
+
+                          return DropdownButtonFormField<IoT_Device>(
+                            hint: const Text('Select a device'),
+                            items: filteredDevices.map((device) {
+                              return DropdownMenuItem<IoT_Device>(
+                                value: device,
+                                child: Text(device.name!),
+                              );
+                            }).toList(),
+                            onChanged: (IoT_Device? selectedDevice) {
+                              // Handle selected device
+                              selectedDeviceInDropdown = selectedDevice;
+                              print("Selected Device: ${selectedDevice?.name}");
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }
+                },
+              ),
               actions: [
-                TextButton(
-                  onPressed: () {
-                    // Handle the button click
-                    // Perform the necessary actions
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'), // Customize the button text
-                ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        if (selectedDeviceInDropdown != null) {
+                          // Add the selected device to the scene
+                          Future<Response> changeResponse = scene.add_devices_into_action(selectedDeviceInDropdown);
+                          changeResponse.then((value) {
+                            if (value.statusCode == 204) {
+                              updateScenes();
+                              Navigator.pop(context); // Close the dialog
+                              isAllowed_Scene_Actions.add(false);
+                              addSceneActionDevices(selectedDeviceInDropdown.id);
+                            }
+                          });
+                        } else {
+                          Navigator.pop(context); // Close the dialog
+                        }
+                      });
+                    },
+                    child: (isEmpty) ? const Text('Dismiss') : const Text('Add')
+                  ),
               ],
             );
           },
@@ -487,13 +590,17 @@ class _eachSceneState extends State<eachScene> {
   ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Device>> snapshot) {
     Map stateToChangeTo = {
       'turnOff': 'turnOn',
+      'TurnOff': 'TurnOn',
       'close': 'open',
       'unsecure': 'secure',
       'turnOn': 'turnOff',
+      'TurnOn': 'TurnOff',
       'open': 'close',
-      'secure': 'unsecure'
+      'secure': 'unsecure',
+      null: 'turnOff'
     };
     bool Offoron = (actions[index]['action']) == 'turnOff' ||
+        (actions[index]['action']) == 'TurnOff' ||
         (actions[index]['action']) == 'close' ||
         (actions[index]['action']) == 'unsecure'
         ? false
@@ -509,6 +616,9 @@ class _eachSceneState extends State<eachScene> {
         value: isAllowed_Scene_Actions[index],
         onChanged: (value) {
           setState(() {
+            print('Tapping device to toggle state\n');
+            print('beforestate: ${actions[index]['action']}');
+            print('afterstate: ${stateToChangeTo[actions[index]['action']]}');
             Future<Response> changeResponse = scene.change_action_state(
               stateToChangeTo[actions[index]['action']],
               index,
@@ -528,5 +638,19 @@ class _eachSceneState extends State<eachScene> {
   //---------------------------------SECOND TAB FUNCTION---------------------------------
   //####################################################################################
   //---------------------------------THIRD TAB FUNCTION---------------------------------
+
+  ListView buildThirdTab(){
+    return ListView.builder(
+      itemCount: 25,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+          tileColor:
+              index.isOdd ? AppColors.primary1 : AppColors.primary2,
+          title: Text('Edit Basic Config $index'),
+        );
+      },
+    );
+  }
+
   //---------------------------------THIRD TAB FUNCTION---------------------------------
 }

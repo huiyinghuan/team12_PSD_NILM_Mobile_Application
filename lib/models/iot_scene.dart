@@ -108,9 +108,8 @@ class IoT_Scene {
 
   Future<Response> change_action_state(String action_state, int index) async {
     // fetch data and change only description
-    
-
     // content updates
+
     List jsonData = jsonDecode(content);
     Map<String, dynamic> action = jsonData[0]['actions'][index];
     action['action'] = action_state;
@@ -128,6 +127,53 @@ class IoT_Scene {
     jsonData2['content'] = jsonEncode(content2);
     // Convert the modified JSON back to a string
     String updatedJSON = jsonEncode(jsonData2);
+    wholeJSON = updatedJSON;
+
+    late Response? response_put;
+    response_put = await http.put(
+      Uri.parse(URL + '/api/scenes/$id'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+      body: updatedJSON,
+    );
+    print("response_put: ${response_put.statusCode}");
+    return response_put;
+  }
+
+  Future<Response> add_devices_into_action(IoT_Device new_device) async {// fetch data and change only description
+  
+    print('in add_devices_into_action');
+    var dict = {
+      "group": "device",
+      "type": "single",
+      "id": new_device.id,
+      "action": (new_device.runtimeType == bool) ? "Close" : "TurnOff",
+      "args": [],
+    };
+    // content updates
+    var jsonData = jsonDecode(content);
+    var oldDataAction = (jsonData[0])['actions']; // problem
+    oldDataAction ??= []; 
+    oldDataAction.add(dict); // entered at the last row of data
+    (jsonData[0])['actions'] = oldDataAction;
+    content = jsonEncode(jsonData);
+
+    var jsonData2 = jsonDecode(wholeJSON);
+    var content2 = jsonDecode(jsonData2['content']);
+    var oldDataAction2 = content2[0]['actions'];
+    oldDataAction2 ??= []; 
+    oldDataAction2.add(dict); // entered at the last row of data
+
+    // put it back
+    content2[0]['actions'] = oldDataAction2;
+    jsonData2['content'] = jsonEncode(content2);
+    // Convert the modified JSON back to a string
+    String updatedJSON = jsonEncode(jsonData2);
+    wholeJSON = updatedJSON;
+
+    print('in half of add_devices_into_action');
+    print('updatedJSON: $updatedJSON');
 
     late Response? response_put;
     response_put = await http.put(
