@@ -85,6 +85,60 @@ class _listScenesState extends State<listScenes> {
           _buildSceneList(navigateTo), //passing the navigateTo function to buildExpansionTiles
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              String name = '';
+              String description = '';
+
+              return AlertDialog(
+                title: Text('New Scene'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      onChanged: (value) {
+                        name = value;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                      ),
+                    ),
+                    TextField(
+                      onChanged: (value) {
+                        description = value;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                      ),
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      // Add logic to save the new scene with the provided name and description
+                      print('Name: $name, Description: $description');
+                      // scene.post_new_scene(name, description);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Save'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 
@@ -217,5 +271,5 @@ class _listScenesState extends State<listScenes> {
       ],
     );
   }
-
 }
+

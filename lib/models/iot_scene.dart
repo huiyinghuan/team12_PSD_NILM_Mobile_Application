@@ -183,6 +183,41 @@ class IoT_Scene {
     return response_put;
   }
 
+  static Future<Response> post_new_scene(
+    String name,
+    String description,
+    dynamic content,
+    String icon,
+    String credentials,
+    String URL,
+  ) async {
+    var sceneData = {
+      "hidden": false, //no need change
+      "protectedByPin": false, //no need change
+      "sceneView": "sceneView", //not sure yet
+      "icon": icon,
+      "maxRunningInstances": 2, //no need change
+      "stopOnAlarm": false, //no need change
+      "restart": true, //no need change
+      "type": "json", //no need change
+      "content": content,
+      "enabled": true, //no need change
+      "mode": "automatic", //no need change
+      "name": name,
+      "description": description,
+      "categories": [1], //no need change
+      "roomId": 219, //no need change
+    };
+    final response = await http.post(
+      Uri.parse('$URL/api/scenes'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+      body: sceneData,
+    );
+    return response;
+  }
+
   static Future<List<IoT_Scene>> get_scenes(
       String credentials, String URL) async {
     List<IoT_Scene> scenes = [];
