@@ -43,12 +43,9 @@ Widget buildDeviceStatusSection(
                 runSpacing: 8.0,
                 children: snapshot.data!
                     .map((device) => IoT_Device_Tile(
-                          device: device,
-                          onTap: () => onTap(device),
-                          onLongPress: device.needSlider!
-                              ? () => handleLongPress(context, device)
-                              : null,
-                        ))
+                        device: device,
+                        onTap: () => onTap(device),
+                        onLongPress: () => handleLongPress(context, device)))
                     .toList(),
               ),
             ],
