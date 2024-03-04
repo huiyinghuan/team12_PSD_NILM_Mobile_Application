@@ -171,38 +171,38 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ),
                             SizedBox(height: 16),
-                            TextFormField(
-                              initialValue: 'test123',
-                              // controller: _passwordController,
-                              obscureText: !_isPasswordVisible,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                hintText:
-                                    'Leave blank to keep current password',
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.grey.shade300),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: AppColors.primary2, width: 2),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible = !_isPasswordVisible;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
+                            // TextFormField(
+                            //   initialValue: 'test123',
+                            //   // controller: _passwordController,
+                            //   obscureText: !_isPasswordVisible,
+                            //   decoration: InputDecoration(
+                            //     labelText: 'Password',
+                            //     hintText:
+                            //         'Leave blank to keep current password',
+                            //     enabledBorder: OutlineInputBorder(
+                            //       borderSide:
+                            //           BorderSide(color: Colors.grey.shade300),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     focusedBorder: OutlineInputBorder(
+                            //       borderSide: BorderSide(
+                            //           color: AppColors.primary2, width: 2),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     suffixIcon: IconButton(
+                            //       icon: Icon(
+                            //         _isPasswordVisible
+                            //             ? Icons.visibility
+                            //             : Icons.visibility_off,
+                            //       ),
+                            //       onPressed: () {
+                            //         setState(() {
+                            //           _isPasswordVisible = !_isPasswordVisible;
+                            //         });
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
                             SizedBox(height: 24),
                             ElevatedButton(
                               onPressed: () {
