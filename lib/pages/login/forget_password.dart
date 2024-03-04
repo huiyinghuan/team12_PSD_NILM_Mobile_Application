@@ -4,6 +4,9 @@ import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
+import 'package:l3homeation/pages/login/register_user.dart';
+
+import 'reuseable.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -54,15 +57,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const SquareTile(imagePath: 'images/l3homeation.png'),
+                displayLogo(),
                 const SizedBox(height: 50),
 
-                // Welcome back text
-                const Text(
-                  'Forget Password',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 97, 97, 97), fontSize: 16),
-                ),
+                // Title
+                displayTitle('Forget Password'),
 
                 const SizedBox(height: 25),
 
@@ -84,33 +83,36 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 const SizedBox(height: 50),
 
                 // Sign in page
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Remembered your password? Go to: '),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Sign in',
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
+                redirectToSignIn()
               ],
             ),
           ),
         ), // Add this
       ),
+    );
+  }
+
+  Row redirectToSignIn() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Remembered your password? Go to: '),
+        const SizedBox(
+          width: 4,
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+          child: const Text(
+            'Sign in',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+          ),
+        )
+      ],
     );
   }
 }

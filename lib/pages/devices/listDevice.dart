@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
-import 'package:l3homeation/services/userPreferences.dart';
-import 'package:l3homeation/pages/editDevice/edit_light.dart';
+
+import 'list_device_lib.dart';
+import 'list_device_shared.dart';
 
 class ListDevice extends StatefulWidget {
   @override
@@ -14,9 +12,6 @@ class ListDevice extends StatefulWidget {
 }
 
 class _ListDeviceState extends State<ListDevice> {
-  late Future<List<dynamic>> devices = Future.value([]);
-  String? auth;
-
   @override
   void initState() {
     super.initState();
@@ -24,10 +19,6 @@ class _ListDeviceState extends State<ListDevice> {
       print("Got auth: $auth\n");
       updateDevices();
     });
-  }
-
-  Future<void> loadAuth() async {
-    auth = await UserPreferences.getString('auth');
   }
 
   Future<void> updateDevices() async {
@@ -71,153 +62,8 @@ class _ListDeviceState extends State<ListDevice> {
       drawer: NavigationDrawerWidget(),
       body: ListView(
         children: <Widget>[
-          _buildDeviceList(),
+          buildDeviceList(swapper),
         ],
-      ),
-    );
-  }
-
-  // Assuming that devices is a List<IoT_Device>
-  List<ExpansionTile> buildExpansionTiles(List<dynamic> devices) {
-    return devices.map((device) {
-      print(device.propertiesMap);
-      String descriptionDevice = device.propertiesMap["userDescription"];
-      if (descriptionDevice == "") {
-        descriptionDevice = "No description given";
-      }
-      List<dynamic> categoriesDevice = device.propertiesMap["categories"];
-      dynamic valueDevice = device.propertiesMap["value"];
-      if (categoriesDevice.contains("blinds")) {
-        valueDevice = 'Open ' + valueDevice.toString() + '%';
-      } else if (categoriesDevice.contains("security")) {
-        if (valueDevice == false) {
-          valueDevice = 'Unlocked';
-        } else {
-          valueDevice = 'Locked';
-        }
-      } else if (valueDevice == 99 || valueDevice == true) {
-        valueDevice = 'On';
-      } else if (valueDevice == 0 || valueDevice == false) {
-        valueDevice = 'Off';
-      } else {
-        valueDevice = valueDevice.toString();
-      }
-      String categoriesString = categoriesDevice
-          .join(", "); // Convert list to a single string separated by commas
-
-      return ExpansionTile(
-        title: Text(
-          device.name, // Replace with your desired title text
-          style: TextStyle(fontSize: 18.0), // Customize title text size
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(18.0), // Adjust padding as needed
-            child: Row(
-              children: [
-                Flexible(
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Status: ',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: valueDevice.toString() + '\n\n',
-                          style: TextStyle(
-                              color: (valueDevice == 'Off' ||
-                                      valueDevice == 'Unlocked')
-                                  ? Colors.red
-                                  : Colors.green,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(
-                          text: 'Description Given: \n',
-                          // style: TextStyle(
-                          //   color: Colors.black,
-                          //   fontSize: 14.0,
-                          // ),
-                        ),
-                        TextSpan(
-                          text: descriptionDevice + '\n\n',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(text: 'Category Chosen: '),
-                        TextSpan(
-                          text: categoriesString,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Switch(
-                    // This bool value toggles the switch.
-                    value: (valueDevice == 'Off' || valueDevice == 'Unlocked')
-                        ? false
-                        : true,
-                    activeColor: Colors.green,
-                    inactiveThumbColor: Colors.red,
-                    onChanged: (bool value) {
-                      swapper(device);
-                    },
-                  ),
-                ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditLight()),
-                    );
-                  },
-                  child: Text('Edit Device'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    }).toList();
-  }
-
-  // a container that holds the list of devices
-  Container _buildDeviceList() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: FutureBuilder<List<dynamic>>(
-        future: devices,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 8),
-                Column(
-                  children: buildExpansionTiles(snapshot.data!),
-                ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(
-            child: CircularProgressIndicator(
-              color: Color(0xFFD36E2F),
-            ),
-          );
-        },
       ),
     );
   }

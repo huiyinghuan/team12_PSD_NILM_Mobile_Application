@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:l3homeation/components/custom_textfield.dart';
-import 'package:l3homeation/components/square_tile.dart';
+
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/error_dialog.dart';
+import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
+
+import 'reuseable.dart';
 
 class RegisterUser extends StatefulWidget {
   const RegisterUser({super.key});
@@ -33,10 +35,12 @@ class _RegisterUserState extends State<RegisterUser> {
           );
         });
 
+    // TODO handle the registration logic here
+
     // Close the loading dialog
     Navigator.of(context).pop();
 
-    print("Sign up test successful");
+    // print("Sign up test successful");
 
     // Handle login failure
     // showDialog(
@@ -49,6 +53,9 @@ class _RegisterUserState extends State<RegisterUser> {
     // );
 
     // Changed message to a snackbar so it looks cleaner and can bring user to the login_page()
+
+    // if(successfulRegistration){ScaffoldMessenger....}
+
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Navigator.pushReplacement(
       context,
@@ -68,42 +75,27 @@ class _RegisterUserState extends State<RegisterUser> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                const SquareTile(imagePath: 'images/l3homeation.png'),
+                // Homeation logo
+                displayLogo(),
+
                 const SizedBox(height: 50),
 
                 // Welcome back text
-                const Text(
-                  'Registration',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 97, 97, 97), fontSize: 16),
-                ),
-
+                displayTitle("Registration"),
                 const SizedBox(height: 25),
 
                 // Email field
-                CustomTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                    autofillHints: [AutofillHints.email]),
+                displayEmailField(),
 
                 const SizedBox(height: 15),
 
                 // Password Field
-                CustomTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password]),
+                displayPasswordField(),
 
                 const SizedBox(height: 15),
 
                 // Confirm Password Field
-                CustomTextField(
-                    controller: confirmPasswordController,
-                    hintText: 'Confirm Password',
-                    obscureText: true,
-                    autofillHints: [AutofillHints.password]),
+                displayConfirmPasswordField(),
 
                 const SizedBox(height: 25),
 
@@ -116,33 +108,60 @@ class _RegisterUserState extends State<RegisterUser> {
                 const SizedBox(height: 50),
 
                 // Sign in page
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account? '),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Sign in',
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ),
+                redirectToSignIn(),
               ],
             ),
           ),
         ), // Add this
       ),
+    );
+  }
+
+  CustomTextField displayEmailField() {
+    return CustomTextField(
+        controller: emailController,
+        hintText: 'Email',
+        obscureText: false,
+        autofillHints: const [AutofillHints.email]);
+  }
+
+  CustomTextField displayPasswordField() {
+    return CustomTextField(
+        controller: passwordController,
+        hintText: 'Password',
+        obscureText: true,
+        autofillHints: const [AutofillHints.password]);
+  }
+
+  CustomTextField displayConfirmPasswordField() {
+    return CustomTextField(
+        controller: confirmPasswordController,
+        hintText: 'Confirm Password',
+        obscureText: true,
+        autofillHints: const [AutofillHints.password]);
+  }
+
+  Row redirectToSignIn() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text('Already have an account? '),
+        const SizedBox(
+          width: 4,
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+          child: const Text(
+            'Sign in',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+          ),
+        )
+      ],
     );
   }
 }
