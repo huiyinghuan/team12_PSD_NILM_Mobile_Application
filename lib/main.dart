@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
-import 'package:l3homeation/pages/editDevice/edit_light.dart';
+import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/pages/scenes/listScenes.dart';
 import 'package:l3homeation/pages/login/auth_page.dart';
 import 'package:google_fonts/google_fonts.dart';

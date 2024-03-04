@@ -1,6 +1,7 @@
 part of 'dashboard_lib.dart';
 
-Widget buildDeviceStatusSection(BuildContext context, Function onTap) {
+Widget buildDeviceStatusSection(
+    BuildContext context, Function onTap, Function handleLongPress) {
   final navigateTo =
       (Widget page) => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => page,
@@ -44,6 +45,9 @@ Widget buildDeviceStatusSection(BuildContext context, Function onTap) {
                     .map((device) => IoT_Device_Tile(
                           device: device,
                           onTap: () => onTap(device),
+                          onLongPress: device.needSlider!
+                              ? () => handleLongPress(context, device)
+                              : null,
                         ))
                     .toList(),
               ),
@@ -61,3 +65,11 @@ Widget buildDeviceStatusSection(BuildContext context, Function onTap) {
     ),
   );
 }
+
+// void adjustDeviceSlider(IoT_Device device, BuildContext context) {
+//   final navigateTo =
+//       (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+//             builder: (context) => page,
+//           ));
+//   navigateTo(ListDevice());
+// }

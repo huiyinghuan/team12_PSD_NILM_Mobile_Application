@@ -103,7 +103,8 @@ List<ExpansionTile> buildExpansionTiles(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditLight()),
+                    MaterialPageRoute(
+                        builder: (context) => EditDevicePage(device: device)),
                   );
                 },
                 child: Text('Edit Device'),

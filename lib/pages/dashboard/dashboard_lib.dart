@@ -6,8 +6,10 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 
 import 'package:l3homeation/components/iot_device_tile.dart';
+import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/models/iot_device.dart';
+import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
 import 'dashboard_shared.dart';

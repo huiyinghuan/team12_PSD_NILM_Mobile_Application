@@ -10,6 +10,7 @@ class IoT_Device {
   String? URL;
   String? credentials;
   int? id;
+  bool? needSlider;
   dynamic value;
   Map<String, dynamic>? propertiesMap;
 
@@ -19,6 +20,7 @@ class IoT_Device {
     required this.URL,
     required this.credentials,
     required this.id,
+    required this.needSlider,
     required this.value,
     required this.propertiesMap,
   });
@@ -39,7 +41,8 @@ class IoT_Device {
       if (onlinevalue != value) {
         print("online value is not same as local value\n");
         print("online value: $onlinevalue\n");
-        print("do not swap state, but update the interface value and local value");
+        print(
+            "do not swap state, but update the interface value and local value");
         value = onlinevalue;
         return;
       }
@@ -84,30 +87,33 @@ class IoT_Device {
 
   static Future<List<IoT_Device>> get_devices(
       String credentials, String URL) async {
-        List<IoT_Device> devices = [];
-        final response = await http.get(
-          Uri.parse('$URL/api/devices/'),
-          // Send authorization headers to the backend.
-          headers: {
-            HttpHeaders.authorizationHeader: 'Basic $credentials',
-          },
+    List<IoT_Device> devices = [];
+    final response = await http.get(
+      Uri.parse('$URL/api/devices/'),
+      // Send authorization headers to the backend.
+      headers: {
+        HttpHeaders.authorizationHeader: 'Basic $credentials',
+      },
+    );
+    List<dynamic> jsonResponses = jsonDecode(response.body);
+
+    for (Map<String, dynamic> response in jsonResponses) {
+      if (response['properties'].containsKey('value') &&
+          response['visible'] == true) {
+        IoT_Device new_device = IoT_Device(
+          id: response['id'],
+          URL: URL,
+          credentials: credentials,
+          name: response['name'],
+          value: response['properties']['value'],
+          needSlider: response['properties']['value'] is int ? true : false,
+          propertiesMap: response['properties'],
         );
-        List<dynamic> jsonResponses = jsonDecode(response.body);
-        for (Map<String, dynamic> response in jsonResponses) {
-          if (response['properties'].containsKey('value') &&
-              response['visible'] == true) {
-            IoT_Device new_device = IoT_Device(
-              id: response['id'],
-              URL: URL,
-              credentials: credentials,
-              name: response['name'],
-              value: response['properties']['value'],
-              propertiesMap: response['properties'],
-            );
-            devices.add(new_device);
-          }
-        }
-        return devices;
+
+        devices.add(new_device);
+      }
+    }
+    return devices;
   }
 
   static Future<List<IoT_Device>> get_devices_by_ids(
@@ -134,13 +140,15 @@ class IoT_Device {
               credentials: credentials,
               name: jsonResponses['name'],
               value: jsonResponses['properties']['value'],
+              needSlider:
+                  jsonResponses['properties']['value'] is bool ? true : false,
               propertiesMap: jsonResponses['properties'],
             );
             devices.add(new_device);
           }
         }
       }
-    return devices;
+      return devices;
     }
   }
 
