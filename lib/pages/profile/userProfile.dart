@@ -82,7 +82,7 @@ class _UserProfileState extends State<UserProfile> {
                           },
                           child: Text('Logout'),
                           style: TextButton.styleFrom(
-                            primary: Colors.white,
+                            // primary: Colors.white,
                             backgroundColor: AppColors.secondary2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -460,8 +460,8 @@ class _UserProfileState extends State<UserProfile> {
                   },
                   child: Text('Send Invite', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: AppColors.secondary2,
-                    onPrimary: Colors.white, // Text color
+                    // primary: AppColors.secondary2,
+                    // onPrimary: Colors.white, // Text color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),

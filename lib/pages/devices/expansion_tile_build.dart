@@ -4,7 +4,7 @@ part of "list_device_lib.dart";
 List<ExpansionTile> buildExpansionTiles(
     List<dynamic> devices, BuildContext context, Function onTap) {
   return devices.map((device) {
-    print(device.propertiesMap);
+    // print(device.propertiesMap);
     String descriptionDevice = device.propertiesMap["userDescription"];
     if (descriptionDevice == "") {
       descriptionDevice = "No description given";
@@ -104,7 +104,10 @@ List<ExpansionTile> buildExpansionTiles(
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EditDevicePage(device: device)),
+                        builder: (context) => EditDevicePage(
+                              device: device,
+                              onTap: onTap,
+                            )),
                   );
                 },
                 child: Text('Edit Device'),

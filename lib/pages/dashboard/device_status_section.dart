@@ -28,7 +28,7 @@ Widget buildDeviceStatusSection(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(width: 4), // Add spacing between text and icon
+                  const SizedBox(width: 4), // Add spacing between text and icon
                   Container(
                     child: IconButton(
                       icon: const Icon(Icons.add_circle_outline_outlined),
@@ -37,7 +37,7 @@ Widget buildDeviceStatusSection(
                   ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,

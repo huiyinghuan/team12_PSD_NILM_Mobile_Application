@@ -55,7 +55,10 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(device: device),
+        builder: (context) => EditDevicePage(
+          device: device,
+          onTap: () {},
+        ),
       ),
     );
   }
