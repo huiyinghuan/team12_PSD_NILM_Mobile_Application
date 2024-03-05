@@ -12,122 +12,157 @@ class EditDevicePage extends StatefulWidget {
 }
 
 class _EditDevicePageState extends State<EditDevicePage> {
-  bool switchValue = false;
+  bool isSwitchedOn = false;
+  double intensity = 0.35; // Assuming 35% is the initial value from the image
+  String currentRole = '';
+
+  String getImagePath() {
+    if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'Light') {
+      return isSwitchedOn
+          ? 'images/icons/light100.png'
+          : 'images/icons/light0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'BlindsWithPositioning') {
+      return isSwitchedOn
+          ? 'images/icons/drzwi100.png'
+          : 'images/icons/drzwi0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'OpeningSensor') {
+      return isSwitchedOn
+          ? 'images/icons/roleta_wew100.png'
+          : 'images/icons/roleta_wew0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'Other') {
+      return 'images/icons/czujnik_ruchu0.png';
+    } else {
+      // If there is no deviceRole, return the default image
+      return 'images/l3homeation.png';
+    }
+  }
+
+  bool getSwitchValue() {
+    dynamic value = widget.device.propertiesMap?["value"];
+    if (value == 99 || value == true) {
+      isSwitchedOn = true;
+      return true;
+    } else if (value == 0 || value == false) {
+      isSwitchedOn = false;
+      return false;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    String? descriptionDevice = widget.device.propertiesMap?["userDescription"];
-    if (descriptionDevice == "") {
-      descriptionDevice = "No description given";
-    }
-    List<dynamic> categoriesDevice = widget.device.propertiesMap?["categories"];
-    dynamic valueDevice = widget.device.propertiesMap?["value"];
-    print("Current device value: $valueDevice");
-    if (categoriesDevice.contains("blinds")) {
-      valueDevice = 'Open ' + valueDevice.toString() + '%';
-    } else if (categoriesDevice.contains("security")) {
-      if (valueDevice == false) {
-        valueDevice = 'Unlocked';
-      } else {
-        valueDevice = 'Locked';
-      }
-    } else if (valueDevice == 99 || valueDevice == true) {
-      valueDevice = 'On';
-    } else if (valueDevice == 0 || valueDevice == false) {
-      valueDevice = 'Off';
-    } else {
-      valueDevice = valueDevice.toString();
-    }
-
-    if (valueDevice == 'Off' || valueDevice == 'Unlocked') {
-      switchValue = false;
-    } else {
-      switchValue = true;
-    }
-
-    String categoriesString = categoriesDevice.join(", ");
-
+    // print(widget.device.propertiesMap);
+    getSwitchValue();
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.device.name}'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Edit Device', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              widget.device.name.toString(),
-              style: TextStyle(fontSize: 18.0),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
+      body: SingleChildScrollView(
+        // Use SingleChildScrollView to avoid overflow
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.device.name!,
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 24), // For spacing
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Status: ',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.0,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: valueDevice.toString() + '\n\n',
-                            style: TextStyle(
-                                color: (valueDevice == 'Off' ||
-                                        valueDevice == 'Unlocked')
-                                    ? Colors.red
-                                    : Colors.green,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(
-                            text: 'Description Given: \n',
-                          ),
-                          TextSpan(
-                            text: (descriptionDevice != null
-                                    ? descriptionDevice
-                                    : '') +
-                                '\n\n',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(text: 'Category Chosen: '),
-                          TextSpan(
-                            text: categoriesString,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
+                  Expanded(
+                    child: Text('Power:', style: TextStyle(fontSize: 16.0)),
+                  ),
+                  Radio<bool>(
+                    value: true,
+                    groupValue: isSwitchedOn,
+                    onChanged: (bool? value) async {
+                      await widget.onTap(widget.device, () {
+                        // This is the callback function
+                        setState(() {
+                          // Assuming the device instance's value is now updated
+                          isSwitchedOn = getSwitchValue();
+                          print("Current state is $isSwitchedOn");
+                        });
+                      });
+                    },
+                  ),
+                  Text('On'),
+                  Radio<bool>(
+                    value: false,
+                    groupValue: isSwitchedOn,
+                    onChanged: (bool? value) async {
+                      await widget.onTap(widget.device, () {
+                        // This is the callback function
+                        setState(() {
+                          // Assuming the device instance's value is now updated
+                          isSwitchedOn = getSwitchValue();
+                          print("Current state is $isSwitchedOn");
+                        });
+                      });
+                    },
+                  ),
+                  Text('Off'),
+                  Expanded(
+                    flex: 2,
+                    child: Image.asset(
+                      getImagePath(),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  // Add your Switch and ElevatedButton here
                 ],
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 20.0),
-                child: Switch(
-                  // This bool value toggles the switch.
-                  value: switchValue,
-                  activeColor: Colors.green,
-                  inactiveThumbColor: Colors.red,
-                  onChanged: (bool value) {
-                    setState(() {
-                      switchValue = value;
-                    });
-                  },
+              Slider(
+                value: intensity,
+                min: 0,
+                max: 1,
+                divisions: 100,
+                onChanged: (double value) {
+                  setState(() {
+                    intensity = value;
+                  });
+                },
+              ),
+              Center(
+                child: Text(
+                  '${(intensity * 100).round()}%',
+                  style: TextStyle(fontSize: 16.0),
                 ),
               ),
-            ),
-          ],
+              // SizedBox(height: 24), // For spacing before the Save button
+              // SizedBox(
+              //   width:
+              //       double.infinity, // Makes the button stretch to full width
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       widget.onTap();
+              //     },
+              //     child: Text('Save Edit'),
+              //     style: ElevatedButton.styleFrom(
+              //       // primary: Theme.of(context).accentColor, // Use the accent color from the theme
+              //       padding: EdgeInsets.symmetric(
+              //           vertical: 12.0), // Add padding for a taller button
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

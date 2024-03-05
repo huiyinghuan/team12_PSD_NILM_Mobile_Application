@@ -94,7 +94,7 @@ List<ExpansionTile> buildExpansionTiles(
                   activeColor: Colors.green,
                   inactiveThumbColor: Colors.red,
                   onChanged: (bool value) {
-                    onTap(device);
+                    onTap(device, () {});
                   },
                 ),
               ),
