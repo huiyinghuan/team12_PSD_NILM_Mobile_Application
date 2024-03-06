@@ -30,7 +30,6 @@ class PowerGraph extends StatefulWidget {
 
 class _PowerGraphState extends State<PowerGraph>
     with SingleTickerProviderStateMixin {
-  late Future<List<dynamic>> devices = Future.value([]);
   String? auth;
   TabController? _tabController;
 
@@ -38,25 +37,10 @@ class _PowerGraphState extends State<PowerGraph>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    loadAuth().then((_) {
-      print("Got auth: $auth\n");
-      updateDevices();
-    });
   }
 
   Future<void> loadAuth() async {
     auth = await UserPreferences.getString('auth');
-  }
-
-  Future<void> updateDevices() async {
-    if (auth != null) {
-      setState(() {
-        devices = IoT_Device.get_devices(
-          auth!,
-          "http://l3homeation.dyndns.org:2080",
-        );
-      });
-    }
   }
 
   @override
@@ -80,11 +64,6 @@ class _PowerGraphState extends State<PowerGraph>
                 color: Colors.black,
               ),
               Container(
-                child: LineChartSample2(),
-                color: Color.fromARGB(255, 160, 113, 160),
-                alignment: Alignment.center,
-              ),
-              Container(
                 child: BarChartSample6(),
                 color: Color.fromARGB(255, 189, 223, 109),
                 alignment: Alignment.center,
@@ -98,6 +77,10 @@ class _PowerGraphState extends State<PowerGraph>
           Container(
             child: PieChartSample2(),
             color: Color.fromARGB(255, 206, 107, 140),
+          ),
+          Container(
+            child: RadarChartSample1(),
+            color: Color.fromARGB(255, 129, 134, 177),
           ),
         ],
       ),
@@ -116,13 +99,18 @@ class _PowerGraphState extends State<PowerGraph>
             children: <Widget>[
               Container(
                 child: NILM_graph(),
-                color: Color.fromARGB(255, 79, 27, 109),
+                color: Color.fromARGB(255, 49, 83, 194),
               ),
             ],
           ),
           Container(
-            child: RadarChartSample1(),
-            color: Color.fromARGB(255, 129, 134, 177),
+            child: LineChartSample2(),
+            color: Color.fromARGB(255, 160, 113, 160),
+            alignment: Alignment.center,
+          ),
+          Container(
+            child: BarChartSample2(),
+            color: Color.fromARGB(255, 74, 90, 231),
           ),
         ],
       ),
@@ -133,8 +121,8 @@ class _PowerGraphState extends State<PowerGraph>
     return TabBarView(
       controller: _tabController,
       children: [
-        buildEnergyTab(),
         buildNILMTab(),
+        buildEnergyTab(),
       ],
     );
   }
@@ -143,8 +131,8 @@ class _PowerGraphState extends State<PowerGraph>
     return TabBar(
       controller: _tabController,
       tabs: [
-        Tab(text: 'Energy'),
-        Tab(text: 'NILM'),
+        Tab(text: 'NILM Data'),
+        Tab(text: 'Energy Data'),
       ],
     );
   }

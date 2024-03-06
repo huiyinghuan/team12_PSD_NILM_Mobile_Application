@@ -17,7 +17,7 @@ class NILM_graph extends StatefulWidget {
 }
 
 class NILM_graph_state extends State<NILM_graph> {
-  final double width = 4;
+  final double width = 25;
 
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
@@ -30,27 +30,31 @@ class NILM_graph_state extends State<NILM_graph> {
   List<double> y_axis_titles = [];
   String? timestamp;
   double? total_power_consumption;
+
+  double? min;
+  double? avg;
+  double? max;
+
+  late Timer updateNILMTimer;
   @override
   void initState() {
     super.initState();
 
     appliances = fetch_appliances(credentials, baseURL);
+    updateNILMTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      updateNilmGraph();
+    });
+  }
 
-    final barGroup1 = makeGroupData(0, 5, 12);
-    final barGroup2 = makeGroupData(1, 16, 12);
-    final barGroup3 = makeGroupData(2, 18, 5);
-    final barGroup4 = makeGroupData(3, 20, 16);
-
-    final items = [
-      barGroup1,
-      barGroup2,
-      barGroup3,
-      barGroup4,
-    ];
-
-    rawBarGroups = items;
-
-    showingBarGroups = rawBarGroups;
+  Future<void> updateNilmGraph() async {
+    if (auth != null) {
+      setState(() {
+        appliances = NILM_appliance.get_appliances(
+          auth!,
+          baseURL,
+        );
+      });
+    }
   }
 
   Future<List<NILM_appliance>> fetch_appliances(
@@ -67,7 +71,7 @@ class NILM_graph_state extends State<NILM_graph> {
         if (snapshot.hasData) {
           List<NILM_appliance> appliances = snapshot.data!;
           process_NILM_appliances(snapshot, appliances);
-          return Placeholder(); // Return your widget here
+          return displayScrollable(); // Return your widget here
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Or any other loading indicator
         } else if (snapshot.hasError) {
@@ -81,15 +85,35 @@ class NILM_graph_state extends State<NILM_graph> {
 
   void process_NILM_appliances(
       AsyncSnapshot snapshot, List<NILM_appliance> appliances) {
+    List<BarChartGroupData> localBarGroup = [];
+    List<String> local_x_titles = [];
+    List<double> local_y_titles = [];
+    int i = 0;
     timestamp = appliances[0].timestamp;
     total_power_consumption = appliances[0].total_consumption;
     for (NILM_appliance appliance in appliances) {
-      x_axis_titles.add(appliance.name!);
-      y_axis_titles.add(appliance.power_kW!);
-      // print(appliance.running);
-
-      print(appliance.total_consumption);
+      local_x_titles.add(appliance.name!);
+      local_y_titles.add(appliance.power_kW!);
+      if (min == null) min = appliance.power_kW!;
+      if (max == null) max = appliance.power_kW!;
+      if (appliance.power_kW! < min!) min = appliance.power_kW!;
+      if (appliance.power_kW! > max!) max = appliance.power_kW!;
+      localBarGroup.add(makeGroupData(i, appliance.power_kW!));
+      i++;
     }
+    double number = max! + min!;
+    avg = (i != 0) ? double.parse((number / i).toStringAsFixed(2)) : null;
+    x_axis_titles = local_x_titles;
+    y_axis_titles = local_y_titles;
+    rawBarGroups = localBarGroup;
+    showingBarGroups = rawBarGroups;
+    print("length is: ${rawBarGroups.length}");
+  }
+
+  @override
+  void dispose() {
+    updateNILMTimer.cancel();
+    super.dispose();
   }
 
   @override
@@ -97,141 +121,157 @@ class NILM_graph_state extends State<NILM_graph> {
     return AspectRatio(
       aspectRatio: 1,
       child: Padding(
-          padding: const EdgeInsets.all(16), child: getGraph() //Column(
-          //   crossAxisAlignment: CrossAxisAlignment.stretch,
-          //   children: <Widget>[
-          //     Row(
-          //       mainAxisSize: MainAxisSize.min,
-          //       children: <Widget>[
-          //         makeTransactionsIcon(),
-          //         const SizedBox(
-          //           width: 10,
-          //         ),
-          //         const Text(
-          //           'Transactions',
-          //           style: TextStyle(color: Colors.white, fontSize: 10),
-          //         ),
-          //         const SizedBox(
-          //           width: 4,
-          //         ),
-          //         const Text(
-          //           'state',
-          //           style: TextStyle(color: Color(0xff77839a), fontSize: 16),
-          //         ),
-          //       ],
-          //     ),
-          //     const SizedBox(
-          //       height: 38,
-          //     ),
-          //     Expanded(
-          //       child: BarChart(
-          //         BarChartData(
-          //           maxY: 20,
-          //           barTouchData: BarTouchData(
-          //             touchTooltipData: BarTouchTooltipData(
-          //               tooltipBgColor: Colors.grey,
-          //               getTooltipItem: (a, b, c, d) => null,
-          //             ),
-          //             touchCallback: (FlTouchEvent event, response) {
-          //               if (response == null || response.spot == null) {
-          //                 setState(() {
-          //                   touchedGroupIndex = -1;
-          //                   showingBarGroups = List.of(rawBarGroups);
-          //                 });
-          //                 return;
-          //               }
+        padding: const EdgeInsets.all(16),
+        child: getGraph(),
+      ),
+    );
+  }
 
-          //               touchedGroupIndex = response.spot!.touchedBarGroupIndex;
+  Column displayScrollable() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Total Energy Consumed: $total_power_consumption kW',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 236, 201, 42),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                SizedBox(width: 70),
+                Text(
+                  '$timestamp',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 255, 255), fontSize: 16),
+                ),
+                SizedBox(width: 20),
+                makeIcon()
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 38,
+        ),
+        Expanded(
+          child: BarChart(
+            BarChartData(
+              maxY: max,
+              barTouchData: BarTouchData(
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Color.fromARGB(255, 240, 148, 105),
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final yValue = rod.toY.toString();
+                    return BarTooltipItem(
+                      yValue,
+                      TextStyle(color: Colors.white),
+                    );
+                  },
+                ),
+                touchCallback: (FlTouchEvent event, response) {
+                  if (response == null || response.spot == null) {
+                    setState(() {
+                      touchedGroupIndex = -1;
+                      showingBarGroups = List.of(rawBarGroups);
+                    });
+                    return;
+                  }
 
-          //               setState(() {
-          //                 if (!event.isInterestedForInteractions) {
-          //                   touchedGroupIndex = -1;
-          //                   showingBarGroups = List.of(rawBarGroups);
-          //                   return;
-          //                 }
-          //                 showingBarGroups = List.of(rawBarGroups);
-          //                 if (touchedGroupIndex != -1) {
-          //                   var sum = 0.0;
-          //                   for (final rod
-          //                       in showingBarGroups[touchedGroupIndex].barRods) {
-          //                     sum += rod.toY;
-          //                   }
-          //                   final avg = sum /
-          //                       showingBarGroups[touchedGroupIndex]
-          //                           .barRods
-          //                           .length;
+                  touchedGroupIndex = response.spot!.touchedBarGroupIndex;
 
-          //                   showingBarGroups[touchedGroupIndex] =
-          //                       showingBarGroups[touchedGroupIndex].copyWith(
-          //                     barRods: showingBarGroups[touchedGroupIndex]
-          //                         .barRods
-          //                         .map((rod) {
-          //                       return rod.copyWith(
-          //                           toY: avg, color: widget.avgColor);
-          //                     }).toList(),
-          //                   );
-          //                 }
-          //               });
-          //             },
-          //           ),
-          //           titlesData: FlTitlesData(
-          //             show: true,
-          //             rightTitles: const AxisTitles(
-          //               sideTitles: SideTitles(showTitles: false),
-          //             ),
-          //             topTitles: const AxisTitles(
-          //               sideTitles: SideTitles(showTitles: false),
-          //             ),
-          //             bottomTitles: AxisTitles(
-          //               sideTitles: SideTitles(
-          //                 showTitles: true,
-          //                 getTitlesWidget: bottomTitles,
-          //                 reservedSize: 42,
-          //               ),
-          //             ),
-          //             leftTitles: AxisTitles(
-          //               sideTitles: SideTitles(
-          //                 showTitles: true,
-          //                 reservedSize: 28,
-          //                 interval: 1,
-          //                 getTitlesWidget: leftTitles,
-          //               ),
-          //             ),
-          //           ),
-          //           borderData: FlBorderData(
-          //             show: false,
-          //           ),
-          //           barGroups: showingBarGroups,
-          //           gridData: const FlGridData(show: false),
-          //         ),
-          //       ),
-          //     ),
-          //     const SizedBox(
-          //       height: 12,
-          //     ),
-          //   ],
-          // ),
+                  setState(() {
+                    if (!event.isInterestedForInteractions) {
+                      touchedGroupIndex = -1;
+                      showingBarGroups = List.of(rawBarGroups);
+                      return;
+                    }
+                    showingBarGroups = List.of(rawBarGroups);
+                    if (touchedGroupIndex != -1) {
+                      var sum = 0.0;
+                      for (final rod
+                          in showingBarGroups[touchedGroupIndex].barRods) {
+                        sum += rod.toY;
+                      }
+                      final avg = sum /
+                          showingBarGroups[touchedGroupIndex].barRods.length;
+
+                      showingBarGroups[touchedGroupIndex] =
+                          showingBarGroups[touchedGroupIndex].copyWith(
+                        barRods: showingBarGroups[touchedGroupIndex]
+                            .barRods
+                            .map((rod) {
+                          return rod.copyWith(toY: avg, color: widget.avgColor);
+                        }).toList(),
+                      );
+                    }
+                  });
+                },
+              ),
+              titlesData: FlTitlesData(
+                show: true,
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: bottomTitles,
+                    reservedSize: 42,
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 28,
+                    interval: 1,
+                    getTitlesWidget: leftTitles,
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              barGroups: showingBarGroups,
+              gridData: const FlGridData(show: false),
+            ),
           ),
+        ),
+        const SizedBox(
+          height: 12,
+        ),
+      ],
     );
   }
 
   Widget leftTitles(
     double value,
     TitleMeta meta,
-    /*List<int> maxMinAvg*/
+    /*List<double> maxMinAvg*/
   ) {
     const style = TextStyle(
-      color: Color(0xff7589a2),
+      color: Color.fromARGB(255, 255, 255, 255),
       fontWeight: FontWeight.bold,
       fontSize: 10,
     );
     String text;
     if (value == 0) {
-      text = '1K';
-    } else if (value == 10) {
-      text = '5K';
-    } else if (value == 19) {
-      text = '10K';
+      text = '$min';
+    } else if (value >= avg! && value < max!) {
+      text = '$avg';
+    } else if (value >= max!) {
+      text = '$max';
     } else {
       return Container();
     }
@@ -242,32 +282,31 @@ class NILM_graph_state extends State<NILM_graph> {
     );
   }
 
-  Widget bottomTitles(
-    double value,
-    TitleMeta meta,
-    /*List<String> titles*/
-  ) {
-    final titles = <String>['Mn', 'Te', 'Wd', 'Tu'];
+  Widget bottomTitles(double value, TitleMeta meta) {
+    // final titles = <String>['Mn', 'Te', 'Wd', 'Tu'];
 
     final Widget text = Text(
-      titles[value.toInt()],
+      x_axis_titles[value.toInt()],
       style: const TextStyle(
-        color: Color(0xff7589a2),
+        color: Color.fromARGB(255, 255, 255, 255),
         fontWeight: FontWeight.bold,
-        fontSize: 7,
+        fontSize: 8,
       ),
     );
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 16, //margin top
-      child: text,
+      space: 10, //margin top
+      child: Transform.rotate(
+          angle: -math.pi /
+              10.0, // Rotate the text by 45 degrees (pi/4 radians) counter-clockwise
+          child: text),
     );
   }
 
-  BarChartGroupData makeGroupData(int x, double y1, double y2) {
+  BarChartGroupData makeGroupData(int x, double y1) {
     return BarChartGroupData(
-      barsSpace: 4,
+      barsSpace: 10,
       x: x,
       barRods: [
         BarChartRodData(
@@ -275,16 +314,11 @@ class NILM_graph_state extends State<NILM_graph> {
           color: widget.leftBarColor,
           width: width,
         ),
-        BarChartRodData(
-          toY: y2,
-          color: widget.rightBarColor,
-          width: width,
-        ),
       ],
     );
   }
 
-  Widget makeTransactionsIcon() {
+  Widget makeIcon() {
     const width = 3.5;
     const space = 3.5;
     return Row(

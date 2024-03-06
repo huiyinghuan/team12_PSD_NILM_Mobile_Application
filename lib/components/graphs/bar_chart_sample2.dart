@@ -195,7 +195,7 @@ class BarChartSample2State extends State<BarChartSample2> {
     final Widget text = Text(
       titles[value.toInt()],
       style: const TextStyle(
-        color: Color(0xff7589a2),
+        color: Color.fromARGB(255, 241, 238, 238),
         fontWeight: FontWeight.bold,
         fontSize: 14,
       ),
