@@ -39,7 +39,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(device: device),
+        builder: (context) => EditDevicePage(device: device, onTap: () {}),
       ),
     );
   }
