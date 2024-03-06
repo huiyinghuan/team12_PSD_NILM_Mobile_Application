@@ -2,7 +2,6 @@ part of 'dashboard_lib.dart';
 
 Widget buildGreetingSection(BuildContext context) {
   return Container(
-    color: Colors.grey[200],
     child: ListTile(
       leading: CircleAvatar(child: Icon(Icons.person)),
       title: Row(

@@ -8,7 +8,13 @@ Widget buildDeviceStatusSection(
           ));
 
   return Container(
-    color: Colors.grey[200],
+    decoration: BoxDecoration(
+      color: Colors.grey[200],
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(40),
+        topRight: Radius.circular(40),
+    ),
+    ),
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     child: FutureBuilder<List<IoT_Device>>(
       future: devices,

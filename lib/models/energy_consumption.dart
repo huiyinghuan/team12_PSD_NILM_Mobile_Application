@@ -29,15 +29,13 @@ class Energy_Consumption {
     );
 
     // Print the raw JSON response to the console
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    // print('Response status: ${response.statusCode}');
+    // print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // Assuming these are directly part of the response now, not in a 'topConsumingDevices' array
       final consumption = data['consumption'].toString();
       final consumptionCost = data['consumptionCost'].toString();
-      // Wrapping them into a list to fit your FutureBuilder's expected format
       return [
         Energy_Consumption(consumptionKwh: consumption,
             consumptionCost: consumptionCost,

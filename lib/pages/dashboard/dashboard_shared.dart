@@ -17,11 +17,10 @@ final Map<String, int> deviceStatus = {
   'Smart Fan': 2,
   'Lights': 2,
 };
-// const String date = '17 Dec 2023';
+
 // Get current date
 String currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
-const int usageKWh = 450;
-const int cost = 100;
+
 
 // Sign out
 Future<void> signUserOut(BuildContext context) async {

@@ -368,6 +368,7 @@ class _UserProfileState extends State<UserProfile> {
         final member = familyMembers[index];
 
         return Card(
+          elevation: 0,
           // Keep the border radius and outline as is, or adjust as needed
           shape: RoundedRectangleBorder(
             side: BorderSide(color: AppColors.primary2, width: 2),
@@ -422,7 +423,7 @@ class _UserProfileState extends State<UserProfile> {
             borderRadius:
                 BorderRadius.circular(20), // Softer curve for the dialog
           ),
-          elevation: 5, // Adds a subtle shadow for depth
+          elevation: 0,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
