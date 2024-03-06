@@ -30,10 +30,12 @@ class PowerGraph extends StatefulWidget {
 class _PowerGraphState extends State<PowerGraph> {
   late Future<List<dynamic>> devices = Future.value([]);
   String? auth;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this as TickerProvider);
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateDevices();
@@ -43,6 +45,12 @@ class _PowerGraphState extends State<PowerGraph> {
     //   updateDevices();
     // });
     // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
+  }
+  
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> loadAuth() async {
@@ -62,7 +70,26 @@ class _PowerGraphState extends State<PowerGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    
+    TabBar tabNames(){
+      return const TabBar (
+        tabs: [
+        Tab(
+          icon: Icon(Icons.cloud_outlined),
+          text: 'Graph 1',
+        ),
+        Tab(
+          icon: Icon(Icons.edit_attributes),
+          text: 'Graph 2',
+        ),
+        ],
+      );
+    }
+
+    return DefaultTabController(
+        initialIndex: 1,
+        length: 3,
+        child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -73,53 +100,111 @@ class _PowerGraphState extends State<PowerGraph> {
           ),
         ),
         iconTheme: IconThemeData(color: Colors.black),
+        bottom: tabNames(),
+        scrolledUnderElevation: 4.0,
+        shadowColor: Theme.of(context).shadowColor,
       ),
       drawer: NavigationDrawerWidget(),
       backgroundColor: Color.fromARGB(230, 145, 145, 145),
-      body:ListView(
-        children: [
-          // GridView.count
-          GridView.count(
-            crossAxisCount: 1,
-            childAspectRatio: 1,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling for the inner GridView
-            children: <Widget>[
-              Container(
-                child: LineChartSample10(),
-                color: Colors.black,
+      body: TabBarView(
+        children: <Widget>[
+            SingleChildScrollView(
+              child: Padding(
+                // make scrollable below.
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+                child: Column(
+                  children: [
+                    content1(),
+                  ],
+                ),
               ),
-              Container(
-                child: LineChartSample2(),
-                color: Color.fromARGB(255, 160, 113, 160),
-                alignment: Alignment.center,
+            ),
+            SingleChildScrollView(
+              child: Padding(
+                // make scrollable below.
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
+                child: Column(
+                  children: [
+                    content2()
+                  ],
+                ),
               ),
-              Container(
-                child: BarChartSample6(),
-                color: Color.fromARGB(255, 189, 223, 109),
-                alignment: Alignment.center,
-              ),
-              Container(
-                child: BarChartSample7(),
-                color: Color.fromARGB(255, 63, 128, 118),
-              ),
-              Container(
-                child: BarChartSample2(),
-                color: Color.fromARGB(255, 79, 27, 109),
-              ),
-              Container(
-                child: PieChartSample2(),
-                color: Color.fromARGB(255, 206, 107, 140),
-              ),
-            ],
-          ),
-          // Container outside of GridView
-          Container(
-            child: RadarChartSample1(),
-            color: Color.fromARGB(255, 129, 134, 177),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+SingleChildScrollView content1() {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        GridView.count(
+          crossAxisCount: 1,
+          childAspectRatio: 1,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[
+            Container(
+              child: PieChartSample2(),
+              color: Color.fromARGB(255, 255, 255, 255),
+            ),
+            Container(
+              child: BarChartSample6(),
+              color: Color.fromARGB(255, 189, 223, 109),
+              alignment: Alignment.center,
+            ),
+            Container(
+              child: BarChartSample7(),
+              color: Color.fromARGB(255, 63, 128, 118),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+SingleChildScrollView content2() {
+  return SingleChildScrollView(
+    child: Column(
+      children: [
+        GridView.count(
+          crossAxisCount: 1,
+          childAspectRatio: 1,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[
+            Container(
+              child: LineChartSample10(),
+              color: Colors.black,
+            ),
+            Container(
+              child: LineChartSample2(),
+              color: Color.fromARGB(255, 160, 113, 160),
+              alignment: Alignment.center,
+            ),
+            Container(
+              child: BarChartSample6(),
+              color: Color.fromARGB(255, 189, 223, 109),
+              alignment: Alignment.center,
+            ),
+            Container(
+              child: BarChartSample7(),
+              color: Color.fromARGB(255, 63, 128, 118),
+            ),
+          ],
+        ),
+        Container(
+          child: RadarChartSample1(),
+          color: Color.fromARGB(255, 129, 134, 177),
+        ),
+        Container(
+          child: BarChartSample2(),
+          color: Color.fromARGB(255, 79, 27, 109),
+        ),
+      ],
+    ),
+  );
 }
