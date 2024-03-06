@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -30,14 +29,15 @@ class Energy_Consumption {
 
     // Print the raw JSON response to the console
     // print('Response status: ${response.statusCode}');
-    // print('Response body: ${response.body}');
+    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final consumption = data['consumption'].toString();
       final consumptionCost = data['consumptionCost'].toString();
       return [
-        Energy_Consumption(consumptionKwh: consumption,
+        Energy_Consumption(
+            consumptionKwh: consumption,
             consumptionCost: consumptionCost,
             credentials: credentials)
       ];

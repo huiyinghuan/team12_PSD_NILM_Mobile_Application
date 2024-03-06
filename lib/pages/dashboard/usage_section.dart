@@ -1,20 +1,35 @@
 part of 'dashboard_lib.dart';
 
-
 Widget buildUsageSection(BuildContext context) {
   return FutureBuilder<List<Energy_Consumption>>(
-    future: Energy_Consumption.get_energy_consumption_summary(auth!, "http://l3homeation.dyndns.org:2080"),
+    future: energies,
     builder: (context, snapshot) {
-      String consumption = '0.00'; // Placeholder while loading or in case of an error
-      String consumptionCost = '0.00'; // Placeholder while loading or in case of an error
-      final currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now()); // Current date formatting
+      String consumption =
+          '0.00'; // Placeholder while loading or in case of an error
+      String consumptionCost =
+          '0.00'; // Placeholder while loading or in case of an error
+      final currentDate = DateFormat('dd MMMM yyyy')
+          .format(DateTime.now()); // Current date formatting
+      if (snapshot.hasData &&
+          snapshot.connectionState == ConnectionState.done) {
+        // Convert and format to two decimal places
+        consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0')
+            .toStringAsFixed(2);
+        consumptionCost =
+            double.parse(snapshot.data!.first.consumptionCost ?? '0')
+                .toStringAsFixed(2);
 
-      // Convert and format to two decimal places
-      consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0').toStringAsFixed(2);
-      consumptionCost = double.parse(snapshot.data!.first.consumptionCost ?? '0').toStringAsFixed(2);
-
-      // Utilizes the containerWithConsumptionData for consistent UI
-      return containerWithConsumptionData(currentDate, consumption, consumptionCost);
+        // Utilizes the containerWithConsumptionData for consistent UI
+        return containerWithConsumptionData(
+            currentDate, consumption, consumptionCost);
+      } else if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else {
+        return Text(
+          'Failed to load energy consumption',
+          style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+        );
+      }
     },
   );
 }
@@ -95,7 +110,8 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
                     ),
                     SizedBox(height: 10),
                     Text('Cost : \$$cost',
-                        style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+                        style:
+                            GoogleFonts.poppins(fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -113,7 +129,3 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
     ),
   );
 }
-
-
-
-

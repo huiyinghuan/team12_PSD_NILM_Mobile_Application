@@ -1,6 +1,9 @@
 // dashboard_main.dart
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
@@ -17,6 +20,12 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
+late Timer dashboardUpdateTimer;
+
+// updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+//   updateDevices();
+// });
+// ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
 class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
@@ -24,6 +33,11 @@ class _DashboardState extends State<Dashboard> {
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateDevices();
+      fetchEnergy();
+      dashboardUpdateTimer =
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateDevices();
+      });
     });
   }
 
@@ -34,6 +48,15 @@ class _DashboardState extends State<Dashboard> {
           auth!,
           baseURL,
         );
+      });
+    }
+  }
+
+  Future<void> fetchEnergy() async {
+    if (auth != null) {
+      setState(() {
+        energies =
+            Energy_Consumption.get_energy_consumption_summary(auth!, baseURL);
       });
     }
   }
@@ -74,5 +97,12 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  // remove the timer to stop the crashes
+  @override
+  void dispose() {
+    dashboardUpdateTimer.cancel();
+    super.dispose();
   }
 }
