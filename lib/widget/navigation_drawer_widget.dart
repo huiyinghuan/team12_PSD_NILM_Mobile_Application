@@ -106,8 +106,10 @@ class NavigationDrawerWidget extends StatelessWidget {
             case 1:
               return PowerGraph();
             case 2:
-              return listScenes();
+              return ListDevice();
             case 3:
+              return listScenes();
+            case 4:
               return UserProfile();
             default:
               return Dashboard(); // Default to Dashboard if the index is not handled
@@ -140,6 +142,8 @@ class NavigationDrawerWidget extends StatelessWidget {
           return Colors.yellow.shade700;
         case 'Power':
           return Colors.green.shade800;
+        case 'All Devices':
+          return Colors.purple.shade800;
         case 'Scenes':
           return Colors.blue.shade800;
         case 'Profile':

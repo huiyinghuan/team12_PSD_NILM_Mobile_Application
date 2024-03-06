@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 // Change the baseURL into an await.get from preferences
 Future<List<IoT_Device>> devices = Future.value([]);
@@ -16,7 +17,9 @@ final Map<String, int> deviceStatus = {
   'Smart Fan': 2,
   'Lights': 2,
 };
-const String date = '17 Dec 2023';
+// const String date = '17 Dec 2023';
+// Get current date
+String currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
 const int usageKWh = 450;
 const int cost = 100;
 
