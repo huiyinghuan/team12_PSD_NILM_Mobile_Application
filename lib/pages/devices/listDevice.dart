@@ -43,6 +43,7 @@ class _ListDeviceState extends State<ListDevice> {
         );
       });
       callback();
+      print("Ran the callback successfully");
     }
   }
 

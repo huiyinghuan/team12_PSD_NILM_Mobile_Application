@@ -41,8 +41,8 @@ class _EditDevicePageState extends State<EditDevicePage> {
     }
   }
 
-  bool getSwitchValue() {
-    dynamic value = widget.device.propertiesMap?["value"];
+  bool getSwitchValue(IoT_Device device) {
+    dynamic value = device.propertiesMap?["value"];
     if (value == 99 || value == true) {
       isSwitchedOn = true;
       return true;
@@ -57,7 +57,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
   @override
   Widget build(BuildContext context) {
     // print(widget.device.propertiesMap);
-    getSwitchValue();
+    getSwitchValue(widget.device);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -97,7 +97,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = getSwitchValue();
+                          isSwitchedOn = getSwitchValue(widget.device);
                           print("Current state is $isSwitchedOn");
                         });
                       });
@@ -112,7 +112,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = getSwitchValue();
+                          isSwitchedOn = getSwitchValue(widget.device);
                           print("Current state is $isSwitchedOn");
                         });
                       });

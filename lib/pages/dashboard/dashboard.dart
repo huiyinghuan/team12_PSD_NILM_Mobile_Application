@@ -7,6 +7,7 @@ import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/widget/base_layout.dart';
+import 'package:l3homeation/pages/editDevice/edit_device.dart';
 
 import 'dashboard_lib.dart';
 
@@ -38,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  void turn_on_off_device_tile(IoT_Device device) async {
+  void turn_on_off_device_tile(IoT_Device device, Function callback) async {
     print("Tapping device to toggle state\n");
     await device.swapStates();
     if (auth != null) {
@@ -48,16 +49,18 @@ class _DashboardState extends State<Dashboard> {
           baseURL,
         );
       });
+      callback();
     }
   }
 
-  void adjustDevice(BuildContext context, IoT_Device device) {
+  void adjustDevice(
+      BuildContext context, IoT_Device device, Function toggleDeviceState) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditDevicePage(
           device: device,
-          onTap: () {},
+          onTap: toggleDeviceState,
         ),
       ),
     );
