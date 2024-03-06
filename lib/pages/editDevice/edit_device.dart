@@ -13,6 +13,7 @@ class EditDevicePage extends StatefulWidget {
 
 class _EditDevicePageState extends State<EditDevicePage> {
   bool isSwitchedOn = false;
+  bool isInteger = false;
   double intensity = 0.35; // Assuming 35% is the initial value from the image
   String currentRole = '';
 
@@ -41,8 +42,12 @@ class _EditDevicePageState extends State<EditDevicePage> {
     }
   }
 
-  bool getSwitchValue(IoT_Device device) {
+  bool setSystemValue(IoT_Device device) {
     dynamic value = device.propertiesMap?["value"];
+    if (value is int) {
+      intensity = value / 100;
+      isInteger = true;
+    }
     if (value == 99 || value == true) {
       isSwitchedOn = true;
       return true;
@@ -56,8 +61,8 @@ class _EditDevicePageState extends State<EditDevicePage> {
 
   @override
   Widget build(BuildContext context) {
-    // print(widget.device.propertiesMap);
-    getSwitchValue(widget.device);
+    print(widget.device.propertiesMap);
+    setSystemValue(widget.device);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -97,7 +102,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = getSwitchValue(widget.device);
+                          isSwitchedOn = setSystemValue(widget.device);
                           print("Current state is $isSwitchedOn");
                         });
                       });
@@ -112,7 +117,7 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = getSwitchValue(widget.device);
+                          isSwitchedOn = setSystemValue(widget.device);
                           print("Current state is $isSwitchedOn");
                         });
                       });
@@ -128,23 +133,31 @@ class _EditDevicePageState extends State<EditDevicePage> {
                   ),
                 ],
               ),
-              Slider(
-                value: intensity,
-                min: 0,
-                max: 1,
-                divisions: 100,
-                onChanged: (double value) {
-                  setState(() {
-                    intensity = value;
-                  });
-                },
-              ),
-              Center(
-                child: Text(
-                  '${(intensity * 100).round()}%',
-                  style: TextStyle(fontSize: 16.0),
+              Visibility(
+                visible: isInteger,
+                child: Column(
+                  children: [
+                    Slider(
+                      value: intensity,
+                      min: 0,
+                      max: 1,
+                      divisions: 100,
+                      onChanged: (double value) {
+                        setState(() {
+                          intensity = value;
+                        });
+                      },
+                    ),
+                    Center(
+                      child: Text(
+                        '${(intensity * 100).round()}%',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               // SizedBox(height: 24), // For spacing before the Save button
               // SizedBox(
               //   width:
