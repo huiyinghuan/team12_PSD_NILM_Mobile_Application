@@ -27,10 +27,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
     await device.swapStates();
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
-          auth!,
-          baseURL,
-        );
+        devices = widget.specificRoom.getThisRoomsDevices();
       });
     }
   }
@@ -39,7 +36,8 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(device: device, onTap: () {}),
+        builder: (context) =>
+            EditDevicePage(device: device, onTap: turn_on_off_device_tile),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:l3homeation/models/room.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/pages/rooms/base/specific_room.dart';
+import 'package:l3homeation/pages/rooms/edit/edit_rooms.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 
 import 'package:l3homeation/pages/rooms/base/rooms_shared.dart';
@@ -56,11 +57,11 @@ class _RoomsState extends State<Rooms> {
     );
   }
 
-  void adjustRoom(BuildContext context, IoT_Device device) {
+  void adjustRoom(BuildContext context, Room room) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(device: device, onTap: () {}),
+        builder: (context) => EditRoomPage(room: room),
       ),
     );
   }
