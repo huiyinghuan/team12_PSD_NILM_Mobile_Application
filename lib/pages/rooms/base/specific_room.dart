@@ -69,26 +69,24 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
 
   Widget displayDevicesInRoom(BuildContext context, Function onTap) {
     return Container(
-      child: deviceTied(context, onTap),
+      child: deviceTiedDevices(context, onTap),
     );
   }
 
-  Widget deviceTied(BuildContext context, Function onTap) {
+  Widget deviceTiedDevices(BuildContext context, Function onTap) {
     return FutureBuilder<List<IoT_Device>>(
       future: devices,
       builder:
           (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
         if (snapshot.hasData) {
           // Filter devices based on the room's ID
-          List<IoT_Device> roomDevices = snapshot.data!
-              .where((device) => device.roomId == widget.specificRoom.id)
-              .toList();
+          List<IoT_Device> roomDevices = snapshot.data!.toList();
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 8),
-              displayNumberOfDevicesOn(roomDevices),
+              // displayNumberOfDevicesOn(roomDevices),
               displayDeviceTiles(roomDevices, onTap),
             ],
           );

@@ -3,7 +3,6 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "package:l3homeation/models/room.dart";
-import "../models/iot_device.dart";
 
 class Room_Tile extends StatelessWidget {
   final Room room;
