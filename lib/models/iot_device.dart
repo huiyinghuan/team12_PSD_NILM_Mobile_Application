@@ -26,6 +26,87 @@ class IoT_Device {
     required this.roomId,
     required this.propertiesMap,
   });
+  Future<void> setToTrue() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': true,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> setToFalse() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': false,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> setToZero() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {'value': 0},
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> sendCurrentValue() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': value,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
 
   Future<void> swapStates() async {
     print("swapping states now\n");

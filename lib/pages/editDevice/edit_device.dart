@@ -12,57 +12,24 @@ class EditDevicePage extends StatefulWidget {
 }
 
 class _EditDevicePageState extends State<EditDevicePage> {
-  bool isSwitchedOn = false;
-  bool isInteger = false;
-  double intensity = 0.35; // Assuming 35% is the initial value from the image
+  bool? isSwitchedOn;
+  int intensity = 100;
   String currentRole = '';
 
-  String getImagePath() {
-    if (widget.device.propertiesMap != null &&
-        widget.device.propertiesMap?['deviceRole'] == 'Light') {
-      return isSwitchedOn
-          ? 'images/icons/light100.png'
-          : 'images/icons/light0.png';
-    } else if (widget.device.propertiesMap != null &&
-        widget.device.propertiesMap?['deviceRole'] == 'BlindsWithPositioning') {
-      return isSwitchedOn
-          ? 'images/icons/drzwi100.png'
-          : 'images/icons/drzwi0.png';
-    } else if (widget.device.propertiesMap != null &&
-        widget.device.propertiesMap?['deviceRole'] == 'OpeningSensor') {
-      return isSwitchedOn
-          ? 'images/icons/roleta_wew100.png'
-          : 'images/icons/roleta_wew0.png';
-    } else if (widget.device.propertiesMap != null &&
-        widget.device.propertiesMap?['deviceRole'] == 'Other') {
-      return 'images/icons/czujnik_ruchu0.png';
+  @override
+  void initState() {
+    super.initState();
+    if (widget.device.needSlider!) {
+      isSwitchedOn = widget.device.value > 0 ? true : false;
     } else {
-      // If there is no deviceRole, return the default image
-      return 'images/l3homeation.png';
-    }
-  }
-
-  bool setSystemValue(IoT_Device device) {
-    dynamic value = device.propertiesMap?["value"];
-    if (value is int) {
-      intensity = value / 100;
-      isInteger = true;
-    }
-    if (value == 99 || value == true) {
-      isSwitchedOn = true;
-      return true;
-    } else if (value == 0 || value == false) {
-      isSwitchedOn = false;
-      return false;
-    } else {
-      return false;
+      isSwitchedOn = widget.device.value;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     print(widget.device.propertiesMap);
-    setSystemValue(widget.device);
+    // setSystemValue(widget.device);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -102,7 +69,14 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = setSystemValue(widget.device);
+                          isSwitchedOn = true;
+                          if (!widget.device.needSlider!) {
+                            widget.device.setToTrue();
+                            widget.device.value = true;
+                          } else {
+                            widget.device.value = intensity;
+                            widget.device.sendCurrentValue();
+                          }
                           print("Current state is $isSwitchedOn");
                         });
                       });
@@ -117,7 +91,15 @@ class _EditDevicePageState extends State<EditDevicePage> {
                         // This is the callback function
                         setState(() {
                           // Assuming the device instance's value is now updated
-                          isSwitchedOn = setSystemValue(widget.device);
+                          isSwitchedOn = false;
+                          if (!widget.device.needSlider!) {
+                            widget.device.setToFalse();
+                            widget.device.value = false;
+                          } else {
+                            //store the last turned on value
+                            // set the api value to 0 and store the last turned on value
+                            widget.device.setToZero();
+                          }
                           print("Current state is $isSwitchedOn");
                         });
                       });
@@ -133,51 +115,102 @@ class _EditDevicePageState extends State<EditDevicePage> {
                   ),
                 ],
               ),
-              Visibility(
-                visible: isInteger,
-                child: Column(
-                  children: [
-                    Slider(
-                      value: intensity,
-                      min: 0,
-                      max: 1,
-                      divisions: 100,
-                      onChanged: (double value) {
-                        setState(() {
-                          intensity = value;
-                        });
-                      },
-                    ),
-                    Center(
-                      child: Text(
-                        '${(intensity * 100).round()}%',
-                        style: TextStyle(fontSize: 16.0),
+              if (widget.device.needSlider! == true)
+                Container(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20),
+                      sliderBar(),
+                      Center(
+                        child: Text(
+                          'Intensity: ${(widget.device.value).round()}%',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // SizedBox(height: 24), // For spacing before the Save button
-              // SizedBox(
-              //   width:
-              //       double.infinity, // Makes the button stretch to full width
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       widget.onTap();
-              //     },
-              //     child: Text('Save Edit'),
-              //     style: ElevatedButton.styleFrom(
-              //       // primary: Theme.of(context).accentColor, // Use the accent color from the theme
-              //       padding: EdgeInsets.symmetric(
-              //           vertical: 12.0), // Add padding for a taller button
-              //     ),
-              //   ),
-              // ),
+                    ],
+                  ),
+                )
+              else
+                SizedBox(height: 10),
             ],
           ),
         ),
       ),
     );
+  }
+
+  // Column(
+  //   children: [
+  //     SizedBox(height: 20),
+  //     sliderBar(),
+  //     Center(
+  //       child: Text(
+  //         'Intensity: ${(widget.device.value).round()}%',
+  //         style: TextStyle(fontSize: 16.0),
+  //       ),
+  //     ),
+  //   ],
+  // ),
+
+  // SizedBox(height: 24), // For spacing before the Save button
+  // SizedBox(
+  //   width:
+  //       double.infinity, // Makes the button stretch to full width
+  //   child: ElevatedButton(
+  //     onPressed: () {
+  //       widget.onTap();
+  //     },
+  //     child: Text('Save Edit'),
+  //     style: ElevatedButton.styleFrom(
+  //       // primary: Theme.of(context).accentColor, // Use the accent color from the theme
+  //       padding: EdgeInsets.symmetric(
+  //           vertical: 12.0), // Add padding for a taller button
+  //     ),
+  //   ),
+  // ),
+  Slider sliderBar() {
+    return Slider(
+      value: ((double.parse(widget.device.value.toString())) / 100),
+      min: 0.0,
+      max: 1.0,
+      divisions: 100,
+      label: "${(widget.device.value).toInt()}",
+      onChanged: (double newValue) {
+        setState(() => widget.device.value = (newValue * 100).toInt());
+        if (widget.device.value > 0) {
+          isSwitchedOn = true;
+          intensity = widget.device.value;
+          widget.device.sendCurrentValue();
+        } else {
+          isSwitchedOn = false;
+          widget.device.setToZero();
+        }
+      },
+    );
+  }
+
+  String getImagePath() {
+    if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'Light') {
+      return isSwitchedOn!
+          ? 'images/icons/light100.png'
+          : 'images/icons/light0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'BlindsWithPositioning') {
+      return isSwitchedOn!
+          ? 'images/icons/drzwi100.png'
+          : 'images/icons/drzwi0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'OpeningSensor') {
+      return isSwitchedOn!
+          ? 'images/icons/roleta_wew100.png'
+          : 'images/icons/roleta_wew0.png';
+    } else if (widget.device.propertiesMap != null &&
+        widget.device.propertiesMap?['deviceRole'] == 'Other') {
+      return 'images/icons/czujnik_ruchu0.png';
+    } else {
+      // If there is no deviceRole, return the default image
+      return 'images/l3homeation.png';
+    }
   }
 }
