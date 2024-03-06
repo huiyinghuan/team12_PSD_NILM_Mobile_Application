@@ -3,6 +3,7 @@ import 'package:l3homeation/models/drawer_item.dart';
 import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
+import 'package:l3homeation/pages/rooms/base/rooms.dart';
 import 'package:l3homeation/pages/scenes/listScenes.dart';
 import 'package:l3homeation/pages/profile/userProfile.dart';
 import 'package:provider/provider.dart';
@@ -104,10 +105,14 @@ class NavigationDrawerWidget extends StatelessWidget {
             case 0:
               return Dashboard();
             case 1:
-              return PowerGraph();
+              return ListDevice();
             case 2:
               return listScenes();
             case 3:
+              return Rooms();
+            case 4:
+              return PowerGraph();
+            case 5:
               return UserProfile();
             default:
               return Dashboard(); // Default to Dashboard if the index is not handled
@@ -138,10 +143,14 @@ class NavigationDrawerWidget extends StatelessWidget {
       switch (item.title) {
         case 'Dashboard':
           return Colors.yellow.shade700;
-        case 'Power':
-          return Colors.green.shade800;
+        case 'All Devices':
+          return Colors.deepPurple.shade500;
         case 'Scenes':
           return Colors.blue.shade800;
+        case 'Rooms':
+          return Colors.orangeAccent.shade400;
+        case 'Power':
+          return Colors.green.shade800;
         case 'Profile':
           return Colors.orange.shade800;
         case 'Searching...':
