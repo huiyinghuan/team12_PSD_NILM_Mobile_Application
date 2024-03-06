@@ -87,41 +87,53 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: [
-                  Text(
-                    '${roomDevices.length} DEVICES ON',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(width: 4), // Add spacing between text and icon
-                ],
-              ),
               SizedBox(height: 8),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: roomDevices
-                    .map((device) => IoT_Device_Tile(
-                          device: device,
-                          onTap: () => onTap(device),
-                        ))
-                    .toList(),
-              ),
+              displayNumberOfDevicesOn(roomDevices),
+              displayDeviceTiles(roomDevices, onTap),
             ],
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return Text(
-            'Failed to load devices',
-            style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
-          );
+          return failedToLoadError();
         }
       },
+    );
+  }
+
+  Row displayNumberOfDevicesOn(List<IoT_Device> roomDevices) {
+    return Row(
+      children: [
+        Text(
+          '${roomDevices.length} DEVICES ON',
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        SizedBox(width: 4), // Add spacing between text and icon
+      ],
+    );
+  }
+
+  Wrap displayDeviceTiles(List<IoT_Device> roomDevices, Function onTap) {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 8.0,
+      children: roomDevices
+          .map((device) => IoT_Device_Tile(
+                device: device,
+                onTap: () => onTap(device),
+              ))
+          .toList(),
+    );
+  }
+
+  Text failedToLoadError() {
+    return Text(
+      'Failed to load devices',
+      style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
     );
   }
 
