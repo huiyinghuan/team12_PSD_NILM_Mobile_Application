@@ -17,7 +17,7 @@ class NILM_graph extends StatefulWidget {
 }
 
 class NILM_graph_state extends State<NILM_graph> {
-  final double width = 25;
+  final double width = 15;
 
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
