@@ -24,8 +24,12 @@ class NILM_graph_state extends State<NILM_graph> {
   late Future<List<NILM_appliance>> appliances;
   int touchedGroupIndex = -1;
   String credentials = auth!;
+  // change to deployment url when done
   String baseURL = "http://dereknan.click:27558";
-
+  List<String> x_axis_titles = [];
+  List<double> y_axis_titles = [];
+  String? timestamp;
+  double? total_power_consumption;
   @override
   void initState() {
     super.initState();
@@ -62,13 +66,7 @@ class NILM_graph_state extends State<NILM_graph> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<NILM_appliance> appliances = snapshot.data!;
-          for (NILM_appliance appliance in appliances) {
-            print(appliance.name);
-            print(appliance.power_kW);
-            print(appliance.running);
-            print(appliance.timestamp);
-            print(appliance.total_consumption);
-          }
+          process_NILM_appliances(snapshot, appliances);
           return Placeholder(); // Return your widget here
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Or any other loading indicator
@@ -79,6 +77,19 @@ class NILM_graph_state extends State<NILM_graph> {
         }
       },
     );
+  }
+
+  void process_NILM_appliances(
+      AsyncSnapshot snapshot, List<NILM_appliance> appliances) {
+    timestamp = appliances[0].timestamp;
+    total_power_consumption = appliances[0].total_consumption;
+    for (NILM_appliance appliance in appliances) {
+      x_axis_titles.add(appliance.name!);
+      y_axis_titles.add(appliance.power_kW!);
+      // print(appliance.running);
+
+      print(appliance.total_consumption);
+    }
   }
 
   @override
@@ -243,7 +254,7 @@ class NILM_graph_state extends State<NILM_graph> {
       style: const TextStyle(
         color: Color(0xff7589a2),
         fontWeight: FontWeight.bold,
-        fontSize: 14,
+        fontSize: 7,
       ),
     );
 
