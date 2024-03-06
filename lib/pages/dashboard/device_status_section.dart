@@ -13,7 +13,7 @@ Widget buildDeviceStatusSection(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(40),
         topRight: Radius.circular(40),
-    ),
+      ),
     ),
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
     child: FutureBuilder<List<IoT_Device>>(
@@ -26,6 +26,7 @@ Widget buildDeviceStatusSection(
             children: <Widget>[
               Row(
                 children: [
+                  SizedBox(height: 50),
                   Text(
                     '${snapshot.data!.where((device) => (checkDeviceValue(device) || device.value == true)).length} DEVICES ON',
                     style: GoogleFonts.poppins(
@@ -34,13 +35,7 @@ Widget buildDeviceStatusSection(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(width: 4), // Add spacing between text and icon
-                  Container(
-                    child: IconButton(
-                      icon: const Icon(Icons.add_circle_outline_outlined),
-                      onPressed: () => {navigateTo(ListDevice())},
-                    ),
-                  ),
+                  SizedBox(height: 6), // Add spacing between text and icon
                 ],
               ),
               SizedBox(height: 8),
