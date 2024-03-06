@@ -1,5 +1,7 @@
 // dashboard_main.dart
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
@@ -18,12 +20,17 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late Timer updateDevicesTimer;
+
   @override
   void initState() {
     super.initState();
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateDevices();
+      updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateDevices();
+      });
     });
   }
 
@@ -74,5 +81,12 @@ class _DashboardState extends State<Dashboard> {
         ],
       ),
     );
+  }
+
+  // remove the timer to stop the crashes
+  @override
+  void dispose() {
+    updateDevicesTimer.cancel();
+    super.dispose();
   }
 }

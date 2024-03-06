@@ -12,6 +12,7 @@ class IoT_Device {
   int? id;
   bool? needSlider;
   dynamic value;
+  int? roomId;
   Map<String, dynamic>? propertiesMap;
 
   IoT_Device({
@@ -22,6 +23,7 @@ class IoT_Device {
     required this.id,
     required this.needSlider,
     required this.value,
+    required this.roomId,
     required this.propertiesMap,
   });
 
@@ -107,6 +109,7 @@ class IoT_Device {
           name: response['name'],
           value: response['properties']['value'],
           needSlider: response['properties']['value'] is int ? true : false,
+          roomId: response['roomID'],
           propertiesMap: response['properties'],
         );
 
@@ -142,6 +145,7 @@ class IoT_Device {
               value: jsonResponses['properties']['value'],
               needSlider:
                   jsonResponses['properties']['value'] is bool ? true : false,
+              roomId: jsonResponses['roomID'],
               propertiesMap: jsonResponses['properties'],
             );
             devices.add(new_device);

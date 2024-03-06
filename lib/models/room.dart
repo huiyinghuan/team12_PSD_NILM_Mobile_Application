@@ -17,7 +17,6 @@ class Room {
   Map<String, dynamic>? defaultSensors;
   int? defaultThermostat;
   Map<String, dynamic>? meters;
-  late List<IoT_Device> devices;
   Map<String, dynamic>? propertiesMap;
   Room(
       {required this.name,
@@ -53,8 +52,23 @@ class Room {
           propertiesMap: responses);
       rooms.add(newRoom);
     }
-    // print(jsonResponses);
-    print(rooms.length);
     return rooms;
+  }
+
+  // get the devices tied only to this room
+  Future<List<IoT_Device>> getThisRoomsDevices() async {
+    late Future<List<IoT_Device>> futureDevices = IoT_Device.get_devices(
+      credentials,
+      URL,
+    );
+    List<IoT_Device> devices = await futureDevices;
+    List<IoT_Device> roomIdSpecifics = [];
+    for (IoT_Device device in devices) {
+      if (device.roomId == id) {
+        print(device.name);
+        roomIdSpecifics.add(device);
+      }
+    }
+    return roomIdSpecifics;
   }
 }
