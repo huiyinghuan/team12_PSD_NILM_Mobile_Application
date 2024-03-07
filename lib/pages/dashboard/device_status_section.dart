@@ -15,7 +15,7 @@ Widget buildDeviceStatusSection(
         topRight: Radius.circular(40),
       ),
     ),
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
     child: FutureBuilder<List<IoT_Device>>(
       future: devices,
       builder:
@@ -26,16 +26,10 @@ Widget buildDeviceStatusSection(
             children: <Widget>[
               Row(
                 children: [
-                  SizedBox(height: 50),
-                  Text(
-                    '${snapshot.data!.where((device) => (checkDeviceValue(device) || device.value == true)).length} DEVICES ON',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: displayDevicesOn(snapshot),
                   ),
-                  const SizedBox(width: 4), // Add spacing between text and icon
                   Container(
                     child: IconButton(
                       icon: const Icon(Icons.add_circle_outline_outlined),
@@ -44,16 +38,19 @@ Widget buildDeviceStatusSection(
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
               Wrap(
-                spacing: 8.0,
+                spacing: 0.0,
                 runSpacing: 8.0,
                 children: snapshot.data!
-                    .map((device) => IoT_Device_Tile(
-                        device: device,
-                        onTap: () => onTap(device, () {}),
-                        onLongPress: () =>
-                            handleLongPress(context, device, onTap)))
+                    .map((device) => Padding(
+                          padding: const EdgeInsets.only(left: 12.0, top: 12.0),
+                          child: IoT_Device_Tile(
+                            device: device,
+                            onTap: () => onTap(device),
+                            onLongPress: () =>
+                                handleLongPress(context, device, onTap),
+                          ),
+                        ))
                     .toList(),
               ),
             ],
@@ -71,6 +68,16 @@ Widget buildDeviceStatusSection(
   );
 }
 
+Text displayDevicesOn(AsyncSnapshot snapshot) {
+  return Text(
+    '${snapshot.data!.where((device) => (checkDeviceValue(device) || device.value == true)).length} DEVICES ON',
+    style: GoogleFonts.poppins(
+      color: Colors.black,
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+    ),
+  );
+}
 // void adjustDeviceSlider(IoT_Device device, BuildContext context) {
 //   final navigateTo =
 //       (Widget page) => Navigator.of(context).push(MaterialPageRoute(

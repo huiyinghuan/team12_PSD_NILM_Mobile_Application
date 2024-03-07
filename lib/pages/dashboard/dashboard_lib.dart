@@ -6,6 +6,8 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 
 import 'package:l3homeation/components/iot_device_tile.dart';
+import 'package:l3homeation/components/iot_scene_tile.dart';
+import 'package:l3homeation/models/IoT_Scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';

@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:l3homeation/models/IoT_Scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
@@ -26,19 +27,18 @@ class Dashboard extends StatefulWidget {
 }
 
 late Timer dashboardUpdateTimer;
+late ScrollController scrollController;
 
-// updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-//   updateDevices();
-// });
-// ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
 class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    scrollController = ScrollController();
     loadAuth().then((_) async {
       print("Got auth: $auth\n");
       updateDevices();
       fetchEnergy();
+      fetchScenes();
       dashboardUpdateTimer =
           Timer.periodic(const Duration(seconds: 5), (timer) {
         updateDevices();
@@ -57,6 +57,17 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  Future<void> fetchScenes() async {
+    if (auth != null) {
+      setState(() {
+        allScenes = IoT_Scene.get_scenes(
+          auth!,
+          baseURL,
+        );
+      });
+    }
+  }
+
   Future<void> fetchEnergy() async {
     if (auth != null) {
       setState(() {
@@ -66,8 +77,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  void turn_on_off_device_tile(IoT_Device device, Function callback) async {
-    print("Tapping device to toggle state\n");
+  void turn_on_off_device_tile(IoT_Device device) async {
     await device.swapStates();
     if (auth != null) {
       setState(() {
@@ -76,7 +86,6 @@ class _DashboardState extends State<Dashboard> {
           baseURL,
         );
       });
-      callback();
     }
   }
 
@@ -93,17 +102,34 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  void sceneSwap(IoT_Scene scene) async {
+    await scene.swapStates();
+    if (auth != null) {
+      setState(() {
+        allScenes = IoT_Scene.get_scenes(auth!, baseURL);
+      });
+
+      // Scroll to the previous position after updating the UI
+      scrollController.animateTo(
+        scrollController.position.pixels,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
       title: 'Dashboard',
       child: ListView(
+        controller: scrollController,
         children: <Widget>[
           buildGreetingSection(context),
           buildDeviceStatusSection(
               context, turn_on_off_device_tile, adjustDevice),
           buildUsageSection(context),
-          buildSceneSection(context),
+          buildSceneSection(context, sceneSwap),
         ],
       ),
     );
@@ -113,6 +139,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   void dispose() {
     dashboardUpdateTimer.cancel();
+    scrollController.dispose(); // Dispose the ScrollController
     super.dispose();
   }
 }

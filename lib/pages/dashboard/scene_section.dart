@@ -1,36 +1,82 @@
 part of 'dashboard_lib.dart';
 
-Widget buildSceneSection(BuildContext context) {
-  // For now, using static data and cards
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Scene',
-          style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 10),
-        Wrap(
-          spacing: 10,
-          children: <Widget>[
-            Column(
-              children: [
-                buildSceneCard(
-                    'Kitchen', 'Lights; Fan', '3', 'images/kitchen.png'),
-              ],
+Widget buildSceneSection(BuildContext context, Function onTap) {
+  return FutureBuilder<List<IoT_Scene>>(
+    future: allScenes,
+    builder: (context, snapshot) {
+      if (snapshot.hasData &&
+          snapshot.connectionState == ConnectionState.done) {
+        return Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start, // Align children to the start
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14.0, top: 12.0),
+              child: Text(
+                'Scenes',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            Column(
-              children: [
-                buildSceneCard('Bedroom', 'ALL', '4', 'images/bedroom.png'),
-              ],
+            Wrap(
+              spacing: 0.0,
+              runSpacing: 8.0,
+              children: snapshot.data!
+                  .mapIndexed((index, scene) => Padding(
+                        padding: const EdgeInsets.only(left: 12.0, top: 12.0),
+                        child: IoT_Scene_Tile(
+                          scene: scene,
+                          onTap: () => onTap(scene),
+                          count: index + 1,
+                        ),
+                      ))
+                  .toList(),
             ),
-            // Add more columns as needed
           ],
-        ),
-      ],
-    ),
+        );
+      } else if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else {
+        return Text(
+          'Failed to load energy consumption',
+          style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+        );
+      }
+    },
+  );
+}
+
+extension IndexedIterable<E> on Iterable<E> {
+  Iterable<T> mapIndexed<T>(T Function(int index, E e) f) sync* {
+    var index = 0;
+    for (final element in this) {
+      yield f(index, element);
+      index++;
+    }
+  }
+}
+
+Wrap buildSceneList(AsyncSnapshot snapshot, Function onTap) {
+  return Wrap(
+    spacing: 10,
+    children: <Widget>[
+      Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return IoT_Scene_Tile(
+                  scene: snapshot.data![index],
+                  onTap: () => onTap,
+                  count: index + 1);
+            },
+          ),
+        ],
+      ),
+    ],
   );
 }
 
