@@ -39,7 +39,7 @@ class _PowerGraphState extends State<PowerGraph>
     _tabController = TabController(length: 2, vsync: this as TickerProvider);
     loadAuth().then((_) {
       print("Got auth: $auth\n");
-      updateDevices();
+      // updateDevices();
     });
     // updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -56,12 +56,6 @@ class _PowerGraphState extends State<PowerGraph>
 
   Future<void> loadAuth() async {
     auth = await UserPreferences.getString('auth');
-  }
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
   }
 
   Widget buildEnergyTab() {

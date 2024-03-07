@@ -107,8 +107,6 @@ class NavigationDrawerWidget extends StatelessWidget {
             case 1:
               return ListDevice();
             case 2:
-              return ListDevice();
-            case 3:
               return listScenes();
             case 3:
               return Rooms();

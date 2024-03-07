@@ -10,8 +10,12 @@ Widget buildUsageSection(BuildContext context) {
           '0.00'; // Placeholder while loading or in case of an error
       final currentDate = DateFormat('dd MMMM yyyy')
           .format(DateTime.now()); // Current date formatting
+
       if (snapshot.hasData &&
           snapshot.connectionState == ConnectionState.done) {
+        // Process electrical consumption data
+        // List<NILM_appliance> appliances = snapshot.data!;
+
         // Convert and format to two decimal places
         consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0')
             .toStringAsFixed(2);

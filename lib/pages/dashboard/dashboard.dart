@@ -69,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  void turn_on_off_device_tile(IoT_Device device) async {
+  void turn_on_off_device_tile(IoT_Device device, Function callback) async {
     print("Tapping device to toggle state\n");
     await device.swapStates();
     if (auth != null) {
