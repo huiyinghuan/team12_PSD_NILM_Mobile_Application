@@ -190,7 +190,7 @@ class IoT_Scene {
     String icon,
     String credentials,
     String URL,
-  ) async {
+  ) {
     var sceneData = {
       "hidden": false, //no need change
       "protectedByPin": false, //no need change
@@ -208,12 +208,12 @@ class IoT_Scene {
       "categories": [1], //no need change
       "roomId": 219, //no need change
     };
-    final response = await http.post(
+    final response = http.post(
       Uri.parse('$URL/api/scenes'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
-      body: sceneData,
+      body: JsonEncoder().convert(sceneData),
     );
     return response;
   }

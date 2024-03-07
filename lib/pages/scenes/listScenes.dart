@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/scenes/eachScene.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
@@ -15,7 +16,8 @@ class listScenes extends StatefulWidget {
 }
 
 class _listScenesState extends State<listScenes> {
-  late Future<List<dynamic>> scenes = Future.value([]);
+  late Future<List<IoT_Scene>> scenes = Future.value([]);
+  late Future<List<IoT_Device>> devices = Future.value([]);
   String? auth;
 
   @override
@@ -24,6 +26,7 @@ class _listScenesState extends State<listScenes> {
     loadAuth().then((_) {
       print("Got auth: $auth\n");
       updateScenes();
+      updateDevices();
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -40,6 +43,17 @@ class _listScenesState extends State<listScenes> {
     if (auth != null) {
       setState(() {
         scenes = IoT_Scene.get_scenes(
+          auth!,
+          "http://l3homeation.dyndns.org:2080",
+        );
+      });
+    }
+  }
+
+  Future<void> updateDevices() async {
+    if (auth != null) {
+      setState(() {
+        devices = IoT_Device.get_devices(
           auth!,
           "http://l3homeation.dyndns.org:2080",
         );
@@ -80,7 +94,8 @@ class _listScenesState extends State<listScenes> {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       drawer: NavigationDrawerWidget(),
-      body: ListView(
+      body: 
+      ListView(
         children: <Widget>[
           _buildSceneList(navigateTo), //passing the navigateTo function to buildExpansionTiles
         ],
@@ -93,8 +108,19 @@ class _listScenesState extends State<listScenes> {
               String name = '';
               String description = '';
 
+              IoT_Device selectedDevice = IoT_Device(
+                name: '',
+                URL: '',
+                credentials: '',
+                id: 0,
+                needSlider: false,
+                value: 0,
+                propertiesMap: {},
+                roomId: 0,
+              );
+              late var buttonpressed = (selectedDevice.id == null || name == '' || description == '');
               return AlertDialog(
-                title: Text('New Scene'),
+                title: const Text('New Scene'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -102,7 +128,7 @@ class _listScenesState extends State<listScenes> {
                       onChanged: (value) {
                         name = value;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Name',
                       ),
                     ),
@@ -110,34 +136,87 @@ class _listScenesState extends State<listScenes> {
                       onChanged: (value) {
                         description = value;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Description',
                       ),
+                    ),
+                    FutureBuilder<List<IoT_Device>>(
+                      future: devices,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<IoT_Device> devices = snapshot.data!;
+                          return DropdownButtonFormField<IoT_Device>(
+                            decoration: const InputDecoration(
+                              labelText: 'Select a device',
+                              hintText: 'Choose a device',
+                            ),
+                            items: [
+                              const DropdownMenuItem<IoT_Device>(
+                                value: null,
+                                child: Text('Choose a Main device'),
+                              ),
+                              ...devices.map((IoT_Device device) {
+                                return DropdownMenuItem<IoT_Device>(
+                                  value: device,
+                                  child: Text(device.name!),
+                                );
+                              }),
+                            ],
+                            onChanged: (IoT_Device? select) {
+                              // Handle selected device
+                              if (select != null) {
+                                selectedDevice = select;
+                              }
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return const Text('Error loading devices');
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
                     ),
                   ],
                 ),
                 actions: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      // Add logic to save the new scene with the provided name and description
-                      print('Name: $name, Description: $description');
-                      // scene.post_new_scene(name, description);
                       Navigator.of(context).pop();
                     },
-                    child: Text('Save'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      if (buttonpressed) {
+                        Navigator.of(context).pop();
+                        return;
+                      }
+                      var action = (selectedDevice.value.runtimeType == bool) ? "close" : "turnOff";
+                      print(selectedDevice.value);
+                      // Add logic to save the new scene with the provided name and description
+                      print('Name: $name, Description: $description');
+                      IoT_Scene.post_new_scene(
+                        name,
+                        description,
+                        "[{\"conditions\":{\"operator\":\"all\",\"conditions\":[]},\"actions\":[{\"group\":\"device\",\"type\":\"single\",\"id\":${selectedDevice.id},\"action\":\"$action\",\"args\":[]}]}]",
+                        'scene',
+                        auth!,
+                        "http://l3homeation.dyndns.org:2080",
+                      ).then((response) {
+                        print(response.body); // Print the response body
+                        updateScenes();
+                        setState(() {});
+                      });
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Save'),
                   ),
                 ],
               );
             },
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -146,7 +225,7 @@ class _listScenesState extends State<listScenes> {
   Container _buildSceneList(navigateTo) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: FutureBuilder<List<dynamic>>(
+      child: FutureBuilder<List<IoT_Scene>>(
         future: scenes,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -154,7 +233,10 @@ class _listScenesState extends State<listScenes> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Column(
-                  children: buildExpansionTiles(snapshot.data!, navigateTo),
+                  children: [
+                    ...buildExpansionTiles(snapshot.data!, navigateTo),
+                    const SizedBox(height: 100), // Add a margin spacer
+                  ],
                 ),
               ],
             );
@@ -172,40 +254,103 @@ class _listScenesState extends State<listScenes> {
   }
 
   // Assuming that scenes is a List<IoT_Scene>
-  List<ExpansionTile> buildExpansionTiles(List<dynamic> scenes, navigateTo) {
+  Iterable<Card> buildExpansionTiles(List<IoT_Scene> scenes, navigateTo) {
     return scenes.map((scene) {
       // print(scene.toString_IOT());
       dynamic enableScene = scene.enable;
 
-      return ExpansionTile(
-        title: Text(
-          scene.name, // Replace with your desired title text
-          style: const TextStyle(fontSize: 18.0), // Customize title text size
+      return Card(
+      elevation: 0,
+      margin: const EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: const BorderSide(
+            color: AppColors.primary2, width: 2), // Add orange outline
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: ExpansionTile(
+        title: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+              child: Image(
+                image: AssetImage(
+                  scene.icon != null
+                      ? 'images/icons/${scene.icon}.png'
+                      : 'images/icons/scene.png',
+                ),
+                width: 52.10625,
+                height: 53.12625,
+              ),
+            ),
+            Text(
+              scene.name!, // Replace with your desired title text
+              style: const TextStyle(fontSize: 18.0), // Customize title text size
+            ),
+          ],
         ),
         children: [
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(18.0), // Adjust padding as needed
+                padding: const EdgeInsets.fromLTRB(18, 10, 0, 0), // Adjust padding as needed
                 child: eachSceneRow(scene, enableScene, navigateTo), // Replace with your desired row widget
               ),
               Align(
                 alignment: Alignment.topRight,
                 child: ButtonBar(
                   children: [
-                    TextButton(
-                      onPressed: (enableScene)
-                          ? () => {scene.activate_scenes(),}
-                          : null,
-                      child: Text(
-                        'Activate Scene Now',
-                        style: TextStyle(
-                          color: (enableScene)
-                              ? AppColors.secondary1
-                              : Colors.grey,
-                          fontSize: 18.0,
-                        ),
+                    AnimatedOpacity(
+                      opacity: enableScene ? 1 : 0.5,
+                      duration: const Duration(seconds: 1), // Customize the duration as needed
+                      child: Row(
+                        children: [
+                          TextButton(
+                            onPressed: enableScene
+                                ? () {
+                                    print('directing to next page');
+                                    navigateTo(eachScene(scene: scene));
+                                  }
+                                : null,
+                            onLongPress: enableScene
+                                ? () {
+                                    CustomDialog("Click to Edit Scene");
+                                  }
+                                : null,
+                            child: const Icon(Icons.edit),
+                            style: ButtonStyle(
+                              foregroundColor: enableScene ? MaterialStateProperty.all<Color>(AppColors.secondary1) : MaterialStateProperty.all<Color>(Colors.grey),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: enableScene ? () => scene.activate_scenes() : null,
+                            onLongPress: enableScene
+                                ? () {
+                                    CustomDialog("Click to Activate Scene Once");
+                                  } : null,
+                            child: IconButton(
+                              icon: const Icon(Icons.touch_app),
+                              onPressed: enableScene
+                                  ? () {
+                                      print('directing to next page');
+                                      navigateTo(eachScene(scene: scene));
+                                    }
+                                  : null,
+                              color: enableScene ? AppColors.secondary1 : Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    Switch(
+                      // This bool value toggles the switch.
+                      value: enableScene,
+                      activeColor: Colors.green,
+                      inactiveThumbColor: Colors.red,
+                      onChanged: (bool value) {
+                        swapper(scene);
+                      },
                     ),
                   ],
                 ),
@@ -213,63 +358,92 @@ class _listScenesState extends State<listScenes> {
             ],
           )
         ],
+      )
+    ),
       );
     }).toList();
   }
 
-  Row eachSceneRow(IoT_Scene scene, enableScene, navigateTo) {
-    return Row(
-      children: [
-        Flexible(
-          child: RichText(
-            text: const TextSpan(
-              text: 'Status: ',
-              style: TextStyle(
-                color: AppColors.secondary1,
-                fontSize: 18.0,
-              ),
-              children: [
-                TextSpan(
-                  text: 'put smth?! \n\n',
-                  style: TextStyle(
-                    color: AppColors.secondary1,
-                    fontSize: 18.0,
-                    fontWeight: (FontWeight.bold),
+  void CustomDialog(String text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20), // Add your desired padding values
+            child: Center(
+              heightFactor: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.info),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text( text,
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                      overflow: TextOverflow.visible,
+                    ),  
                   ),
-                ),
-                TextSpan(
-                  text: 'Enable Trigger Scene: \n',
-                  // style: TextStyle(
-                  //   color: Colors.black,
-                  //   fontSize: 14.0,
-                  // ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Row eachSceneRow(IoT_Scene scene, enableScene, navigateTo) {
+    String? description;
+    if (scene.description == "" || scene.description == null) {
+      description = "No description";
+    }
+    // print(jsonDecode(scene.content)[0]['actions'].length);
+    int countOfDevices = jsonDecode(scene.content)[0]['actions'].length;
+    return Row(
+      children: [
+        // child: buildRichText(description, scene.description!, countOfDevices)
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildRichText(description, scene.description!, countOfDevices),
+            ],
+          ),
         ),
-        Switch(
-          // This bool value toggles the switch.
-          value: enableScene,
-          activeColor: Colors.green,
-          inactiveThumbColor: Colors.red,
-          onChanged: (bool value) {
-            swapper(scene);
-          },
-        ),
-        IconButton(
-          // This bool value toggles the switch.
-          icon: const Icon(Icons.edit),
-          onPressed: (enableScene)
-              ? () {
-                  print('directing to next page');
-                  navigateTo(eachScene(scene: scene));
-                }
-              : null,
-          color: (enableScene) ? AppColors.secondary1 : Colors.grey,
-        ),
+        
       ],
     );
   }
 }
 
+RichText buildRichText(String? description, String sceneDescription, int countOfDevices) {
+  return RichText(
+    text: TextSpan(
+      style: GoogleFonts.poppins(
+        fontSize: 16.0, color: Colors.black),
+      children: [
+        TextSpan(
+          text: 'Description: ',
+          style: GoogleFonts.poppins(
+          color: AppColors.primary2),
+        ),
+        TextSpan(
+          text: '${description ?? sceneDescription}\n\n',
+          style: GoogleFonts.poppins(),
+        ),
+        TextSpan(
+          text: 'Number of Devices: ',
+          style: GoogleFonts.poppins(
+          color: AppColors.primary2),
+        ),
+        TextSpan(
+          text: '${countOfDevices}',
+          style: GoogleFonts.poppins(),
+        ),
+      ],
+    ),
+  );
+}
