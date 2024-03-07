@@ -19,6 +19,7 @@ class _listScenesState extends State<listScenes> {
   late Future<List<IoT_Scene>> scenes = Future.value([]);
   late Future<List<IoT_Device>> devices = Future.value([]);
   String? auth;
+  late Timer dashboardUpdateTimer;
 
   @override
   void initState() {
@@ -27,6 +28,11 @@ class _listScenesState extends State<listScenes> {
       print("Got auth: $auth\n");
       updateScenes();
       updateDevices();
+      
+      dashboardUpdateTimer =
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateScenes();
+      });
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {

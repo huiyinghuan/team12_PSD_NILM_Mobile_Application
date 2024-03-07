@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:l3homeation/models/IoT_Scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
@@ -38,6 +39,7 @@ class _DashboardState extends State<Dashboard> {
     loadAuth().then((_) async {
       print("Got auth: $auth\n");
       updateDevices();
+      updateScenes();
       fetchEnergy();
       dashboardUpdateTimer =
           Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -53,6 +55,14 @@ class _DashboardState extends State<Dashboard> {
           auth!,
           baseURL,
         );
+      });
+    }
+  }
+
+  Future<void> updateScenes() async {
+    if (auth != null) {
+      setState(() {
+        scenes = IoT_Scene.get_scenes(auth!, baseURL);
       });
     }
   }
