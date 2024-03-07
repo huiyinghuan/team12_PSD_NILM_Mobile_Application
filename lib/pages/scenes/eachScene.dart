@@ -21,7 +21,7 @@ class eachScene extends StatefulWidget {
 }
 
 class _eachSceneState extends State<eachScene> {
-  final dynamic scene;
+  final IoT_Scene scene;
   List<bool> isAllowed_Scene_Actions = [];
 
   List<String> tableAttributes = [
@@ -157,8 +157,8 @@ class _eachSceneState extends State<eachScene> {
           text: 'Edit Devices',
         ),
         Tab(
-          icon: Icon(Icons.edit_note),
-          text: 'Edit Basic Config',
+          icon: Icon(Icons.timer),
+          text: 'Time Config',
         )
         ],
       );
@@ -171,7 +171,7 @@ class _eachSceneState extends State<eachScene> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             title: Text(
-              scene.name,
+              scene.name!,
               style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 22,
@@ -186,7 +186,7 @@ class _eachSceneState extends State<eachScene> {
           body: TabBarView(
             children: <Widget>[
               //---------------------------------FIRST TAB---------------------------------
-              buildFirstTab(),
+              buildFirstTab(scene),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
               buildSecondTab(),
@@ -200,7 +200,7 @@ class _eachSceneState extends State<eachScene> {
   }
 
   //---------------------------------FIRST TAB FUNCTION---------------------------------
-  SingleChildScrollView buildFirstTab(){
+  SingleChildScrollView buildFirstTab(IoT_Scene scene_carriedover){
     return SingleChildScrollView(
       child: Padding(
         // make scrollable below.
@@ -208,7 +208,7 @@ class _eachSceneState extends State<eachScene> {
         child: Column(
           // column got 2 children. 1 top row and 1 bottom datatable
           children: [
-            contentTopRow(),
+            contentTopRow(scene_carriedover),
             Center(
               child: contentBody()
             ),
@@ -218,31 +218,88 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
-  Row contentTopRow(){
+  Row contentTopRow(dynamic scene_carriedover){
             // top row. icon and name
     return Row(
         children: [
           SizedBox(
             width: 100,
             height: 100,
-            child: Image(
-              image: AssetImage(
-                scene.icon != null
-                    ? 'images/icons/${scene.icon}.png'
-                    : 'images/kitchen.png',
+            child: 
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return 
+                    AlertDialog(
+                      scrollable: true,
+                      title: Text('Change Icon'),
+                      content: SizedBox(
+                        height: 300, // Set a fixed height for the AlertDialog
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: List.generate(
+                              (iconList.length / 5).ceil(), // Calculate number of rows
+                              (rowIndex) {
+                                int startIndex = rowIndex * 5;
+                                int endIndex = (rowIndex + 1) * 5;
+                                if (endIndex > iconList.length) {
+                                  endIndex = iconList.length;
+                                }
+                                return Row(
+                                  children: List.generate(
+                                    endIndex - startIndex,
+                                    (index) => Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Future<Response> changeResponse = scene_carriedover.change_icon(iconList[startIndex + index]);
+                                          changeResponse.then((value) {
+                                            if (value.statusCode == 204) {
+                                              scene.icon = iconList[startIndex + index];
+                                              updateScenes();
+                                              // print('changed description to $new_desc');
+                                            }
+                                          });
+                                          // Add your onTap logic here
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image(
+                                            image: AssetImage('images/icons/${iconList[startIndex + index]}.png'),
+                                            width: 40,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Image(
+                image: AssetImage(
+                  scene.icon != null
+                      ? 'images/icons/${scene.icon}.png'
+                      : 'images/kitchen.png',
+                ),
+                fit: BoxFit.cover,
+                color: scene.icon != null ? null : AppColors.primary3,
               ),
-              fit: BoxFit
-                  .cover, // to prevent overflow from too large image and also fix the image size to 100 by 100 px
-              color: scene.icon != null
-                  ? null
-                  : AppColors.primary3,
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(
                 left: 20.0), // Add desired padding here
             child: Text(
-              scene.name,
+              scene.name!,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -326,22 +383,22 @@ class _eachSceneState extends State<eachScene> {
   String Body_buildDataCellContent(int columnIndex) {
     switch (columnIndex) {
       case 0:
-        return scene.description;
+        return scene.description!;
       case 1:
-        return scene.type;
+        return scene.type!;
       case 2:
-        return scene.icon;
+        return scene.icon!;
       case 3:
         return scene.mode.toString();
       case 4:
         return scene.enable.toString();
       case 5:
         return DateFormat('HH:mm | dd/MM/yyyy').format(
-          DateTime.fromMillisecondsSinceEpoch(scene.created * 1000),
+          DateTime.fromMillisecondsSinceEpoch(scene.created! * 1000),
         );
       case 6:
         return DateFormat('HH:mm | dd/MM/yyyy').format(
-          DateTime.fromMillisecondsSinceEpoch(scene.updated * 1000),
+          DateTime.fromMillisecondsSinceEpoch(scene.updated! * 1000),
         );
       case 7:
         return scene.content.toString();
@@ -351,6 +408,76 @@ class _eachSceneState extends State<eachScene> {
         return 'Unknown Column';
     }
   }
+  // create an icon list that exist in the images/icons
+  List<String> iconList = [
+    'airpurifer0',
+    'airpurifer100',
+    'alarm_partial',
+    'alarm_red',
+    'alarm_siren_gray0',
+    'alarm_siren_gray100',
+    'alarm_siren_red0',
+    'alarm_siren_red100',
+    'alarm0',
+    'audio0',
+    'audio100',
+    'barrierClosing',
+    'barrierOpening',
+    'brama_2-50',
+    'brama50',
+    'com.fibaro.rainSensor',
+    'com.fibaro.rainSensor0',
+    'com.fibaro.windSensor',
+    'czajnik0',
+    'czajnik100',
+    'czujnik_ruchu0',
+    'czujnik_ruchu100',
+    'czujnik_zalania0',
+    'czujnik_zalania100',
+    'dehumidifier0',
+    'dehumidifier100',
+    'door_lock100',
+    'doorbell_dark0',
+    'doorbell_dark100',
+    'drzwi0',
+    'drzwi100',
+    'energy_meter',
+    'evening',
+    'garageDoor_sectionalClosing',
+    'garageDoor_sectionalOpening',
+    'gate_doubleLeafClosing',
+    'gate_doubleLeafOpening',
+    'humidifier0',
+    'humidifier100',
+    'klimatyzator0',
+    'klimatyzator100',
+    'lampa ogrodowa0',
+    'lampa ogrodowa100',
+    'light0',
+    'light100',
+    'morning',
+    'onoff0',
+    'onoff100',
+    'preasure_sensor',
+    'roleta_wewo',
+    'roleta_wew100',
+    'scene_auto',
+    'scene_block',
+    'scene_dinner',
+    'scene_dinner2',
+    'scene_entrance',
+    'scene_entrance2',
+    'scene_exit',
+    'scene_exit2',
+    'scene_lua',
+    'scene_magic',
+    'scene_movie',
+    'scene',
+    'smoke_sensor0',
+    'smoke_sensor100',
+    'wiatrak0',
+    'wiatrak100',
+  ];
 
   // for data table edit data custom popup box
   Future<void> changeDescriptionPromptBox(String title, String content, int i) async {

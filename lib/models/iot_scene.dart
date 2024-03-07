@@ -103,6 +103,14 @@ class IoT_Scene {
     return response_put;
   }
 
+  Future<Response> change_icon(String newIcon) async {
+    // fetch data and change only description
+    Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
+    wholeJSON['icon'] = newIcon;
+    Response response_put = await putmethod(jsonEncode(wholeJSON));
+    return response_put;
+  }
+
   Future<Response> change_action_state(String action_state, int index) async {
     // content updates
     List jsonData = jsonDecode(content);
