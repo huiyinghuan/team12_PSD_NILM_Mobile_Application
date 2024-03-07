@@ -35,18 +35,25 @@ Widget buildDeviceStatusSection(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 6), // Add spacing between text and icon
+                  const SizedBox(width: 4), // Add spacing between text and icon
+                  Container(
+                    child: IconButton(
+                      icon: const Icon(Icons.add_circle_outline_outlined),
+                      onPressed: () => {navigateTo(ListDevice())},
+                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
                 children: snapshot.data!
                     .map((device) => IoT_Device_Tile(
                         device: device,
-                        onTap: () => onTap(device),
-                        onLongPress: () => handleLongPress(context, device)))
+                        onTap: () => onTap(device, () {}),
+                        onLongPress: () =>
+                            handleLongPress(context, device, onTap)))
                     .toList(),
               ),
             ],

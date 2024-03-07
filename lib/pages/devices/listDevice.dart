@@ -32,7 +32,7 @@ class _ListDeviceState extends State<ListDevice> {
     }
   }
 
-  void swapper(IoT_Device device) async {
+  void swapper(IoT_Device device, VoidCallback callback) async {
     print("Tapping device to toggle state\n");
     await device.swapStates();
     if (auth != null) {
@@ -42,6 +42,8 @@ class _ListDeviceState extends State<ListDevice> {
           "http://l3homeation.dyndns.org:2080",
         );
       });
+      callback();
+      print("Ran the callback successfully");
     }
   }
 

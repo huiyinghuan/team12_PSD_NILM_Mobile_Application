@@ -2,6 +2,8 @@
 
 import 'dart:async';
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
@@ -10,6 +12,7 @@ import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/widget/base_layout.dart';
+import 'package:l3homeation/pages/editDevice/edit_device.dart';
 
 import 'dashboard_lib.dart';
 
@@ -27,6 +30,8 @@ late Timer dashboardUpdateTimer;
 // });
 // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
 class _DashboardState extends State<Dashboard> {
+  late Timer updateDevicesTimer;
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +41,9 @@ class _DashboardState extends State<Dashboard> {
       fetchEnergy();
       dashboardUpdateTimer =
           Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateDevices();
+      });
+      updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
         updateDevices();
       });
     });
@@ -71,14 +79,19 @@ class _DashboardState extends State<Dashboard> {
           baseURL,
         );
       });
+      callback();
     }
   }
 
-  void adjustDevice(BuildContext context, IoT_Device device) {
+  void adjustDevice(
+      BuildContext context, IoT_Device device, Function toggleDeviceState) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(device: device),
+        builder: (context) => EditDevicePage(
+          device: device,
+          onTap: toggleDeviceState,
+        ),
       ),
     );
   }

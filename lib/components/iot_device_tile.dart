@@ -27,8 +27,7 @@ class IoT_Device_Tile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      onLongPress:
-          onLongPress == null ? () {/* Do nothing function */} : onLongPress,
+      onLongPress: onLongPress,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 2.0),
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),

@@ -4,7 +4,8 @@ part of "list_device_lib.dart";
 List<Card> buildExpansionTiles(
     List<dynamic> devices, BuildContext context, Function onTap) {
   return devices.map((device) {
-    String descriptionDevice = device.propertiesMap["userDescription"] ?? "No description given";
+    String descriptionDevice =
+        device.propertiesMap["userDescription"] ?? "No description given";
     List<dynamic> categoriesDevice = device.propertiesMap["categories"];
     dynamic valueDevice = device.propertiesMap["value"];
 
@@ -23,7 +24,8 @@ List<Card> buildExpansionTiles(
       margin: EdgeInsets.all(10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
-        side: BorderSide(color: AppColors.primary2, width: 2), // Add orange outline
+        side: BorderSide(
+            color: AppColors.primary2, width: 2), // Add orange outline
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
@@ -46,19 +48,33 @@ List<Card> buildExpansionTiles(
                   // Device details
                   RichText(
                     text: TextSpan(
-                      style: GoogleFonts.poppins(fontSize: 16.0, color: Colors.black),
+                      style: GoogleFonts.poppins(
+                          fontSize: 16.0, color: Colors.black),
                       children: [
-                        TextSpan(text: 'Status: ', style: GoogleFonts.poppins(fontWeight: FontWeight.bold,
-                            color: AppColors.primary2)),
+                        TextSpan(
+                            text: 'Status: ',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary2)),
                         TextSpan(
                           text: '$valueDevice\n\n',
-                          style: GoogleFonts.poppins(color: (valueDevice == 'Off' || valueDevice == 'Unlocked') ? Colors.red : Colors.green),
+                          style: GoogleFonts.poppins(
+                              color: (valueDevice == 'Off' ||
+                                      valueDevice == 'Unlocked')
+                                  ? Colors.red
+                                  : Colors.green),
                         ),
-                        TextSpan(text: 'Description: ', style: GoogleFonts.poppins(fontWeight: FontWeight.bold,
-                            color: AppColors.primary2)),
+                        TextSpan(
+                            text: 'Description: ',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary2)),
                         TextSpan(text: '$descriptionDevice\n\n'),
-                        TextSpan(text: 'Category: ', style: GoogleFonts.poppins(fontWeight: FontWeight.bold,
-                            color: AppColors.primary2)),
+                        TextSpan(
+                            text: 'Category: ',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary2)),
                         TextSpan(text: categoriesString),
                       ],
                     ),
@@ -72,7 +88,9 @@ List<Card> buildExpansionTiles(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => EditDevicePage(device: device)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditDevicePage(device: device)),
                           );
                         },
                         child: Text('Edit Device'),
@@ -82,7 +100,10 @@ List<Card> buildExpansionTiles(
                         ),
                       ),
                       Switch(
-                        value: (valueDevice == 'Off' || valueDevice == 'Unlocked') ? false : true,
+                        value:
+                            (valueDevice == 'Off' || valueDevice == 'Unlocked')
+                                ? false
+                                : true,
                         activeColor: Colors.green,
                         inactiveThumbColor: Colors.red,
                         onChanged: (bool value) {
