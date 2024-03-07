@@ -1,33 +1,39 @@
 part of 'dashboard_lib.dart';
 
-Widget buildUsageSection(BuildContext context) {
+Widget buildUsageSection(BuildContext context, ElectricityData electricity) {
   return FutureBuilder<List<Energy_Consumption>>(
     future: energies,
     builder: (context, snapshot) {
-      String consumption =
-          '0.00'; // Placeholder while loading or in case of an error
-      String consumptionCost =
-          '0.00'; // Placeholder while loading or in case of an error
-      final currentDate = DateFormat('dd MMMM yyyy')
-          .format(DateTime.now()); // Current date formatting
-
       if (snapshot.hasData &&
-          snapshot.connectionState == ConnectionState.done) {
-        // Process electrical consumption data
-        // List<NILM_appliance> appliances = snapshot.data!;
+          snapshot.connectionState == ConnectionState.done &&
+          electricity != null) {
+        // Use the appropriate format that matches the input string
+        DateFormat inputFormat = DateFormat('d MMM yyyy hh:mm a');
+        DateTime parsedTimestamp;
 
-        // Convert and format to two decimal places
-        consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0')
-            .toStringAsFixed(2);
-        consumptionCost =
-            double.parse(snapshot.data!.first.consumptionCost ?? '0')
-                .toStringAsFixed(2);
+        try {
+          parsedTimestamp = inputFormat.parse(electricity.timestamp);
+        } on FormatException {
+          // Handle the situation where the date format does not match
+          return Text(
+            'Invalid date format',
+            style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+          );
+        }
 
-        // Utilizes the containerWithConsumptionData for consistent UI
+        // Use DateFormat to convert the DateTime into the desired format
+        String formattedDate =
+            DateFormat('dd MMM yyyy').format(parsedTimestamp);
+        String consumption =
+            electricity.totalPowerConsumption?.toStringAsFixed(2) ?? '0.00';
+        String consumptionCost =
+            (electricity.totalPowerConsumption * 0.15)?.toStringAsFixed(2) ??
+                '0.00';
+
         return containerWithConsumptionData(
-            currentDate, consumption, consumptionCost);
+            formattedDate, consumption, consumptionCost);
       } else if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else {
         return Text(
           'Failed to load energy consumption',

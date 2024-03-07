@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
@@ -13,6 +14,8 @@ import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
+import 'package:l3homeation/models/nilm_appliance.dart';
+import 'package:l3homeation/models/electrical_data.dart';
 
 import 'dashboard_lib.dart';
 
@@ -24,18 +27,17 @@ class Dashboard extends StatefulWidget {
 }
 
 late Timer dashboardUpdateTimer;
+late ElectricityData receivedElectricityData;
 
 // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
 //   updateDevices();
 // });
 // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
 class _DashboardState extends State<Dashboard> {
-  late Timer updateDevicesTimer;
-
   @override
   void initState() {
     super.initState();
-    loadAuth().then((_) {
+    loadAuth().then((_) async {
       print("Got auth: $auth\n");
       updateDevices();
       fetchEnergy();
@@ -43,9 +45,8 @@ class _DashboardState extends State<Dashboard> {
           Timer.periodic(const Duration(seconds: 5), (timer) {
         updateDevices();
       });
-      updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-        updateDevices();
-      });
+      receivedElectricityData =
+          await getElectricity(auth!, "http://dereknan.click:27558");
     });
   }
 
@@ -96,6 +97,17 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Future<ElectricityData> getElectricity(String credentials, String URL) async {
+    List<NILM_appliance> appliances = [];
+    String? timestamp;
+    double? totalPowerConsumption;
+    appliances = await NILM_appliance.get_appliances(credentials, URL);
+    timestamp = appliances[0].timestamp;
+    totalPowerConsumption = appliances[0].total_consumption;
+
+    return ElectricityData(timestamp!, totalPowerConsumption!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
@@ -105,7 +117,7 @@ class _DashboardState extends State<Dashboard> {
           buildGreetingSection(context),
           buildDeviceStatusSection(
               context, turn_on_off_device_tile, adjustDevice),
-          buildUsageSection(context),
+          buildUsageSection(context, receivedElectricityData),
           buildSceneSection(context),
         ],
       ),

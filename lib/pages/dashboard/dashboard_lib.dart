@@ -6,6 +6,7 @@ import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 
 import 'package:l3homeation/components/iot_device_tile.dart';
+import 'package:l3homeation/models/electrical_data.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/devices/listDevice.dart';
@@ -18,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:l3homeation/models/energy_consumption.dart';
+import 'package:intl/intl.dart';
 
 part 'greeting_section.dart';
 part 'device_status_section.dart';
