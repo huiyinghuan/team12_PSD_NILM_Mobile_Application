@@ -14,7 +14,7 @@ Widget displayRooms(BuildContext context, Function onTap) {
         return buildRoomTiles(snapshot.data!, onTap,
             context); // Call the extracted function with the data
       } else if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(
+        return const Center(
           child:
               CircularProgressIndicator(), // Show a loading indicator while fetching data
         );
@@ -24,7 +24,7 @@ Widget displayRooms(BuildContext context, Function onTap) {
               'Error: ${snapshot.error}'), // Show an error message if the future fails
         );
       } else {
-        return Center(
+        return const Center(
           child: Text(
               'No rooms available'), // Show a message if there are no rooms
         );
