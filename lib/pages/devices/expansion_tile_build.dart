@@ -31,13 +31,26 @@ List<Card> buildExpansionTiles(
         borderRadius: BorderRadius.circular(15),
         child: ExpansionTile(
           backgroundColor: Colors.white,
-          title: Text(
-            device.name,
-            style: GoogleFonts.poppins(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w500,
-            ),
+          title: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+                child: Image(
+                  image: AssetImage( getImagePath(device)),
+                  width: 52.10625,
+                  height: 53.12625,
+                ),
+              ),
+              Text(
+                device.name,
+                style: GoogleFonts.poppins(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
+          
           children: [
             Padding(
               padding: const EdgeInsets.all(18.0),
@@ -123,3 +136,35 @@ List<Card> buildExpansionTiles(
     );
   }).toList();
 }
+
+String getImagePath(IoT_Device device) {
+    bool? isSwitchedOn;
+    if (device.needSlider!) {
+      isSwitchedOn = device.value > 0 ? true : false;
+    } else {
+      isSwitchedOn = device.value;
+    }
+
+    if (device.propertiesMap != null &&
+        device.propertiesMap?['deviceRole'] == 'Light') {
+      return isSwitchedOn!
+          ? 'images/icons/light100.png'
+          : 'images/icons/light0.png';
+    } else if (device.propertiesMap != null &&
+        device.propertiesMap?['deviceRole'] == 'BlindsWithPositioning') {
+      return isSwitchedOn!
+          ? 'images/icons/drzwi100.png'
+          : 'images/icons/drzwi0.png';
+    } else if (device.propertiesMap != null &&
+        device.propertiesMap?['deviceRole'] == 'OpeningSensor') {
+      return isSwitchedOn!
+          ? 'images/icons/roleta_wew100.png'
+          : 'images/icons/roleta_wew0.png';
+    } else if (device.propertiesMap != null &&
+        device.propertiesMap?['deviceRole'] == 'Other') {
+      return 'images/icons/czujnik_ruchu0.png';
+    } else {
+      // If there is no deviceRole, return the default image
+      return 'images/l3homeation.png';
+    }
+  }

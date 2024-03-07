@@ -19,6 +19,7 @@ class _listScenesState extends State<listScenes> {
   late Future<List<IoT_Scene>> scenes = Future.value([]);
   late Future<List<IoT_Device>> devices = Future.value([]);
   String? auth;
+  late Timer dashboardUpdateTimer;
 
   @override
   void initState() {
@@ -27,12 +28,23 @@ class _listScenesState extends State<listScenes> {
       print("Got auth: $auth\n");
       updateScenes();
       updateDevices();
+
+      dashboardUpdateTimer =
+          Timer.periodic(const Duration(seconds: 5), (timer) {
+        updateScenes();
+      });
     });
     // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
     // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
     //   updateScenes();
     // });
     // ^ Implement the timer back once we figure out how to make the rebuilding of the scene status' more smooth
+  }
+
+  @override
+  void dispose() {
+    dashboardUpdateTimer.cancel();
+    super.dispose();
   }
 
   Future<void> loadAuth() async {
@@ -94,10 +106,10 @@ class _listScenesState extends State<listScenes> {
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       drawer: NavigationDrawerWidget(),
-      body: 
-      ListView(
+      body: ListView(
         children: <Widget>[
-          _buildSceneList(navigateTo), //passing the navigateTo function to buildExpansionTiles
+          _buildSceneList(
+              navigateTo), //passing the navigateTo function to buildExpansionTiles
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -118,7 +130,9 @@ class _listScenesState extends State<listScenes> {
                 propertiesMap: {},
                 roomId: 0,
               );
-              late var buttonpressed = (selectedDevice.id == null || name == '' || description == '');
+              late var buttonpressed = (selectedDevice.id == null ||
+                  name == '' ||
+                  description == '');
               return AlertDialog(
                 title: const Text('New Scene'),
                 content: Column(
@@ -191,7 +205,9 @@ class _listScenesState extends State<listScenes> {
                         Navigator.of(context).pop();
                         return;
                       }
-                      var action = (selectedDevice.value.runtimeType == bool) ? "close" : "turnOff";
+                      var action = (selectedDevice.value.runtimeType == bool)
+                          ? "close"
+                          : "turnOff";
                       print(selectedDevice.value);
                       // Add logic to save the new scene with the provided name and description
                       print('Name: $name, Description: $description');
@@ -260,106 +276,119 @@ class _listScenesState extends State<listScenes> {
       dynamic enableScene = scene.enable;
 
       return Card(
-      elevation: 0,
-      margin: const EdgeInsets.all(10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        side: const BorderSide(
-            color: AppColors.primary2, width: 2), // Add orange outline
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: ExpansionTile(
-        title: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
-              child: Image(
-                image: AssetImage(
-                  scene.icon != null
-                      ? 'images/icons/${scene.icon}.png'
-                      : 'images/icons/scene.png',
-                ),
-                width: 52.10625,
-                height: 53.12625,
-              ),
-            ),
-            Text(
-              scene.name!, // Replace with your desired title text
-              style: const TextStyle(fontSize: 18.0), // Customize title text size
-            ),
-          ],
+        elevation: 0,
+        margin: const EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(
+              color: AppColors.primary2, width: 2), // Add orange outline
         ),
-        children: [
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(18, 10, 0, 0), // Adjust padding as needed
-                child: eachSceneRow(scene, enableScene, navigateTo), // Replace with your desired row widget
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: ExpansionTile(
+              title: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
+                    child: Image(
+                      image: AssetImage(
+                        scene.icon != null
+                            ? 'images/icons/${scene.icon}.png'
+                            : 'images/icons/scene.png',
+                      ),
+                      width: 52.10625,
+                      height: 53.12625,
+                    ),
+                  ),
+                  Text(
+                    scene.name!, // Replace with your desired title text
+                    style: const TextStyle(
+                        fontSize: 18.0), // Customize title text size
+                  ),
+                ],
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: ButtonBar(
+              children: [
+                Column(
                   children: [
-                    AnimatedOpacity(
-                      opacity: enableScene ? 1 : 0.5,
-                      duration: const Duration(seconds: 1), // Customize the duration as needed
-                      child: Row(
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                          18, 10, 0, 0), // Adjust padding as needed
+                      child: eachSceneRow(scene, enableScene,
+                          navigateTo), // Replace with your desired row widget
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: ButtonBar(
                         children: [
-                          TextButton(
-                            onPressed: enableScene
-                                ? () {
-                                    print('directing to next page');
-                                    navigateTo(eachScene(scene: scene));
-                                  }
-                                : null,
-                            onLongPress: enableScene
-                                ? () {
-                                    CustomDialog("Click to Edit Scene");
-                                  }
-                                : null,
-                            child: const Icon(Icons.edit),
-                            style: ButtonStyle(
-                              foregroundColor: enableScene ? MaterialStateProperty.all<Color>(AppColors.secondary1) : MaterialStateProperty.all<Color>(Colors.grey),
+                          AnimatedOpacity(
+                            opacity: enableScene ? 1 : 0.5,
+                            duration: const Duration(
+                                seconds: 1), // Customize the duration as needed
+                            child: Row(
+                              children: [
+                                TextButton(
+                                  onPressed: enableScene
+                                      ? () {
+                                          print('directing to next page');
+                                          navigateTo(eachScene(scene: scene));
+                                        }
+                                      : null,
+                                  onLongPress: enableScene
+                                      ? () {
+                                          CustomDialog("Click to Edit Scene");
+                                        }
+                                      : null,
+                                  child: const Icon(Icons.edit),
+                                  style: ButtonStyle(
+                                    foregroundColor: enableScene
+                                        ? MaterialStateProperty.all<Color>(
+                                            AppColors.secondary1)
+                                        : MaterialStateProperty.all<Color>(
+                                            Colors.grey),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: enableScene
+                                      ? () => scene.activate_scenes()
+                                      : null,
+                                  onLongPress: enableScene
+                                      ? () {
+                                          CustomDialog(
+                                              "Click to Activate Scene Once");
+                                        }
+                                      : null,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.touch_app),
+                                    onPressed: enableScene
+                                        ? () {
+                                            print('directing to next page');
+                                            navigateTo(eachScene(scene: scene));
+                                          }
+                                        : null,
+                                    color: enableScene
+                                        ? AppColors.secondary1
+                                        : Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          TextButton(
-                            onPressed: enableScene ? () => scene.activate_scenes() : null,
-                            onLongPress: enableScene
-                                ? () {
-                                    CustomDialog("Click to Activate Scene Once");
-                                  } : null,
-                            child: IconButton(
-                              icon: const Icon(Icons.touch_app),
-                              onPressed: enableScene
-                                  ? () {
-                                      print('directing to next page');
-                                      navigateTo(eachScene(scene: scene));
-                                    }
-                                  : null,
-                              color: enableScene ? AppColors.secondary1 : Colors.grey,
-                            ),
+                          Switch(
+                            // This bool value toggles the switch.
+                            value: enableScene,
+                            activeColor: Colors.green,
+                            inactiveThumbColor: Colors.red,
+                            onChanged: (bool value) {
+                              swapper(scene);
+                            },
                           ),
                         ],
                       ),
                     ),
-                    Switch(
-                      // This bool value toggles the switch.
-                      value: enableScene,
-                      activeColor: Colors.green,
-                      inactiveThumbColor: Colors.red,
-                      onChanged: (bool value) {
-                        swapper(scene);
-                      },
-                    ),
                   ],
-                ),
-              ),
-            ],
-          )
-        ],
-      )
-    ),
+                )
+              ],
+            )),
       );
     }).toList();
   }
@@ -370,7 +399,8 @@ class _listScenesState extends State<listScenes> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20), // Add your desired padding values
+            padding: const EdgeInsets.fromLTRB(
+                0, 20, 0, 20), // Add your desired padding values
             child: Center(
               heightFactor: 1,
               child: Row(
@@ -379,12 +409,13 @@ class _listScenesState extends State<listScenes> {
                   const Icon(Icons.info),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Text( text,
+                    child: Text(
+                      text,
                       style: const TextStyle(
                         fontSize: 15,
                       ),
                       overflow: TextOverflow.visible,
-                    ),  
+                    ),
                   ),
                 ],
               ),
@@ -413,22 +444,20 @@ class _listScenesState extends State<listScenes> {
             ],
           ),
         ),
-        
       ],
     );
   }
 }
 
-RichText buildRichText(String? description, String sceneDescription, int countOfDevices) {
+RichText buildRichText(
+    String? description, String sceneDescription, int countOfDevices) {
   return RichText(
     text: TextSpan(
-      style: GoogleFonts.poppins(
-        fontSize: 16.0, color: Colors.black),
+      style: GoogleFonts.poppins(fontSize: 16.0, color: Colors.black),
       children: [
         TextSpan(
           text: 'Description: ',
-          style: GoogleFonts.poppins(
-          color: AppColors.primary2),
+          style: GoogleFonts.poppins(color: AppColors.primary2),
         ),
         TextSpan(
           text: '${description ?? sceneDescription}\n\n',
@@ -436,8 +465,7 @@ RichText buildRichText(String? description, String sceneDescription, int countOf
         ),
         TextSpan(
           text: 'Number of Devices: ',
-          style: GoogleFonts.poppins(
-          color: AppColors.primary2),
+          style: GoogleFonts.poppins(color: AppColors.primary2),
         ),
         TextSpan(
           text: '${countOfDevices}',

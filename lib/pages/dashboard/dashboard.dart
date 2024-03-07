@@ -2,8 +2,6 @@
 
 import 'dart:async';
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';

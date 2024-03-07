@@ -39,6 +39,7 @@ class Room {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
+
     List<dynamic> jsonResponses = jsonDecode(response.body);
     for (Map<String, dynamic> responses in jsonResponses) {
       Room newRoom = Room(
@@ -49,6 +50,7 @@ class Room {
           sectionId: responses['sectionId'],
           defaultSensors: responses['defaultSensors'],
           defaultThermostat: responses['defaultThermostat'],
+          icon: responses['icon'], 
           propertiesMap: responses);
       rooms.add(newRoom);
     }
