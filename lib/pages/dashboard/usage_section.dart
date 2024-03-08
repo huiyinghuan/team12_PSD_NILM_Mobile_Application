@@ -1,6 +1,45 @@
 part of 'dashboard_lib.dart';
 
 Widget buildUsageSection(BuildContext context) {
+  return FutureBuilder<List<Energy_Consumption>>(
+    future: energies,
+    builder: (context, snapshot) {
+      String consumption =
+          '0.00'; // Placeholder while loading or in case of an error
+      String consumptionCost =
+          '0.00'; // Placeholder while loading or in case of an error
+      final currentDate = DateFormat('dd MMMM yyyy')
+          .format(DateTime.now()); // Current date formatting
+
+      if (snapshot.hasData &&
+          snapshot.connectionState == ConnectionState.done) {
+        // Process electrical consumption data
+        // List<NILM_appliance> appliances = snapshot.data!;
+
+        // Convert and format to two decimal places
+        consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0')
+            .toStringAsFixed(2);
+        consumptionCost =
+            double.parse(snapshot.data!.first.consumptionCost ?? '0')
+                .toStringAsFixed(2);
+
+        // Utilizes the containerWithConsumptionData for consistent UI
+        return containerWithConsumptionData(
+            currentDate, consumption, consumptionCost);
+      } else if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      } else {
+        return Text(
+          'Failed to load energy consumption',
+          style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
+        );
+      }
+    },
+  );
+}
+
+// This widget builds the visual representation of the energy consumption data
+Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.grey[200],
@@ -30,8 +69,8 @@ Widget buildUsageSection(BuildContext context) {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFFB1F4CF), // Start color of the gradient
-                    Color(0xFF9890E3), // End color of the gradient
+                    Color(0xFFB1F4CF),
+                    Color(0xFF9890E3),
                   ],
                 ),
                 boxShadow: [
@@ -54,9 +93,9 @@ Widget buildUsageSection(BuildContext context) {
                     SizedBox(height: 10),
                     RichText(
                       text: TextSpan(
-                        children: <TextSpan>[
+                        children: [
                           TextSpan(
-                              text: '$usageKWh',
+                              text: usageKWh,
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,

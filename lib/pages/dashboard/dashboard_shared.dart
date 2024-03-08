@@ -1,11 +1,18 @@
 // ignore_for_file: camel_case_types
 import 'package:flutter/material.dart';
+import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 // Change the baseURL into an await.get from preferences
 Future<List<IoT_Device>> devices = Future.value([]);
+Future<List<IoT_Scene>> scenes = Future.value([]);
+Future<List<Energy_Consumption>> energies = Future.value([]);
+Future<List<IoT_Scene>> allScenes = Future.value([]);
+
 String? auth;
 String baseURL = "http://l3homeation.dyndns.org:2080";
 
@@ -16,9 +23,9 @@ final Map<String, int> deviceStatus = {
   'Smart Fan': 2,
   'Lights': 2,
 };
-const String date = '17 Dec 2023';
-const int usageKWh = 450;
-const int cost = 100;
+
+// Get current date
+String currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
 
 // Sign out
 Future<void> signUserOut(BuildContext context) async {

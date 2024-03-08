@@ -20,39 +20,80 @@ class IoT_Device_Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // To determine the background color based on the device's active state
     final Color indicatorColor = (device.value != 0 && device.value != false)
         ? Colors.green
         : Colors.red;
-
     return InkWell(
       onTap: onTap,
-      onLongPress:
-          onLongPress == null ? () {/* Do nothing function */} : onLongPress,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 2.0),
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        decoration: BoxDecoration(
-          color: Colors.white, // Background color for the whole tile
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min, // To fit the content inside the row
+      onLongPress: onLongPress,
+      child: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Column(
           children: [
-            // Change the background color of this container
-            activityStatus(indicatorColor),
-            SizedBox(width: 8), // Spacing between the indicator and the text
-            Text(
-              '${device.name} ${device.value != 0 ? "Active" : "Inactive"}',
-              style: GoogleFonts.poppins(
-                fontSize: textSize, // Use the text size parameter
-                color: Colors.black, // Text color
+            SizedBox(
+              width: ((MediaQuery.of(context).size.width) / 2 - 30),
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color:
+                      getBackGroundColor(), // Background color for the whole tile
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    activityStatus(indicatorColor),
+                    SizedBox(width: 5.0),
+                    Expanded(child: displayDeviceName()),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Text displayDeviceName() {
+    return Text(
+      textAlign: TextAlign.start,
+      '${truncateString(device.name!, 11)} ${determineActivity(device)}',
+      style: GoogleFonts.poppins(
+        fontSize: textSize, // Use the text size parameter
+        color: Colors.black, // Text color
+      ),
+    );
+  }
+
+  Color getBackGroundColor() {
+    if (device.value != 0 && device.value != false) {
+      return const Color.fromARGB(255, 241, 177, 81);
+    }
+    return Color.fromARGB(255, 240, 230, 188);
+  }
+
+  String determineActivity(device) {
+    if (device.value is int) {
+      if (device.value != 0) {
+        return "Active";
+      } else {
+        return "Inactive";
+      }
+    } else if (device.value is bool) {
+      if (device.value) return "Active";
+    }
+    return "Inactive";
+  }
+
+  String truncateString(String input, int toLength) {
+    if (input.length > toLength) {
+      // If the string is longer than 15 characters
+      return input.substring(0, toLength - 2) +
+          ".."; // Extract first 13 characters and append ".."
+    } else {
+      // If the string is 15 characters or less
+      return input; // Return the original string
+    }
   }
 
   Container activityStatus(Color indicatorColor) {

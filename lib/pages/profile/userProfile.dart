@@ -132,7 +132,7 @@ class _UserProfileState extends State<UserProfile> {
                           },
                           child: Text('Logout'),
                           style: TextButton.styleFrom(
-                            primary: Colors.white,
+                            // primary: Colors.white,
                             backgroundColor: AppColors.secondary2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
@@ -501,6 +501,7 @@ class _UserProfileState extends State<UserProfile> {
         final member = familyMembers[index];
 
         return Card(
+          elevation: 0,
           // Keep the border radius and outline as is, or adjust as needed
           shape: RoundedRectangleBorder(
             side: BorderSide(color: AppColors.primary2, width: 2),
@@ -555,7 +556,7 @@ class _UserProfileState extends State<UserProfile> {
             borderRadius:
                 BorderRadius.circular(20), // Softer curve for the dialog
           ),
-          elevation: 5, // Adds a subtle shadow for depth
+          elevation: 0,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -594,8 +595,8 @@ class _UserProfileState extends State<UserProfile> {
                   },
                   child: Text('Send Invite', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    primary: AppColors.secondary2,
-                    onPrimary: Colors.white, // Text color
+                    // primary: AppColors.secondary2,
+                    // onPrimary: Colors.white, // Text color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),

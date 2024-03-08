@@ -12,6 +12,7 @@ class IoT_Device {
   int? id;
   bool? needSlider;
   dynamic value;
+  int? roomId;
   Map<String, dynamic>? propertiesMap;
 
   IoT_Device({
@@ -22,8 +23,90 @@ class IoT_Device {
     required this.id,
     required this.needSlider,
     required this.value,
+    required this.roomId,
     required this.propertiesMap,
   });
+  Future<void> setToTrue() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': true,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> setToFalse() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': false,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> setToZero() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {'value': 0},
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
+
+  Future<void> sendCurrentValue() async {
+    try {
+      late Response? putRequest;
+      Map<String, dynamic>? requestBody;
+      requestBody = {
+        'properties': {
+          'value': value,
+        },
+      };
+      putRequest = await http.put(
+        Uri.parse('$URL/api/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
+    } catch (e) {
+      print("Http put request failed\n");
+    }
+  }
 
   Future<void> swapStates() async {
     print("swapping states now\n");
@@ -107,6 +190,7 @@ class IoT_Device {
           name: response['name'],
           value: response['properties']['value'],
           needSlider: response['properties']['value'] is int ? true : false,
+          roomId: response['roomID'],
           propertiesMap: response['properties'],
         );
 
@@ -142,6 +226,7 @@ class IoT_Device {
               value: jsonResponses['properties']['value'],
               needSlider:
                   jsonResponses['properties']['value'] is bool ? true : false,
+              roomId: jsonResponses['roomID'],
               propertiesMap: jsonResponses['properties'],
             );
             devices.add(new_device);
