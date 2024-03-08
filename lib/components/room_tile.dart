@@ -22,7 +22,7 @@ class Room_Tile extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      width: screenWidth / 2 + 50, // Half the screen width with padding
+      width: screenWidth / 2 + 100, // Half the screen width with padding
       height: 100,
       child: InkWell(
         onTap: onTap,
@@ -41,9 +41,9 @@ class Room_Tile extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
                 child: Image(
                 image: AssetImage(
-                    room.icon != null
+                    room.icon == 'room_baby' || room.icon == 'room_child2' || room.icon == 'room_office4' || room.icon == 'room_toilet'
                         ? 'images/icons/${room.icon}.png'
-                        : 'images/l3homeation.png',
+                        : 'images/icons/room_child2.png',
                   ),
                   width: 52.10625,
                   height: 53.12625,
@@ -56,7 +56,9 @@ class Room_Tile extends StatelessWidget {
                   fontSize: 16, // You can adjust this value as needed
                   color: Colors.black, // Text color
                 ),
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+
               ),
             ],
           ),
