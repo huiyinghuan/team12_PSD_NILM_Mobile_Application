@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
@@ -9,6 +13,52 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  String? auth;
+  @override
+  void initState() {
+    super.initState();
+    loadAuth().then((_) {
+      print("Got auth: $auth\n");
+    });
+  }
+
+  Future<void> loadAuth() async {
+    auth = await UserPreferences.getString('auth');
+    print(auth);
+  }
+
+  //add member
+  Future<void> createProfile(_userNameController) async {
+    if (auth != null) {
+      final url = Uri.parse('http://l3homeation.dyndns.org:2080/api/profiles');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $auth', // Use Bearer token
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': _userNameController,
+          'iconId': 6,
+          'sourceId': 3
+          // Name of the profile
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Profile created successfully
+
+        print('Profile created successfully');
+      } else {
+        // Failed to create profile
+        print('Failed to create profile: ${response.statusCode}');
+        // Print the response body for more details about the error
+        print('Response body: ${response.body}');
+        // You can handle errors appropriately
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Wrap your content with BaseLayout instead of Scaffold
@@ -133,8 +183,49 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildPersonalDataSection(BuildContext context) {
     TextEditingController _nameController = TextEditingController();
+    TextEditingController _currentPasswordController = TextEditingController();
     TextEditingController _passwordController = TextEditingController();
     TextEditingController _confirmPasswordController = TextEditingController();
+    String? _errorMessage;
+
+    // check if the password entered is the same
+    bool passwordsMatch() {
+      return _passwordController.text == _confirmPasswordController.text;
+    }
+
+    //check if current password entered matches the passowrd in the server
+    Future<bool> checkCurrentPassword(String _currentPasswordController) async {
+      String? storedAuth = await UserPreferences.getString('auth');
+      if (storedAuth != null) {
+        List<int> decodedBytes = base64Decode(storedAuth);
+        String decodedString = utf8.decode(decodedBytes);
+
+        List<String> emailPassword = decodedString.split(':');
+        String password = emailPassword[1];
+
+        if (password == _currentPasswordController) {
+          // Password entered matches the password in the user preference string
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        print("auth string not found");
+        return false;
+      }
+    }
+
+    // final AuthService _authService = AuthService(password: _currentPasswordController.text);
+    // var response = await _authService.checkLoginStatus(context);
+    // print("Response: ${_currentPasswordController.text}");
+
+    // if (response['status'] == true) {
+    //   return true;
+    //   else{
+    //     return false;
+    //   }
+//    }
+
     return FutureBuilder<String?>(
       future: UserPreferences.getString('username'),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
@@ -242,8 +333,27 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ),
                             SizedBox(height: 16),
+                            //current password field
                             TextFormField(
-                              controller: _passwordController,
+                              controller: _currentPasswordController,
+                              decoration: InputDecoration(
+                                labelText: 'Current Password',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: AppColors.primary2, width: 2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            TextFormField(
+                              controller:
+                                  _passwordController, // stores the password text
                               obscureText: !_isPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: 'New Password',
@@ -274,7 +384,8 @@ class _UserProfileState extends State<UserProfile> {
                             ),
                             SizedBox(height: 16),
                             TextFormField(
-                              controller: _confirmPasswordController,
+                              controller:
+                                  _confirmPasswordController, //store the confirm passowrd text
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Retype Password',
@@ -291,17 +402,39 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: 16),
+                            if (_errorMessage != null)
+                              Text(
+                                _errorMessage!,
+                                style: TextStyle(
+                                    color: Colors
+                                        .red), // Customize error text style
+                              ),
                             SizedBox(height: 24),
                             ElevatedButton(
-                              onPressed: () {
-                                // Implement your logic for password change confirmation here
+                              onPressed: () async {
+                                // Check if passwords match
+                                // if (passwordsMatch()) {
+                                //   // Passwords match, implement your logic for password change confirmation here
+                                //   Future<bool> passwordCheck = checkCurrentPassword(_currentPasswordController.text);
+                                //   if (passwordCheck == true) {
 
-                                // After performing the logic, reset the editing state and clear the controllers
-                                setState(() {
-                                  _isEditingData = false;
-                                  _passwordController.clear();
-                                  _confirmPasswordController.clear();
-                                });
+                                //   }
+
+                                //   // After performing the logic, reset the editing state and clear the controllers
+                                //   setState(() {
+                                //     _isEditingData = false;
+                                //     _passwordController.clear();
+                                //     _confirmPasswordController.clear();
+                                //     // Reset error message when passwords match
+                                //     _errorMessage = null;
+                                //   });
+                                // } else {
+                                //   // Passwords do not match, show an error message or take appropriate action
+                                //   setState(() {
+                                //     _errorMessage = 'Passwords do not match';
+                                //   });
+                                // }
                               },
                               child: Text('Confirm Change'),
                               style: ElevatedButton.styleFrom(
@@ -456,6 +589,7 @@ class _UserProfileState extends State<UserProfile> {
                 ElevatedButton(
                   onPressed: () {
                     // Logic to send invite
+                    createProfile(_usernameController.text);
                     Navigator.of(context).pop(); // Close the dialog after
                   },
                   child: Text('Send Invite', style: TextStyle(fontSize: 16)),
