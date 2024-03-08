@@ -64,21 +64,17 @@ class _EditDevicePageState extends State<EditDevicePage> {
                   Radio<bool>(
                     value: true,
                     groupValue: isSwitchedOn,
-                    onChanged: (bool? value) async {
-                      await widget.onTap(widget.device, () {
-                        // This is the callback function
-                        setState(() {
-                          // Assuming the device instance's value is now updated
-                          isSwitchedOn = true;
-                          if (!widget.device.needSlider!) {
-                            widget.device.setToTrue();
-                            widget.device.value = true;
-                          } else {
-                            widget.device.value = intensity;
-                            widget.device.sendCurrentValue();
-                          }
-                          print("Current state is $isSwitchedOn");
-                        });
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isSwitchedOn = true;
+                        if (!widget.device.needSlider!) {
+                          widget.device.setToTrue();
+                          widget.device.value = true;
+                        } else {
+                          widget.device.value = intensity;
+                          widget.device.sendCurrentValue();
+                        }
+                        print("Current state is $isSwitchedOn");
                       });
                     },
                   ),
@@ -86,22 +82,18 @@ class _EditDevicePageState extends State<EditDevicePage> {
                   Radio<bool>(
                     value: false,
                     groupValue: isSwitchedOn,
-                    onChanged: (bool? value) async {
-                      await widget.onTap(widget.device, () {
-                        // This is the callback function
-                        setState(() {
-                          // Assuming the device instance's value is now updated
-                          isSwitchedOn = false;
-                          if (!widget.device.needSlider!) {
-                            widget.device.setToFalse();
-                            widget.device.value = false;
-                          } else {
-                            //store the last turned on value
-                            // set the api value to 0 and store the last turned on value
-                            widget.device.setToZero();
-                          }
-                          print("Current state is $isSwitchedOn");
-                        });
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isSwitchedOn = false;
+                        if (!widget.device.needSlider!) {
+                          widget.device.setToFalse();
+                          widget.device.value = false;
+                        } else {
+                          //store the last turned on value
+                          // set the api value to 0 and store the last turned on value
+                          widget.device.setToZero();
+                        }
+                        print("Current state is $isSwitchedOn");
                       });
                     },
                   ),
