@@ -533,14 +533,20 @@ class _UserProfileState extends State<UserProfile> {
         } else if (snapshot.hasData) {
           List<Map<String, dynamic>> familyMembers = snapshot.data!;
           // Adding +1 for the "add new member" card
+          double gridSpacing = 20;
+          double gridPadding = 20;
+          double cardWidth = (MediaQuery.of(context).size.width / 2) - gridPadding - gridSpacing;
+          double cardHeight = cardWidth * 1.0; // Adjust based on your design
+
           return GridView.builder(
             shrinkWrap: true,
             physics: ScrollPhysics(), // Make it scrollable
+            padding: EdgeInsets.all(gridPadding),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              childAspectRatio: 1,
+              crossAxisSpacing: gridSpacing,
+              mainAxisSpacing: gridSpacing,
+              childAspectRatio: (cardWidth / cardHeight),
             ),
             itemCount: familyMembers.length + 1, // Account for the "add new member" card
             itemBuilder: (context, index) {
@@ -553,7 +559,7 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   child: InkWell(
                     onTap: () {
-                      // This space is reserved for future functionality, such as viewing profile details
+                      // Future functionality or details
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
