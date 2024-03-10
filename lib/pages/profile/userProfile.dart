@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -14,17 +15,17 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   String? auth;
+
+  Future<void> loadAuth() async {
+    auth = await UserPreferences.getString('auth');
+  }
+
   @override
   void initState() {
     super.initState();
     loadAuth().then((_) {
       print("Got auth: $auth\n");
     });
-  }
-
-  Future<void> loadAuth() async {
-    auth = await UserPreferences.getString('auth');
-    print(auth);
   }
 
   //add member
@@ -34,9 +35,9 @@ class _UserProfileState extends State<UserProfile> {
       final response = await http.post(
         url,
         headers: {
-          'Authorization': 'Bearer $auth', // Use Bearer token
-          'Content-Type': 'application/json',
-        },
+            'Content-Type': 'application/json',
+            HttpHeaders.authorizationHeader: 'Basic $auth',
+          },
         body: jsonEncode(<String, dynamic>{
           'name': _userNameController,
           'iconId': 6,
