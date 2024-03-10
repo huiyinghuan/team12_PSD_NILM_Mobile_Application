@@ -15,9 +15,14 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   String? auth;
-
+  // Initialize futureProfiles immediately with a safe placeholder
+  Future<List<Map<String, dynamic>>> futureProfiles = Future.value([]);
   Future<void> loadAuth() async {
     auth = await UserPreferences.getString('auth');
+    // Now that auth is loaded, update futureProfiles with the actual future
+    setState(() {
+      futureProfiles = getAllProfile();
+    });
   }
 
   @override
@@ -61,7 +66,8 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   // get all profiles
-  Future<void> getAllProfile() async {
+  Future<List<Map<String, dynamic>>> getAllProfile() async {
+    List<Map<String, dynamic>> profilesList = [];
     if (auth != null) {
       final url = Uri.parse('http://l3homeation.dyndns.org:2080/api/profiles');
       final response = await http.get(
@@ -82,6 +88,7 @@ class _UserProfileState extends State<UserProfile> {
         
         // Extract the profiles list
         List<dynamic> profiles = jsonResponse['profiles'];
+
         //extract information from profiles json
         // Check if the profiles list is not empty
         if (profiles.isNotEmpty) {
@@ -90,6 +97,11 @@ class _UserProfileState extends State<UserProfile> {
             // Extract the name of the profile
             String name = profile['name'];
             print('Name: $name');
+
+            profilesList.add({
+              'name': profile['name'],
+              'imageUrl': 'https://picsum.photos/id/237/200/300', // hardcoded image link
+            });
           }
 
           // Get the last profile in the list
@@ -108,6 +120,7 @@ class _UserProfileState extends State<UserProfile> {
         // You can handle errors appropriately
       }
     }
+    return profilesList;
   }
 
   @override
@@ -180,7 +193,6 @@ class _UserProfileState extends State<UserProfile> {
                         child: TextButton(
                           onPressed: () {
                             // To handle logout logic
-                            getAllProfile();
                           },
                           child: Text('Logout'),
                           style: TextButton.styleFrom(
@@ -511,91 +523,89 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildFamilySection(BuildContext context) {
-    // Dummy data for family members
-    List<Map<String, dynamic>> familyMembers = [
-      {
-        'name': 'Linda Abraham',
-        'imageUrl':
-            'https://picsum.photos/id/237/200/300', // Replace with actual image URL
-      },
-      {
-        'name': 'Lyra Abraham',
-        'imageUrl':
-            'https://picsum.photos/id/129/200/300', // Replace with actual image URL
-      },
-      {
-        'name': 'Ben Abraham',
-        'imageUrl':
-            'https://picsum.photos/id/173/200/300', // Replace with actual image URL
-      },
-      {
-        'icon': Icons.add,
-      },
-    ];
-    // Calculate the space available after accounting for padding and spacing
-    double gridSpacing = 20;
-    double gridPadding = 20;
-    double cardWidth =
-        (MediaQuery.of(context).size.width / 2) - gridPadding - gridSpacing;
-
-    return GridView.builder(
-      padding: EdgeInsets.all(gridPadding),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: gridSpacing,
-        mainAxisSpacing: gridSpacing,
-        childAspectRatio: (cardWidth /
-            (cardWidth *
-                1.0)), // Assuming you want the card height to be 80% of its width
-      ),
-      itemCount: familyMembers.length,
-      itemBuilder: (context, index) {
-        final member = familyMembers[index];
-
-        return Card(
-          elevation: 0,
-          // Keep the border radius and outline as is, or adjust as needed
-          shape: RoundedRectangleBorder(
-            side: BorderSide(color: AppColors.primary2, width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: InkWell(
-            onTap: () {
-              if (member.containsKey('icon')) {
-                _showAddMemberDialog(context);
-              }
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (member.containsKey('imageUrl')) ...[
-                  CircleAvatar(
-                    radius: 30, // Adjust as needed
-                    backgroundImage: NetworkImage(member['imageUrl']),
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: futureProfiles, // Use the future initialized in initState
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        } else if (snapshot.hasData) {
+          List<Map<String, dynamic>> familyMembers = snapshot.data!;
+          // Adding +1 for the "add new member" card
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: ScrollPhysics(), // Make it scrollable
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              childAspectRatio: 1,
+            ),
+            itemCount: familyMembers.length + 1, // Account for the "add new member" card
+            itemBuilder: (context, index) {
+              if (index < familyMembers.length) {
+                return Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: AppColors.primary2, width: 2),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    member['name'],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  child: InkWell(
+                    onTap: () {
+                      // This space is reserved for future functionality, such as viewing profile details
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage(familyMembers[index]['imageUrl']),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          familyMembers[index]['name'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ] else ...[
-                  Icon(
-                    member['icon'],
-                    size: 100,
-                    color: AppColors.secondary3,
+                );
+              } else {
+                // "Add new member" card
+                return Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: AppColors.primary2, width: 2),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ],
-              ],
-            ),
-          ),
-        );
+                  child: InkWell(
+                    onTap: () {
+                      _showAddMemberDialog(context);
+                    },
+                    child: Center(
+                      child: Icon(
+                        Icons.add_circle,
+                        size: 50,
+                        color: AppColors.secondary2,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        } else {
+          return Center(child: Text("No profiles available"));
+        }
       },
     );
   }
+
+
 
   void _showAddMemberDialog(BuildContext context) {
     showDialog(
@@ -644,6 +654,10 @@ class _UserProfileState extends State<UserProfile> {
                     // Logic to send invite
                     createProfile(_usernameController.text);
                     Navigator.of(context).pop(); // Close the dialog after
+                    setState(() {
+                      // This will re-fetch the profiles
+                      futureProfiles = getAllProfile();
+                    });
                   },
                   child: Text('Send Invite', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
