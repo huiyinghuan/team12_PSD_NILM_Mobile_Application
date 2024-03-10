@@ -77,7 +77,6 @@ class _UserProfileState extends State<UserProfile> {
           HttpHeaders.authorizationHeader: 'Basic $auth',
         },
       );
-      
 
       if (response.statusCode == 200) {
         // Profile created successfully
@@ -85,7 +84,7 @@ class _UserProfileState extends State<UserProfile> {
 
         var jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
-        
+
         // Extract the profiles list
         List<dynamic> profiles = jsonResponse['profiles'];
 
@@ -100,7 +99,8 @@ class _UserProfileState extends State<UserProfile> {
 
             profilesList.add({
               'name': profile['name'],
-              'imageUrl': 'https://picsum.photos/id/237/200/300', // hardcoded image link
+              'imageUrl':
+                  'https://picsum.photos/id/237/200/300', // hardcoded image link
             });
           }
 
@@ -111,7 +111,6 @@ class _UserProfileState extends State<UserProfile> {
           int lastProfileId = lastProfile['id'];
           print('ID of the last profile: $lastProfileId');
         }
-       
       } else {
         // Failed to create profile
         print('Failed to get all profile: ${response.statusCode}');
@@ -535,7 +534,9 @@ class _UserProfileState extends State<UserProfile> {
           // Adding +1 for the "add new member" card
           double gridSpacing = 20;
           double gridPadding = 20;
-          double cardWidth = (MediaQuery.of(context).size.width / 2) - gridPadding - gridSpacing;
+          double cardWidth = (MediaQuery.of(context).size.width / 2) -
+              gridPadding -
+              gridSpacing;
           double cardHeight = cardWidth * 1.0; // Adjust based on your design
 
           return GridView.builder(
@@ -548,7 +549,8 @@ class _UserProfileState extends State<UserProfile> {
               mainAxisSpacing: gridSpacing,
               childAspectRatio: (cardWidth / cardHeight),
             ),
-            itemCount: familyMembers.length + 1, // Account for the "add new member" card
+            itemCount: familyMembers.length +
+                1, // Account for the "add new member" card
             itemBuilder: (context, index) {
               if (index < familyMembers.length) {
                 return Card(
@@ -565,8 +567,9 @@ class _UserProfileState extends State<UserProfile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(familyMembers[index]['imageUrl']),
+                          radius: 40,
+                          backgroundImage:
+                              NetworkImage(familyMembers[index]['imageUrl']),
                         ),
                         SizedBox(height: 8),
                         Text(
@@ -610,8 +613,6 @@ class _UserProfileState extends State<UserProfile> {
       },
     );
   }
-
-
 
   void _showAddMemberDialog(BuildContext context) {
     showDialog(
