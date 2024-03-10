@@ -35,9 +35,9 @@ class _UserProfileState extends State<UserProfile> {
       final response = await http.post(
         url,
         headers: {
-            'Content-Type': 'application/json',
-            HttpHeaders.authorizationHeader: 'Basic $auth',
-          },
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: 'Basic $auth',
+        },
         body: jsonEncode(<String, dynamic>{
           'name': _userNameController,
           'iconId': 6,
@@ -53,6 +53,56 @@ class _UserProfileState extends State<UserProfile> {
       } else {
         // Failed to create profile
         print('Failed to create profile: ${response.statusCode}');
+        // Print the response body for more details about the error
+        print('Response body: ${response.body}');
+        // You can handle errors appropriately
+      }
+    }
+  }
+
+  // get all profiles
+  Future<void> getAllProfile() async {
+    if (auth != null) {
+      final url = Uri.parse('http://l3homeation.dyndns.org:2080/api/profiles');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          HttpHeaders.authorizationHeader: 'Basic $auth',
+        },
+      );
+      
+
+      if (response.statusCode == 200) {
+        // Profile created successfully
+        print('Profile retrieved successfully');
+
+        var jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+        
+        // Extract the profiles list
+        List<dynamic> profiles = jsonResponse['profiles'];
+        //extract information from profiles json
+        // Check if the profiles list is not empty
+        if (profiles.isNotEmpty) {
+          // Iterate through each profile in the list
+          for (var profile in profiles) {
+            // Extract the name of the profile
+            String name = profile['name'];
+            print('Name: $name');
+          }
+
+          // Get the last profile in the list
+          Map<String, dynamic> lastProfile = profiles.last;
+
+          // Extract the ID of the last profile
+          int lastProfileId = lastProfile['id'];
+          print('ID of the last profile: $lastProfileId');
+        }
+       
+      } else {
+        // Failed to create profile
+        print('Failed to get all profile: ${response.statusCode}');
         // Print the response body for more details about the error
         print('Response body: ${response.body}');
         // You can handle errors appropriately
@@ -130,6 +180,7 @@ class _UserProfileState extends State<UserProfile> {
                         child: TextButton(
                           onPressed: () {
                             // To handle logout logic
+                            getAllProfile();
                           },
                           child: Text('Logout'),
                           style: TextButton.styleFrom(
