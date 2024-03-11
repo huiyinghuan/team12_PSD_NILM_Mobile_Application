@@ -47,19 +47,20 @@ class _LoginPageState extends State<LoginPage> {
           utf8.encode('${emailController.text}:${passwordController.text}')));
       // goToLogin(emailController.text, passwordController.text);
       await UserPreferences.setString('username', response['username']);
+      await UserPreferences.setString('userID', response['userID'].toString());
       await UserPreferences.setString(
           'auth',
           base64Encode(utf8
               .encode('${emailController.text}:${passwordController.text}')));
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => const Dashboard()),
       );
     } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return DialogBox(
+          return const DialogBox(
               title: "Error", errorText: "Login Error. Please try again");
         },
       );

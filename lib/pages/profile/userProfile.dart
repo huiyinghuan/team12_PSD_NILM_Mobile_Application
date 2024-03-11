@@ -8,6 +8,8 @@ import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
+import 'package:l3homeation/services/httphandle.dart';
+import 'package:l3homeation/components/error_dialog.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
+  String baseURL = "http://l3homeation.dyndns.org:2080";
+
   String? auth;
   // Initialize futureProfiles immediately with a safe placeholder
   Future<List<Map<String, dynamic>>> futureProfiles = Future.value([]);
@@ -26,6 +30,11 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+  final snackBar = const SnackBar(
+    content: Text("Password Change Successful!"),
+    duration: Duration(seconds: 2),
+  );
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +44,7 @@ class _UserProfileState extends State<UserProfile> {
   //add member
   Future<void> createProfile(_userNameController) async {
     if (auth != null) {
-      final url = Uri.parse('http://l3homeation.dyndns.org:2080/api/profiles');
+      final url = Uri.parse('$baseURL/api/profiles');
       final response = await http.post(
         url,
         headers: {
@@ -61,6 +70,38 @@ class _UserProfileState extends State<UserProfile> {
         // print('Response body: ${response.body}');
         // You can handle errors appropriately
       }
+    }
+  }
+
+  Future<Map<String, dynamic>> changePassword(
+      BuildContext context,
+      String currentPassword,
+      String newPassword,
+      String newConfirmPassword) async {
+    String? userName = await UserPreferences.getString('username');
+    String? userID = await UserPreferences.getString('userID');
+    var url = Uri.parse('$baseURL/api/users/$userID');
+    var response = await http.put(
+      url,
+      headers: {
+        'accept': 'application/json',
+        'X-Fibaro-Version': '2',
+        'Accept-language': 'en',
+        'Authorization':
+            'Basic ${base64Encode(utf8.encode('$userName:$currentPassword'))}',
+      },
+      body: const JsonEncoder().convert({
+        'password': newPassword,
+        'passwordConfirm': newConfirmPassword,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // var jsonResponse = jsonDecode(response.body);
+      return {'status': true};
+    } else {
+      // var jsonResponse = jsonDecode(response.body);
+      return {'status': false};
     }
   }
 
@@ -226,19 +267,19 @@ class _UserProfileState extends State<UserProfile> {
   bool _isPasswordVisible = false; // State variable for password visibility
 
   Widget _buildPersonalDataSection(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _currentPasswordController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-    TextEditingController _confirmPasswordController = TextEditingController();
-    String? _errorMessage;
+    TextEditingController nameController = TextEditingController();
+    TextEditingController currentPasswordController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+    TextEditingController confirmPasswordController = TextEditingController();
+    String? errorMessage;
 
     // check if the password entered is the same
     bool passwordsMatch() {
-      return _passwordController.text == _confirmPasswordController.text;
+      return passwordController.text == confirmPasswordController.text;
     }
 
     //check if current password entered matches the passowrd in the server
-    Future<bool> checkCurrentPassword(String _currentPasswordController) async {
+    Future<bool> checkCurrentPassword(String currentPasswordController) async {
       String? storedAuth = await UserPreferences.getString('auth');
       if (storedAuth != null) {
         List<int> decodedBytes = base64Decode(storedAuth);
@@ -247,7 +288,7 @@ class _UserProfileState extends State<UserProfile> {
         List<String> emailPassword = decodedString.split(':');
         String password = emailPassword[1];
 
-        if (password == _currentPasswordController) {
+        if (password == currentPasswordController) {
           // Password entered matches the password in the user preference string
           return true;
         } else {
@@ -267,7 +308,7 @@ class _UserProfileState extends State<UserProfile> {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            _nameController.text = snapshot.data ?? '';
+            nameController.text = snapshot.data ?? '';
 
             return ListView(
               padding: EdgeInsets.all(16.0),
@@ -278,7 +319,7 @@ class _UserProfileState extends State<UserProfile> {
                       ? Column(
                           children: [
                             TextFormField(
-                              controller: _nameController,
+                              controller: nameController,
                               decoration: InputDecoration(
                                 labelText: 'Name',
                                 enabledBorder: OutlineInputBorder(
@@ -309,7 +350,7 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),
-                                minimumSize: Size(200, 48),
+                                minimumSize: const Size(200, 48),
                               ),
                               child: const Text('Edit Data'),
                             ),
@@ -318,7 +359,7 @@ class _UserProfileState extends State<UserProfile> {
                       : Column(
                           children: [
                             TextFormField(
-                              controller: _nameController,
+                              controller: nameController,
                               decoration: InputDecoration(
                                 labelText: 'Name',
                                 enabledBorder: OutlineInputBorder(
@@ -336,7 +377,7 @@ class _UserProfileState extends State<UserProfile> {
                             const SizedBox(height: 16),
                             //current password field
                             TextFormField(
-                              controller: _currentPasswordController,
+                              controller: currentPasswordController,
                               decoration: InputDecoration(
                                 labelText: 'Current Password',
                                 enabledBorder: OutlineInputBorder(
@@ -354,7 +395,7 @@ class _UserProfileState extends State<UserProfile> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller:
-                                  _passwordController, // stores the password text
+                                  passwordController, // stores the password text
                               obscureText: !_isPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: 'New Password',
@@ -386,7 +427,7 @@ class _UserProfileState extends State<UserProfile> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller:
-                                  _confirmPasswordController, //store the confirm passowrd text
+                                  confirmPasswordController, //store the confirm passowrd text
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Retype Password',
@@ -404,16 +445,49 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            if (_errorMessage != null)
+                            if (errorMessage != null)
                               Text(
-                                _errorMessage!,
+                                errorMessage!,
                                 style: const TextStyle(
                                     color: Colors
                                         .red), // Customize error text style
                               ),
                             const SizedBox(height: 24),
                             ElevatedButton(
-                              onPressed: () async {},
+                              onPressed: () async {
+                                var response = await changePassword(
+                                    context,
+                                    currentPasswordController.text,
+                                    passwordController.text,
+                                    confirmPasswordController.text);
+
+                                if (response['status'] == true) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                  setState(() {
+                                    _isEditingData = false;
+                                  });
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const DialogBox(
+                                          title: "Success!",
+                                          errorText:
+                                              "Password Change Successfully!");
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return const DialogBox(
+                                          title: "Error",
+                                          errorText:
+                                              "Password Change Error. Please try again");
+                                    },
+                                  );
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.secondary3,
                                 foregroundColor: Colors.white,
@@ -587,7 +661,8 @@ class _UserProfileState extends State<UserProfile> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 15),
                   ),
                   child:
                       const Text('Send Invite', style: TextStyle(fontSize: 16)),

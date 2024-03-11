@@ -3,17 +3,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:l3homeation/models/IoT_Scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
-import 'package:l3homeation/pages/charts/power_graph.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
-import 'package:l3homeation/pages/devices/listDevice.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/widget/base_layout.dart';
-import 'package:l3homeation/pages/editDevice/edit_device.dart';
-import 'package:l3homeation/models/nilm_appliance.dart';
 
 import 'dashboard_lib.dart';
 
