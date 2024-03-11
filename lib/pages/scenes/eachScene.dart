@@ -47,15 +47,9 @@ class _eachSceneState extends State<eachScene> {
   void initState() {
     super.initState();
     loadAuth().then((_) {
-      print("Got auth: $auth\n");
       updateScenes();
       updateDevices();
     });
-    // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
-    // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   updateScenes();
-    // });
-    // ^ Implement the timer back once we figure out how to make the rebuilding of the scene status' more smooth
   }
 
   Future<void> loadAuth() async {
@@ -71,7 +65,6 @@ class _eachSceneState extends State<eachScene> {
         );
       });
     }
-    print("${scene.icon}");
   }
 
   Future<void> updateDevices() async {
@@ -95,7 +88,6 @@ class _eachSceneState extends State<eachScene> {
         );
       });
     }
-    print(devices_in_scene);
   }
 
   Future<void> removeDeviceFromScene(int index) async {
@@ -133,10 +125,7 @@ class _eachSceneState extends State<eachScene> {
   }
 
   void swapper(IoT_Scene scene) async {
-    print("Tapping scene to toggle state\n");
-    print("Hello world");
     await scene.swapStates();
-    print("${scene.icon}");
     updateScenes();
   }
 
@@ -259,7 +248,6 @@ class _eachSceneState extends State<eachScene> {
                                             scene.icon =
                                                 iconList[startIndex + index];
                                             updateScenes();
-                                            // print('changed description to $new_desc');
                                           }
                                         });
                                         // Add your onTap logic here
@@ -484,7 +472,6 @@ class _eachSceneState extends State<eachScene> {
   // for data table edit data custom popup box
   Future<void> changeDescriptionPromptBox(
       String title, String content, int i) async {
-    // print(content);
     String new_desc = '';
     showDialog<void>(
       context: context,
@@ -536,7 +523,6 @@ class _eachSceneState extends State<eachScene> {
                     if (value.statusCode == 204) {
                       scene.description = new_desc;
                       updateScenes();
-                      // print('changed description to $new_desc');
                     }
                   });
                 }
@@ -696,7 +682,6 @@ class _eachSceneState extends State<eachScene> {
                             onChanged: (IoT_Device? selectedDevice) {
                               // Handle selected device
                               selectedDeviceInDropdown = selectedDevice;
-                              print("Selected Device: ${selectedDevice?.name}");
                             },
                           );
                         }
@@ -769,7 +754,7 @@ class _eachSceneState extends State<eachScene> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Remove Device'),
+                  title: const Text('Remove Device'),
                   content: Text(
                       'Are you sure you want to remove ${snapshot.data![index].name}?'),
                   actions: <Widget>[
@@ -840,7 +825,7 @@ class _eachSceneState extends State<eachScene> {
 
   AlertDialog customDialog(String customText) {
     return AlertDialog(
-      title: Text('Device not Removed'),
+      title: const Text('Device not Removed'),
       content: Text(customText),
       actions: <Widget>[
         TextButton(

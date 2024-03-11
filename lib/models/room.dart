@@ -50,7 +50,7 @@ class Room {
           sectionId: responses['sectionId'],
           defaultSensors: responses['defaultSensors'],
           defaultThermostat: responses['defaultThermostat'],
-          icon: responses['icon'], 
+          icon: responses['icon'],
           propertiesMap: responses);
       rooms.add(newRoom);
     }
@@ -67,7 +67,6 @@ class Room {
     List<IoT_Device> roomIdSpecifics = [];
     for (IoT_Device device in devices) {
       if (device.roomId == id) {
-        print(device.name);
         roomIdSpecifics.add(device);
       }
     }

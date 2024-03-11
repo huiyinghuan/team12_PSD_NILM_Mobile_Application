@@ -40,8 +40,11 @@ class Room_Tile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 5, 20, 5),
                 child: Image(
-                image: AssetImage(
-                    room.icon == 'room_baby' || room.icon == 'room_child2' || room.icon == 'room_office4' || room.icon == 'room_toilet'
+                  image: AssetImage(
+                    room.icon == 'room_baby' ||
+                            room.icon == 'room_child2' ||
+                            room.icon == 'room_office4' ||
+                            room.icon == 'room_toilet'
                         ? 'images/icons/${room.icon}.png'
                         : 'images/icons/room_child2.png',
                   ),
@@ -49,7 +52,8 @@ class Room_Tile extends StatelessWidget {
                   height: 53.12625,
                 ),
               ),
-              SizedBox(width: 8), // Spacing between the indicator and the text
+              const SizedBox(
+                  width: 8), // Spacing between the indicator and the text
               Text(
                 '${room.name}',
                 style: GoogleFonts.poppins(
@@ -58,7 +62,6 @@ class Room_Tile extends StatelessWidget {
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-
               ),
             ],
           ),

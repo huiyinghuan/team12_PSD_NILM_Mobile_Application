@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:l3homeation/components/custom_button.dart';
-import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
 

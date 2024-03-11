@@ -107,7 +107,6 @@ class NILM_graph_state extends State<NILM_graph> {
     y_axis_titles = local_y_titles;
     rawBarGroups = localBarGroup;
     showingBarGroups = rawBarGroups;
-    print("length is: ${rawBarGroups.length}");
   }
 
   @override

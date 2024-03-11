@@ -27,7 +27,7 @@ Widget buildUsageSection(BuildContext context) {
         return containerWithConsumptionData(
             currentDate, consumption, consumptionCost);
       } else if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else {
         return Text(
           'Failed to load energy consumption',
@@ -43,7 +43,7 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.grey[200],
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
         bottomLeft: Radius.circular(40),
         bottomRight: Radius.circular(40),
       ),

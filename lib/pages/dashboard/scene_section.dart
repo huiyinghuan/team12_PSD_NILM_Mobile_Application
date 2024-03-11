@@ -37,7 +37,7 @@ Widget buildSceneSection(BuildContext context, Function onTap) {
           ],
         );
       } else if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else {
         return Text(
           'Failed to load energy consumption',
@@ -92,7 +92,7 @@ Widget buildSceneCard(IoT_Scene scene, navigateTo) {
         navigateTo(eachScene(scene: scene));
       },
       child: Card(
-        color: Color.fromRGBO(0, 69, 107, 1),
+        color: const Color.fromRGBO(0, 69, 107, 1),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -107,20 +107,20 @@ Widget buildSceneCard(IoT_Scene scene, navigateTo) {
                 width: 80,
                 height: 80,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               RichText(
                 text: TextSpan(
                   children: <TextSpan>[
                     TextSpan(
                       text: '$count',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Color.fromRGBO(110, 241, 110, 1),
                         letterSpacing: 1.0,
                       ),
                     ),
-                    TextSpan(
+                    const TextSpan(
                       text: ' · ',
                       style: TextStyle(
                         fontSize: 12,
@@ -131,7 +131,7 @@ Widget buildSceneCard(IoT_Scene scene, navigateTo) {
                     ),
                     TextSpan(
                       text: '${scene.name}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Color.fromRGBO(255, 255, 255, 1),

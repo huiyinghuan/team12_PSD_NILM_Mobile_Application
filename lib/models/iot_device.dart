@@ -109,8 +109,6 @@ class IoT_Device {
   }
 
   Future<void> swapStates() async {
-    print("swapping states now\n");
-    print("check current state: $value\n");
     try {
       final response = await http.get(
         Uri.parse('$URL/api/devices/$id'),
@@ -122,10 +120,6 @@ class IoT_Device {
       var jsonResponse = jsonDecode(response.body);
       var onlinevalue = jsonResponse['properties']['value'];
       if (onlinevalue != value) {
-        print("online value is not same as local value\n");
-        print("online value: $onlinevalue\n");
-        print(
-            "do not swap state, but update the interface value and local value");
         value = onlinevalue;
         return;
       }
@@ -133,7 +127,6 @@ class IoT_Device {
     // ignore: unused_local_variable
     late Response? putRequest;
     try {
-      print("${value.runtimeType}");
       Map<String, dynamic>? requestBody;
       if (value is int) {
         if (value != 0) {
@@ -165,7 +158,6 @@ class IoT_Device {
     } catch (e) {
       print("Http put request failed\n");
     }
-    print("finished swapping states\n");
   }
 
   static Future<List<IoT_Device>> get_devices(

@@ -3,10 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/models/room.dart';
-import 'package:l3homeation/pages/devices/listDevice.dart';
-import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/pages/rooms/base/specific_room.dart';
 import 'package:l3homeation/pages/rooms/edit/edit_rooms.dart';
 import 'package:l3homeation/widget/base_layout.dart';
@@ -48,7 +45,6 @@ class _RoomsState extends State<Rooms> {
   }
 
   void viewRoom(BuildContext context, Room room) {
-    print("attempting to nav to view");
     Navigator.push(
       context,
       MaterialPageRoute(

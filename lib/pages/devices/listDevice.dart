@@ -16,7 +16,6 @@ class _ListDeviceState extends State<ListDevice> {
   void initState() {
     super.initState();
     loadAuth().then((_) {
-      print("Got auth: $auth\n");
       updateDevices();
     });
   }
@@ -33,7 +32,6 @@ class _ListDeviceState extends State<ListDevice> {
   }
 
   void swapper(IoT_Device device, VoidCallback callback) async {
-    print("Tapping device to toggle state\n");
     await device.swapStates();
     if (auth != null) {
       setState(() {
@@ -43,7 +41,6 @@ class _ListDeviceState extends State<ListDevice> {
         );
       });
       callback();
-      print("Ran the callback successfully");
     }
   }
 
@@ -59,7 +56,7 @@ class _ListDeviceState extends State<ListDevice> {
             fontSize: 22,
           ),
         ),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       drawer: NavigationDrawerWidget(),
       body: ListView(

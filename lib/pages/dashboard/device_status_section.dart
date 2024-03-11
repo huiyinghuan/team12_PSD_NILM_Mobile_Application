@@ -10,7 +10,7 @@ Widget buildDeviceStatusSection(
   return Container(
     decoration: BoxDecoration(
       color: Colors.grey[200],
-      borderRadius: BorderRadius.only(
+      borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(40),
         topRight: Radius.circular(40),
       ),
@@ -56,7 +56,7 @@ Widget buildDeviceStatusSection(
             ],
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else {
           return Text(
             'Failed to load devices',
@@ -78,10 +78,3 @@ Text displayDevicesOn(AsyncSnapshot snapshot) {
     ),
   );
 }
-// void adjustDeviceSlider(IoT_Device device, BuildContext context) {
-//   final navigateTo =
-//       (Widget page) => Navigator.of(context).push(MaterialPageRoute(
-//             builder: (context) => page,
-//           ));
-//   navigateTo(ListDevice());
-// }

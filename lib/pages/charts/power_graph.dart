@@ -37,15 +37,7 @@ class _PowerGraphState extends State<PowerGraph>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this as TickerProvider);
-    loadAuth().then((_) {
-      print("Got auth: $auth\n");
-      // updateDevices();
-    });
-    // updateDevices(); // Can be read as initialize devices too --> Naming seems weird only because it usees the exact same function to call for an update
-    // updateDevicesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   updateDevices();
-    // });
-    // ^ Implement the timer back once we figure out how to make the rebuilding of the device status' more smooth
+    loadAuth().then((_) {});
   }
 
   @override

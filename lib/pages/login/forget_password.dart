@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
-import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
-import 'package:l3homeation/pages/login/register_user.dart';
 
 import 'reuseable.dart';
 
@@ -31,8 +29,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
     // Close the loading dialog
     Navigator.of(context).pop();
-
-    print("Reset test successful");
 
     // Handle login failure
     showDialog(
@@ -70,7 +66,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     controller: emailController,
                     hintText: 'Email',
                     obscureText: false,
-                    autofillHints: [AutofillHints.email]),
+                    autofillHints: const [AutofillHints.email]),
 
                 const SizedBox(height: 25),
 

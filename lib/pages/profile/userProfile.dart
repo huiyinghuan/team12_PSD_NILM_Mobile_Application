@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/themes/colors.dart';
@@ -28,9 +27,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void initState() {
     super.initState();
-    loadAuth().then((_) {
-      print("Got auth: $auth\n");
-    });
+    loadAuth().then((_) {});
   }
 
   //add member
@@ -54,12 +51,12 @@ class _UserProfileState extends State<UserProfile> {
       if (response.statusCode == 200) {
         // Profile created successfully
 
-        print('Profile created successfully');
+        // print('Profile created successfully');
       } else {
         // Failed to create profile
-        print('Failed to create profile: ${response.statusCode}');
+        // print('Failed to create profile: ${response.statusCode}');
         // Print the response body for more details about the error
-        print('Response body: ${response.body}');
+        // print('Response body: ${response.body}');
         // You can handle errors appropriately
       }
     }
@@ -80,10 +77,7 @@ class _UserProfileState extends State<UserProfile> {
 
       if (response.statusCode == 200) {
         // Profile created successfully
-        print('Profile retrieved successfully');
-
         var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
 
         // Extract the profiles list
         List<dynamic> profiles = jsonResponse['profiles'];
@@ -94,28 +88,18 @@ class _UserProfileState extends State<UserProfile> {
           // Iterate through each profile in the list
           for (var profile in profiles) {
             // Extract the name of the profile
-            String name = profile['name'];
-            print('Name: $name');
-
             profilesList.add({
               'name': profile['name'],
               'imageUrl':
                   'https://picsum.photos/id/237/200/300', // hardcoded image link
             });
           }
-
-          // Get the last profile in the list
-          Map<String, dynamic> lastProfile = profiles.last;
-
-          // Extract the ID of the last profile
-          int lastProfileId = lastProfile['id'];
-          print('ID of the last profile: $lastProfileId');
         }
       } else {
         // Failed to create profile
-        print('Failed to get all profile: ${response.statusCode}');
+        // print('Failed to get all profile: ${response.statusCode}');
         // Print the response body for more details about the error
-        print('Response body: ${response.body}');
+        // print('Response body: ${response.body}');
         // You can handle errors appropriately
       }
     }
@@ -132,7 +116,7 @@ class _UserProfileState extends State<UserProfile> {
         child: Column(
           children: <Widget>[
             _buildProfileHeader(context),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             _buildTabBar(context),
             Expanded(child: _buildTabBarView(context)),
           ],
@@ -143,7 +127,7 @@ class _UserProfileState extends State<UserProfile> {
 
   Widget _buildProfileHeader(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: <Widget>[
           // CircleAvatar(
@@ -163,37 +147,28 @@ class _UserProfileState extends State<UserProfile> {
                 } else {
                   return Column(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 50,
                         backgroundImage: NetworkImage(
                             'https://picsum.photos/id/91/200/300'), // Replace with actual image
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         snapshot.data ??
                             '', // Display the username from the snapshot
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
                         ),
                       ),
-
-                      // )
-                      // Text(
-                      //   'John Abraham',
-                      //   style: TextStyle(
-                      //     fontWeight: FontWeight.bold,
-                      //     fontSize: 24,
-                      //   ),
-                      // ),
-                      SizedBox(height: 16), // Add spacing before the button
+                      const SizedBox(
+                          height: 16), // Add spacing before the button
                       SizedBox(
                         width: 100, // Set the width of the button
                         child: TextButton(
                           onPressed: () {
                             // To handle logout logic
                           },
-                          child: Text('Logout'),
                           style: TextButton.styleFrom(
                             // primary: Colors.white,
                             backgroundColor: AppColors.secondary2,
@@ -201,9 +176,10 @@ class _UserProfileState extends State<UserProfile> {
                               borderRadius: BorderRadius.circular(
                                   18), // Set the circular radius to 18
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 vertical: 16), // Add padding inside the button
                           ),
+                          child: const Text('Logout'),
                         ),
                       ),
                     ],
@@ -218,7 +194,7 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   Widget _buildTabBar(BuildContext context) {
-    return TabBar(
+    return const TabBar(
       labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 17,
@@ -273,21 +249,9 @@ class _UserProfileState extends State<UserProfile> {
           return false;
         }
       } else {
-        print("auth string not found");
         return false;
       }
     }
-
-    // final AuthService _authService = AuthService(password: _currentPasswordController.text);
-    // var response = await _authService.checkLoginStatus(context);
-    // print("Response: ${_currentPasswordController.text}");
-
-    // if (response['status'] == true) {
-    //   return true;
-    //   else{
-    //     return false;
-    //   }
-//    }
 
     return FutureBuilder<String?>(
       future: UserPreferences.getString('username'),
@@ -318,62 +282,31 @@ class _UserProfileState extends State<UserProfile> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: AppColors.primary2, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16),
-                            // TextFormField(
-                            //   initialValue: 'test123',
-                            //   // controller: _passwordController,
-                            //   obscureText: !_isPasswordVisible,
-                            //   decoration: InputDecoration(
-                            //     labelText: 'Password',
-                            //     hintText:
-                            //         'Leave blank to keep current password',
-                            //     enabledBorder: OutlineInputBorder(
-                            //       borderSide:
-                            //           BorderSide(color: Colors.grey.shade300),
-                            //       borderRadius: BorderRadius.circular(12),
-                            //     ),
-                            //     focusedBorder: OutlineInputBorder(
-                            //       borderSide: BorderSide(
-                            //           color: AppColors.primary2, width: 2),
-                            //       borderRadius: BorderRadius.circular(12),
-                            //     ),
-                            //     suffixIcon: IconButton(
-                            //       icon: Icon(
-                            //         _isPasswordVisible
-                            //             ? Icons.visibility
-                            //             : Icons.visibility_off,
-                            //       ),
-                            //       onPressed: () {
-                            //         setState(() {
-                            //           _isPasswordVisible = !_isPasswordVisible;
-                            //         });
-                            //       },
-                            //     ),
-                            //   ),
-                            // ),
-                            SizedBox(height: 24),
+                            const SizedBox(height: 16),
+                            const SizedBox(height: 24),
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
                                   _isEditingData = true;
                                 });
                               },
-                              child: Text('Edit Data'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.secondary3,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 minimumSize: Size(200, 48),
                               ),
+                              child: const Text('Edit Data'),
                             ),
                           ],
                         )
@@ -389,13 +322,13 @@ class _UserProfileState extends State<UserProfile> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: AppColors.primary2, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             //current password field
                             TextFormField(
                               controller: _currentPasswordController,
@@ -407,13 +340,13 @@ class _UserProfileState extends State<UserProfile> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: AppColors.primary2, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller:
                                   _passwordController, // stores the password text
@@ -427,7 +360,7 @@ class _UserProfileState extends State<UserProfile> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: AppColors.primary2, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -445,7 +378,7 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller:
                                   _confirmPasswordController, //store the confirm passowrd text
@@ -459,47 +392,23 @@ class _UserProfileState extends State<UserProfile> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: AppColors.primary2, width: 2),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 16),
+                            const SizedBox(height: 16),
                             if (_errorMessage != null)
                               Text(
                                 _errorMessage!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors
                                         .red), // Customize error text style
                               ),
-                            SizedBox(height: 24),
+                            const SizedBox(height: 24),
                             ElevatedButton(
-                              onPressed: () async {
-                                // Check if passwords match
-                                // if (passwordsMatch()) {
-                                //   // Passwords match, implement your logic for password change confirmation here
-                                //   Future<bool> passwordCheck = checkCurrentPassword(_currentPasswordController.text);
-                                //   if (passwordCheck == true) {
-
-                                //   }
-
-                                //   // After performing the logic, reset the editing state and clear the controllers
-                                //   setState(() {
-                                //     _isEditingData = false;
-                                //     _passwordController.clear();
-                                //     _confirmPasswordController.clear();
-                                //     // Reset error message when passwords match
-                                //     _errorMessage = null;
-                                //   });
-                                // } else {
-                                //   // Passwords do not match, show an error message or take appropriate action
-                                //   setState(() {
-                                //     _errorMessage = 'Passwords do not match';
-                                //   });
-                                // }
-                              },
-                              child: Text('Confirm Change'),
+                              onPressed: () async {},
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.secondary3,
                                 foregroundColor: Colors.white,
@@ -509,6 +418,7 @@ class _UserProfileState extends State<UserProfile> {
                                 padding: EdgeInsets.symmetric(vertical: 16),
                                 minimumSize: Size(200, 48),
                               ),
+                              child: const Text('Confirm Change'),
                             ),
                           ],
                         ),
@@ -526,7 +436,7 @@ class _UserProfileState extends State<UserProfile> {
       future: futureProfiles, // Use the future initialized in initState
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
         } else if (snapshot.hasData) {
@@ -541,7 +451,7 @@ class _UserProfileState extends State<UserProfile> {
 
           return GridView.builder(
             shrinkWrap: true,
-            physics: ScrollPhysics(), // Make it scrollable
+            physics: const ScrollPhysics(), // Make it scrollable
             padding: EdgeInsets.all(gridPadding),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -556,7 +466,7 @@ class _UserProfileState extends State<UserProfile> {
                 return Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.primary2, width: 2),
+                    side: const BorderSide(color: AppColors.primary2, width: 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
@@ -574,7 +484,7 @@ class _UserProfileState extends State<UserProfile> {
                         SizedBox(height: 8),
                         Text(
                           familyMembers[index]['name'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -588,14 +498,14 @@ class _UserProfileState extends State<UserProfile> {
                 return Card(
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    side: BorderSide(color: AppColors.primary2, width: 2),
+                    side: const BorderSide(color: AppColors.primary2, width: 2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: InkWell(
                     onTap: () {
                       _showAddMemberDialog(context);
                     },
-                    child: Center(
+                    child: const Center(
                       child: Icon(
                         Icons.add_circle,
                         size: 50,
@@ -608,7 +518,7 @@ class _UserProfileState extends State<UserProfile> {
             },
           );
         } else {
-          return Center(child: Text("No profiles available"));
+          return const Center(child: Text("No profiles available"));
         }
       },
     );
@@ -631,7 +541,7 @@ class _UserProfileState extends State<UserProfile> {
             child: Column(
               mainAxisSize: MainAxisSize.min, // Use minimum space vertically
               children: <Widget>[
-                Text(
+                const Text(
                   'Send New Invitation',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -640,7 +550,7 @@ class _UserProfileState extends State<UserProfile> {
                         AppColors.secondary2, // Consistent color for the title
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
@@ -650,12 +560,12 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          BorderSide(color: AppColors.primary2, width: 2),
+                          const BorderSide(color: AppColors.primary2, width: 2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     // Logic to send invite
@@ -666,7 +576,6 @@ class _UserProfileState extends State<UserProfile> {
                       futureProfiles = getAllProfile();
                     });
                   },
-                  child: Text('Send Invite', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
                     // primary: AppColors.secondary2,
                     // onPrimary: Colors.white, // Text color
@@ -675,11 +584,13 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   ),
+                  child:
+                      const Text('Send Invite', style: TextStyle(fontSize: 16)),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel',
+                  child: const Text('Cancel',
                       style: TextStyle(color: AppColors.secondary2)),
                 ),
               ],

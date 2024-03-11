@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:l3homeation/models/iot_device.dart';
 
 class IoT_Scene {
@@ -43,8 +42,6 @@ class IoT_Scene {
   });
 
   Future<void> swapStates() async {
-    print("swapping states now\n");
-    print("check current state: $enable\n");
     try {
       List<dynamic> jsonResponse = await fetchScenes(credentials, URL, id);
 
@@ -62,10 +59,8 @@ class IoT_Scene {
       response_put =
           await putRequest(credentials, URL, id, {'enabled': !enable});
     } catch (e) {
-      print("Http put request failed\n");
       print(e);
     }
-    print("finished swapping states\n");
   }
 
   String toString_IOT() {
@@ -134,7 +129,8 @@ class IoT_Scene {
     return response_put;
   }
 
-  Future<Response> add_devices_into_action(IoT_Device new_device) async {// fetch data and change only description
+  Future<Response> add_devices_into_action(IoT_Device new_device) async {
+    // fetch data and change only description
     var dict = {
       "group": "device",
       "type": "single",
@@ -145,7 +141,7 @@ class IoT_Scene {
     // content updates
     var jsonData = jsonDecode(content);
     var oldDataAction = (jsonData[0])['actions'];
-    oldDataAction ??= []; 
+    oldDataAction ??= [];
     oldDataAction.add(dict); // entered at the last row of data
     (jsonData[0])['actions'] = oldDataAction;
     content = jsonEncode(jsonData); // put it back
@@ -154,7 +150,7 @@ class IoT_Scene {
     var jsonData2 = jsonDecode(wholeJSON);
     var content2 = jsonDecode(jsonData2['content']);
     var oldDataAction2 = content2[0]['actions'];
-    oldDataAction2 ??= []; 
+    oldDataAction2 ??= [];
     oldDataAction2.add(dict); // entered at the last row of data
 
     // put it back
@@ -286,7 +282,9 @@ class IoT_Scene {
     String baseURL,
     int? id,
   ) async {
-    String url = id == null ? '$baseURL/api/scenes?alexaProhibited=true' : '$baseURL/api/scenes/$id';
+    String url = id == null
+        ? '$baseURL/api/scenes?alexaProhibited=true'
+        : '$baseURL/api/scenes/$id';
     final response = await http.get(
       Uri.parse(url),
       headers: {

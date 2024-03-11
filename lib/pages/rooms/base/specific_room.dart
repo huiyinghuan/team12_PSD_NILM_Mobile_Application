@@ -54,7 +54,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
           children: <Widget>[
             Text(
               'Looking at ${widget.specificRoom.name}',
-              style: TextStyle(fontSize: 24.0),
+              style: const TextStyle(fontSize: 24.0),
             ),
             const SizedBox(height: 25),
             displayDevicesInRoom(context, turn_on_off_device_tile),
@@ -83,13 +83,13 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               // displayNumberOfDevicesOn(roomDevices),
               displayDeviceTiles(roomDevices, onTap),
             ],
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else {
           return failedToLoadError();
         }
@@ -108,7 +108,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(width: 4), // Add spacing between text and icon
+        const SizedBox(width: 4), // Add spacing between text and icon
       ],
     );
   }

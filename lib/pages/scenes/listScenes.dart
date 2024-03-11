@@ -25,7 +25,6 @@ class _listScenesState extends State<listScenes> {
   void initState() {
     super.initState();
     loadAuth().then((_) {
-      print("Got auth: $auth\n");
       updateScenes();
       updateDevices();
 
@@ -34,11 +33,6 @@ class _listScenesState extends State<listScenes> {
         updateScenes();
       });
     });
-    // updateScenes(); // Can be read as initialize scenes too --> Naming seems weird only because it usees the exact same function to call for an update
-    // updateScenesTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   updateScenes();
-    // });
-    // ^ Implement the timer back once we figure out how to make the rebuilding of the scene status' more smooth
   }
 
   @override
@@ -74,8 +68,6 @@ class _listScenesState extends State<listScenes> {
   }
 
   void swapper(IoT_Scene scene) async {
-    print("Tapping scene to toggle state\n");
-    print("${scene.icon}");
     await scene.swapStates();
     if (auth != null) {
       setState(() {
@@ -208,9 +200,7 @@ class _listScenesState extends State<listScenes> {
                       var action = (selectedDevice.value.runtimeType == bool)
                           ? "close"
                           : "turnOff";
-                      print(selectedDevice.value);
                       // Add logic to save the new scene with the provided name and description
-                      print('Name: $name, Description: $description');
                       IoT_Scene.post_new_scene(
                         name,
                         description,
@@ -219,7 +209,6 @@ class _listScenesState extends State<listScenes> {
                         auth!,
                         "http://l3homeation.dyndns.org:2080",
                       ).then((response) {
-                        print(response.body); // Print the response body
                         updateScenes();
                         setState(() {});
                       });
@@ -272,7 +261,6 @@ class _listScenesState extends State<listScenes> {
   // Assuming that scenes is a List<IoT_Scene>
   Iterable<Card> buildExpansionTiles(List<IoT_Scene> scenes, navigateTo) {
     return scenes.map((scene) {
-      // print(scene.toString_IOT());
       dynamic enableScene = scene.enable;
 
       return Card(
@@ -329,7 +317,6 @@ class _listScenesState extends State<listScenes> {
                                 TextButton(
                                   onPressed: enableScene
                                       ? () {
-                                          print('directing to next page');
                                           navigateTo(eachScene(scene: scene));
                                         }
                                       : null,
@@ -338,7 +325,6 @@ class _listScenesState extends State<listScenes> {
                                           CustomDialog("Click to Edit Scene");
                                         }
                                       : null,
-                                  child: const Icon(Icons.edit),
                                   style: ButtonStyle(
                                     foregroundColor: enableScene
                                         ? MaterialStateProperty.all<Color>(
@@ -346,6 +332,7 @@ class _listScenesState extends State<listScenes> {
                                         : MaterialStateProperty.all<Color>(
                                             Colors.grey),
                                   ),
+                                  child: const Icon(Icons.edit),
                                 ),
                                 TextButton(
                                   onPressed: enableScene
@@ -361,7 +348,6 @@ class _listScenesState extends State<listScenes> {
                                     icon: const Icon(Icons.touch_app),
                                     onPressed: enableScene
                                         ? () {
-                                            print('directing to next page');
                                             navigateTo(eachScene(scene: scene));
                                           }
                                         : null,
@@ -431,7 +417,6 @@ class _listScenesState extends State<listScenes> {
     if (scene.description == "" || scene.description == null) {
       description = "No description";
     }
-    // print(jsonDecode(scene.content)[0]['actions'].length);
     int countOfDevices = jsonDecode(scene.content)[0]['actions'].length;
     return Row(
       children: [

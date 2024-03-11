@@ -33,7 +33,6 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     scrollController = ScrollController();
     loadAuth().then((_) async {
-      print("Got auth: $auth\n");
       updateDevices();
       fetchEnergy();
       fetchScenes();

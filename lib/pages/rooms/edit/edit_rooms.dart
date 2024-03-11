@@ -23,7 +23,7 @@ class _EditRoomPageState extends State<EditRoomPage> {
           children: <Widget>[
             Text(
               'Editing for ${widget.room.name}',
-              style: TextStyle(fontSize: 24.0),
+              style: const TextStyle(fontSize: 24.0),
             ),
             // Add more settings widgets here
           ],

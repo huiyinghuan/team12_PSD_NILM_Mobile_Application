@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
-import 'package:l3homeation/components/square_tile.dart';
 import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'package:l3homeation/pages/login/register_user.dart';
 import 'package:l3homeation/services/httphandle.dart';
@@ -38,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
     final AuthService _authService = AuthService(
         email: emailController.text, password: passwordController.text);
     var response = await _authService.checkLoginStatus(context);
-    print("Response: ${passwordController.text}");
 
     // Close the loading dialog
     Navigator.of(context).pop();
@@ -50,15 +48,11 @@ class _LoginPageState extends State<LoginPage> {
           'auth',
           base64Encode(utf8
               .encode('${emailController.text}:${passwordController.text}')));
-      print("Login successful");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Dashboard()),
       );
     } else {
-      print("Error logging in");
-      // Handle login failure
-      // showLoginFailed(context);
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -178,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
       controller: emailController,
       hintText: 'Email',
       obscureText: false,
-      autofillHints: [AutofillHints.email],
+      autofillHints: const [AutofillHints.email],
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.white),
@@ -215,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
 
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         // Password Field
         displayPasswordTextField(),
       ],
@@ -227,16 +221,17 @@ class _LoginPageState extends State<LoginPage> {
       controller: passwordController,
       hintText: 'Password',
       obscureText: true,
-      autofillHints: [AutofillHints.password],
+      autofillHints: const [AutofillHints.password],
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Colors.white),
           borderRadius: BorderRadius.circular(20),
         ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color.fromARGB(255, 187, 187, 187)),
+            borderSide:
+                const BorderSide(color: Color.fromARGB(255, 187, 187, 187)),
             borderRadius: BorderRadius.circular(20)),
-        fillColor: Color.fromARGB(255, 236, 236, 236),
+        fillColor: const Color.fromARGB(255, 236, 236, 236),
         filled: true,
         hintText: 'Password',
         border: OutlineInputBorder(

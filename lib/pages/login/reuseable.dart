@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/square_tile.dart';
-import 'package:l3homeation/components/custom_textfield.dart';
 
 Text displayTitle(String title) {
   return Text(
