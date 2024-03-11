@@ -100,7 +100,7 @@ class _RegisterUserState extends State<RegisterUser> {
 
                 // Sign in button
                 CustomButton(
-                  name: "Sign In",
+                  name: "Sign Up",
                   onTap: signUpUser,
                 ),
 

@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
+import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
+import 'package:l3homeation/pages/login/login_page.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -166,8 +168,11 @@ class _UserProfileState extends State<UserProfile> {
                       SizedBox(
                         width: 100, // Set the width of the button
                         child: TextButton(
-                          onPressed: () {
-                            // To handle logout logic
+                          onPressed: () async {
+                            await signUserOut(context);
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
                           },
                           style: TextButton.styleFrom(
                             // primary: Colors.white,
