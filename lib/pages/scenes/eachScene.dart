@@ -131,6 +131,7 @@ class _eachSceneState extends State<eachScene> {
       }
     }
   }
+
   void swapper(IoT_Scene scene) async {
     print("Tapping scene to toggle state\n");
     print("Hello world");
@@ -138,28 +139,28 @@ class _eachSceneState extends State<eachScene> {
     print("${scene.icon}");
     updateScenes();
   }
+
   @override
   Widget build(BuildContext context) {
-    
     navigateTo(Widget page) => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => page,
-            ));
-    
-    TabBar tabNames(){
-      return const TabBar (
+          builder: (context) => page,
+        ));
+
+    TabBar tabNames() {
+      return const TabBar(
         tabs: [
-        Tab(
-          icon: Icon(Icons.cloud_outlined),
-          text: 'Information',
-        ),
-        Tab(
-          icon: Icon(Icons.edit_attributes),
-          text: 'Edit Devices',
-        ),
-        Tab(
-          icon: Icon(Icons.timer),
-          text: 'Time Config',
-        )
+          Tab(
+            icon: Icon(Icons.cloud_outlined),
+            text: 'Information',
+          ),
+          Tab(
+            icon: Icon(Icons.edit_attributes),
+            text: 'Edit Devices',
+          ),
+          Tab(
+            icon: Icon(Icons.timer),
+            text: 'Time Config',
+          )
         ],
       );
     }
@@ -200,7 +201,7 @@ class _eachSceneState extends State<eachScene> {
   }
 
   //---------------------------------FIRST TAB FUNCTION---------------------------------
-  SingleChildScrollView buildFirstTab(IoT_Scene scene_carriedover){
+  SingleChildScrollView buildFirstTab(IoT_Scene scene_carriedover) {
     return SingleChildScrollView(
       child: Padding(
         // make scrollable below.
@@ -209,108 +210,109 @@ class _eachSceneState extends State<eachScene> {
           // column got 2 children. 1 top row and 1 bottom datatable
           children: [
             contentTopRow(scene_carriedover),
-            Center(
-              child: contentBody()
-            ),
+            Center(child: contentBody()),
           ],
         ),
       ),
     );
   }
 
-  Row contentTopRow(dynamic scene_carriedover){
-            // top row. icon and name
+  Row contentTopRow(dynamic scene_carriedover) {
+    // top row. icon and name
     return Row(
-        children: [
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: 
-            InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return 
-                    AlertDialog(
-                      scrollable: true,
-                      title: Text('Change Icon'),
-                      content: SizedBox(
-                        height: 300, // Set a fixed height for the AlertDialog
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: List.generate(
-                              (iconList.length / 5).ceil(), // Calculate number of rows
-                              (rowIndex) {
-                                int startIndex = rowIndex * 5;
-                                int endIndex = (rowIndex + 1) * 5;
-                                if (endIndex > iconList.length) {
-                                  endIndex = iconList.length;
-                                }
-                                return Row(
-                                  children: List.generate(
-                                    endIndex - startIndex,
-                                    (index) => Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Future<Response> changeResponse = scene_carriedover.change_icon(iconList[startIndex + index]);
-                                          changeResponse.then((value) {
-                                            if (value.statusCode == 204) {
-                                              scene.icon = iconList[startIndex + index];
-                                              updateScenes();
-                                              // print('changed description to $new_desc');
-                                            }
-                                          });
-                                          // Add your onTap logic here
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Image(
-                                            image: AssetImage('images/icons/${iconList[startIndex + index]}.png'),
-                                            width: 40,
-                                          ),
+      children: [
+        SizedBox(
+          width: 100,
+          height: 100,
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: true,
+                    title: Text('Change Icon'),
+                    content: SizedBox(
+                      height: 300, // Set a fixed height for the AlertDialog
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            (iconList.length / 5)
+                                .ceil(), // Calculate number of rows
+                            (rowIndex) {
+                              int startIndex = rowIndex * 5;
+                              int endIndex = (rowIndex + 1) * 5;
+                              if (endIndex > iconList.length) {
+                                endIndex = iconList.length;
+                              }
+                              return Row(
+                                children: List.generate(
+                                  endIndex - startIndex,
+                                  (index) => Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Future<Response> changeResponse =
+                                            scene_carriedover.change_icon(
+                                                iconList[startIndex + index]);
+                                        changeResponse.then((value) {
+                                          if (value.statusCode == 204) {
+                                            scene.icon =
+                                                iconList[startIndex + index];
+                                            updateScenes();
+                                            // print('changed description to $new_desc');
+                                          }
+                                        });
+                                        // Add your onTap logic here
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image(
+                                          image: AssetImage(
+                                              'images/icons/${iconList[startIndex + index]}.png'),
+                                          width: 40,
                                         ),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-              child: Image(
-                image: AssetImage(
-                  scene.icon != null
-                      ? 'images/icons/${scene.icon}.png'
-                      : 'images/kitchen.png',
-                ),
-                fit: BoxFit.cover,
-                color: scene.icon != null ? null : AppColors.primary3,
+                    ),
+                  );
+                },
+              );
+            },
+            child: Image(
+              image: AssetImage(
+                scene.icon != null
+                    ? 'images/icons/${scene.icon}.png'
+                    : 'images/kitchen.png',
               ),
+              fit: BoxFit.cover,
+              color: scene.icon != null ? null : AppColors.primary3,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 20.0), // Add desired padding here
-            child: Text(
-              scene.name!,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 20.0), // Add desired padding here
+          child: Text(
+            scene.name!,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
-  SingleChildScrollView contentBody(){
+  SingleChildScrollView contentBody() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -323,8 +325,7 @@ class _eachSceneState extends State<eachScene> {
               future: Body_buildDataRows(),
               builder: (BuildContext context,
                   AsyncSnapshot<List<DataRow>> snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
@@ -338,8 +339,7 @@ class _eachSceneState extends State<eachScene> {
                           children: [
                             Text('Data Information'),
                             Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10.0),
+                              padding: EdgeInsets.only(left: 10.0),
                               child: Icon(Icons.edit),
                             )
                           ],
@@ -371,7 +371,8 @@ class _eachSceneState extends State<eachScene> {
             maxLines: 1,
           ),
           onTap: () async {
-            changeDescriptionPromptBox('Edit ' + tableAttributes[i], data_cell, i);
+            changeDescriptionPromptBox(
+                'Edit ' + tableAttributes[i], data_cell, i);
           },
         )
       ]));
@@ -408,6 +409,7 @@ class _eachSceneState extends State<eachScene> {
         return 'Unknown Column';
     }
   }
+
   // create an icon list that exist in the images/icons
   List<String> iconList = [
     'airpurifer0',
@@ -451,15 +453,15 @@ class _eachSceneState extends State<eachScene> {
     'humidifier100',
     'klimatyzator0',
     'klimatyzator100',
-    'lampa ogrodowa0',
-    'lampa ogrodowa100',
+    // 'lampaogrodowa0',
+    // 'lampaogrodowa100',
     'light0',
     'light100',
     'morning',
     'onoff0',
-    'onoff100',
+    // 'onoff100',
     'preasure_sensor',
-    'roleta_wewo',
+    // 'roleta_wewo',
     'roleta_wew100',
     'scene_auto',
     'scene_block',
@@ -480,7 +482,8 @@ class _eachSceneState extends State<eachScene> {
   ];
 
   // for data table edit data custom popup box
-  Future<void> changeDescriptionPromptBox(String title, String content, int i) async {
+  Future<void> changeDescriptionPromptBox(
+      String title, String content, int i) async {
     // print(content);
     String new_desc = '';
     showDialog<void>(
@@ -539,7 +542,8 @@ class _eachSceneState extends State<eachScene> {
                 }
                 Navigator.of(context).pop();
               },
-              child: (new_desc == '') ? const Text('OK') : const Text('Confirm'),
+              child:
+                  (new_desc == '') ? const Text('OK') : const Text('Confirm'),
             ),
           ],
         );
@@ -552,7 +556,7 @@ class _eachSceneState extends State<eachScene> {
   //---------------------------------SECOND TAB FUNCTION---------------------------------
 
   ListView buildSecondTab() {
-  List<int> collatedDeviceIds = [];
+    List<int> collatedDeviceIds = [];
     List actions = jsonDecode(scene.content)[0]['actions'];
     for (var action in actions) {
       if (action['group'] == 'device') {
@@ -572,7 +576,7 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
-  Text contentTopHeader(){
+  Text contentTopHeader() {
     return Text(
       'Scene will do the following:',
       style: GoogleFonts.poppins(
@@ -582,26 +586,27 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
-  FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions){
+  FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions) {
     return FutureBuilder<List<IoT_Device>>(
-      future: devices_in_scene, // listing of all devices_in_scene for that scene 
-      builder: (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
+      future:
+          devices_in_scene, // listing of all devices_in_scene for that scene
+      builder:
+          (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
         if (snapshot.hasData) {
           // If the Future has completed successfully, build the ListView.
           // List<IoT_Device> deviceList = snapshot.data!;
           return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data!.length + 1, // Add 1 for the additional row
+            itemCount:
+                snapshot.data!.length + 1, // Add 1 for the additional row
             itemBuilder: (BuildContext context, int index) {
-
               if (index != snapshot.data!.length) {
                 return Body_allDeviceRow(actions, index, snapshot);
               } else {
                 // Render the additional row
                 return Body_addDeviceRow(index);
               }
-
             },
           );
         } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -645,7 +650,8 @@ class _eachSceneState extends State<eachScene> {
               content: FutureBuilder<List<IoT_Device>>(
                 future: devices,
                 builder: (context, devicesSnapshot) {
-                  if (devicesSnapshot.connectionState == ConnectionState.waiting) {
+                  if (devicesSnapshot.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (devicesSnapshot.hasError) {
                     return const Text('Error loading devices');
@@ -653,16 +659,20 @@ class _eachSceneState extends State<eachScene> {
                     return FutureBuilder<List<IoT_Device>>(
                       future: devices_in_scene,
                       builder: (context, sceneSnapshot) {
-                        if (sceneSnapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (sceneSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         } else if (sceneSnapshot.hasError) {
                           return const Text('Error loading scene devices');
                         } else {
                           // Filter out devices that are already in scene
-                          final List<IoT_Device> filteredDevices = devicesSnapshot.data!
-                              .where((device) =>
-                                  !sceneSnapshot.data!.any((sceneDevice) => sceneDevice.id == device.id))
-                              .toList();
+                          final List<IoT_Device> filteredDevices =
+                              devicesSnapshot.data!
+                                  .where((device) => !sceneSnapshot.data!.any(
+                                      (sceneDevice) =>
+                                          sceneDevice.id == device.id))
+                                  .toList();
 
                           if (filteredDevices.isEmpty) {
                             isEmpty = true;
@@ -696,18 +706,21 @@ class _eachSceneState extends State<eachScene> {
                 },
               ),
               actions: [
-                  TextButton(
+                TextButton(
                     onPressed: () {
                       setState(() {
                         if (selectedDeviceInDropdown != null) {
                           // Add the selected device to the scene
-                          Future<Response> changeResponse = scene.add_devices_into_action(selectedDeviceInDropdown);
+                          Future<Response> changeResponse =
+                              scene.add_devices_into_action(
+                                  selectedDeviceInDropdown);
                           changeResponse.then((value) {
                             if (value.statusCode == 204) {
                               updateScenes();
                               Navigator.pop(context); // Close the dialog
                               isAllowed_Scene_Actions.add(false);
-                              addSceneActionDevices(selectedDeviceInDropdown.id);
+                              addSceneActionDevices(
+                                  selectedDeviceInDropdown.id);
                             }
                           });
                         } else {
@@ -715,8 +728,8 @@ class _eachSceneState extends State<eachScene> {
                         }
                       });
                     },
-                    child: (isEmpty) ? const Text('Dismiss') : const Text('Add')
-                  ),
+                    child:
+                        (isEmpty) ? const Text('Dismiss') : const Text('Add')),
               ],
             );
           },
@@ -725,7 +738,8 @@ class _eachSceneState extends State<eachScene> {
     );
   }
 
-  ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Device>> snapshot) {
+  ListTile Body_allDeviceRow(
+      List actions, int index, AsyncSnapshot<List<IoT_Device>> snapshot) {
     Map stateToChangeTo = {
       'turnOff': 'turnOn',
       'TurnOff': 'TurnOn',
@@ -738,65 +752,70 @@ class _eachSceneState extends State<eachScene> {
       null: 'turnOff'
     };
     bool Offoron = (actions[index]['action']) == 'turnOff' ||
-        (actions[index]['action']) == 'TurnOff' ||
-        (actions[index]['action']) == 'close' ||
-        (actions[index]['action']) == 'unsecure'
+            (actions[index]['action']) == 'TurnOff' ||
+            (actions[index]['action']) == 'close' ||
+            (actions[index]['action']) == 'unsecure'
         ? false
         : true;
     isAllowed_Scene_Actions.add(Offoron);
 
     return ListTile(
-      tileColor: (index % 2 == 1)
-          ? AppColors.primary1
-          : AppColors.primary2,
+      tileColor: (index % 2 == 1) ? AppColors.primary1 : AppColors.primary2,
       title: Text(snapshot.data![index].name!),
       onLongPress: () => {
-        if (snapshot.data!.length > 1 && index != 0 ) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Remove Device'),
-                content: Text('Are you sure you want to remove ${snapshot.data![index].name}?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        Future<Response> changeResponse = scene.remove_devices_from_action(index);
-                        changeResponse.then((value) {
-                          if (value.statusCode == 204) {
-                            updateScenes();
-                            isAllowed_Scene_Actions.removeAt(index);
-                            removeDeviceFromScene(index);
-                            Navigator.pop(context);
-                          }
+        if (snapshot.data!.length > 1 && index != 0)
+          {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Remove Device'),
+                  content: Text(
+                      'Are you sure you want to remove ${snapshot.data![index].name}?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          Future<Response> changeResponse =
+                              scene.remove_devices_from_action(index);
+                          changeResponse.then((value) {
+                            if (value.statusCode == 204) {
+                              updateScenes();
+                              isAllowed_Scene_Actions.removeAt(index);
+                              removeDeviceFromScene(index);
+                              Navigator.pop(context);
+                            }
+                          });
                         });
-                      });
-                    },
-                    child: const Text('Yes'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('No'),
-                  ),
-                ],
-              );
-            },
-          ),
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              if (index == 0){
-                return customDialog("First Main device is not able to remove from the scene.");
-              } else {
-                return customDialog("Cannot remove the last device from the scene.");
-              }
-            },
-          ),
-        }
+                      },
+                      child: const Text('Yes'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('No'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          }
+        else
+          {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                if (index == 0) {
+                  return customDialog(
+                      "First Main device is not able to remove from the scene.");
+                } else {
+                  return customDialog(
+                      "Cannot remove the last device from the scene.");
+                }
+              },
+            ),
+          }
       },
       trailing: Switch(
         value: isAllowed_Scene_Actions[index],
@@ -808,7 +827,8 @@ class _eachSceneState extends State<eachScene> {
             );
             changeResponse.then((value) {
               if (value.statusCode == 204) {
-                isAllowed_Scene_Actions[index] = !isAllowed_Scene_Actions[index];
+                isAllowed_Scene_Actions[index] =
+                    !isAllowed_Scene_Actions[index];
                 updateScenes();
               }
             });
@@ -836,13 +856,12 @@ class _eachSceneState extends State<eachScene> {
   //####################################################################################
   //---------------------------------THIRD TAB FUNCTION---------------------------------
 
-  ListView buildThirdTab(){
+  ListView buildThirdTab() {
     return ListView.builder(
       itemCount: 25,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
-          tileColor:
-              index.isOdd ? AppColors.primary1 : AppColors.primary2,
+          tileColor: index.isOdd ? AppColors.primary1 : AppColors.primary2,
           title: Text('Edit Basic Config $index'),
         );
       },
@@ -851,4 +870,3 @@ class _eachSceneState extends State<eachScene> {
 
   //---------------------------------THIRD TAB FUNCTION---------------------------------
 }
-
