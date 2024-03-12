@@ -9,6 +9,7 @@ import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'package:l3homeation/widget/base_layout.dart';
+import 'package:l3homeation/services/varHeader.dart';
 
 import 'dashboard_lib.dart';
 
@@ -43,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          baseURL,
+          VarHeader.baseUrl,
         );
       });
     }
@@ -54,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         allScenes = IoT_Scene.get_scenes(
           auth!,
-          baseURL,
+          VarHeader.baseUrl,
         );
       });
     }
@@ -63,8 +64,8 @@ class _DashboardState extends State<Dashboard> {
   Future<void> fetchEnergy() async {
     if (auth != null) {
       setState(() {
-        energies =
-            Energy_Consumption.get_energy_consumption_summary(auth!, baseURL);
+        energies = Energy_Consumption.get_energy_consumption_summary(
+            auth!, VarHeader.baseUrl);
       });
     }
   }
@@ -75,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          baseURL,
+          VarHeader.baseUrl,
         );
       });
     }
@@ -98,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
     await scene.swapStates();
     if (auth != null) {
       setState(() {
-        allScenes = IoT_Scene.get_scenes(auth!, baseURL);
+        allScenes = IoT_Scene.get_scenes(auth!, VarHeader.baseUrl);
       });
 
       // Scroll to the previous position after updating the UI

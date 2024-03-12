@@ -14,7 +14,6 @@ Future<List<Energy_Consumption>> energies = Future.value([]);
 Future<List<IoT_Scene>> allScenes = Future.value([]);
 
 String? auth;
-String baseURL = "http://l3homeation.dyndns.org:2080";
 
 // Dummy data for devices and usage. Fetch this from backend or service.
 const String username = "John Doe";

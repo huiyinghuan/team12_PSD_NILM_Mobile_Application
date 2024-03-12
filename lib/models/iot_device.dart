@@ -36,7 +36,7 @@ class IoT_Device {
         },
       };
       putRequest = await http.put(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
         },
@@ -57,7 +57,7 @@ class IoT_Device {
         },
       };
       putRequest = await http.put(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
         },
@@ -76,7 +76,7 @@ class IoT_Device {
         'properties': {'value': 0},
       };
       putRequest = await http.put(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
         },
@@ -97,7 +97,7 @@ class IoT_Device {
         },
       };
       putRequest = await http.put(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
         },
@@ -111,7 +111,7 @@ class IoT_Device {
   Future<void> swapStates() async {
     try {
       final response = await http.get(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         // Send authorization headers to the backend.
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
@@ -149,7 +149,7 @@ class IoT_Device {
         return;
       }
       putRequest = await http.put(
-        Uri.parse('$URL/api/devices/$id'),
+        Uri.parse('$URL/devices/$id'),
         headers: {
           HttpHeaders.authorizationHeader: 'Basic $credentials',
         },
@@ -164,7 +164,7 @@ class IoT_Device {
       String credentials, String URL) async {
     List<IoT_Device> devices = [];
     final response = await http.get(
-      Uri.parse('$URL/api/devices/'),
+      Uri.parse('$URL/devices/'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
@@ -201,7 +201,7 @@ class IoT_Device {
       for (int? id in ids) {
         if (id != null) {
           final response = await http.get(
-            Uri.parse('$URL/api/devices/$id'),
+            Uri.parse('$URL/devices/$id'),
             // Send authorization headers to the backend.
             headers: {
               HttpHeaders.authorizationHeader: 'Basic $credentials',
@@ -232,7 +232,7 @@ class IoT_Device {
   static Future<List<dynamic>> fetchDevices(
       String credentials, String URL) async {
     final response = await http.get(
-      Uri.parse('$URL/api/devices/'),
+      Uri.parse('$URL/devices/'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',

@@ -70,23 +70,25 @@ class IoT_Scene {
   Future<Response> activate_scenes() async {
     late Response? response_put;
     response_put = await http.get(
-      Uri.parse(URL + '/api/scenes/$id/execute'),
+      Uri.parse(URL + '/scenes/$id/execute'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
+    print("Activate scene funciton");
     return response_put;
   }
 
   Future<Response> putmethod(String updatedJSON) async {
     late Response response_put;
     response_put = await http.put(
-      Uri.parse(URL + '/api/scenes/$id'),
+      Uri.parse(URL + '/scenes/$id'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
       body: updatedJSON,
     );
+    print("Putting method");
     return response_put;
   }
 
@@ -213,12 +215,14 @@ class IoT_Scene {
       "roomId": 219, //no need change
     };
     final response = http.post(
-      Uri.parse('$URL/api/scenes'),
+      Uri.parse('$URL/scenes'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
       body: JsonEncoder().convert(sceneData),
     );
+    print("calling post new scene");
+    print(response);
     return response;
   }
 
@@ -282,9 +286,10 @@ class IoT_Scene {
     String baseURL,
     int? id,
   ) async {
+    print("Fetching scenes");
     String url = id == null
-        ? '$baseURL/api/scenes?alexaProhibited=true'
-        : '$baseURL/api/scenes/$id';
+        ? '$baseURL/scenes?alexaProhibited=true'
+        : '$baseURL/scenes/$id';
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -304,8 +309,9 @@ class IoT_Scene {
     int id,
     dynamic requestBody,
   ) {
+    print("Putting request function scenes");
     final response = http.put(
-      Uri.parse('$baseURL/api/scenes/$id'),
+      Uri.parse('$baseURL/scenes/$id'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },

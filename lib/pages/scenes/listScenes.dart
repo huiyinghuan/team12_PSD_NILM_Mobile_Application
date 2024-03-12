@@ -9,6 +9,7 @@ import 'package:l3homeation/pages/scenes/eachScene.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:l3homeation/services/userPreferences.dart';
+import 'package:l3homeation/services/varHeader.dart';
 
 class listScenes extends StatefulWidget {
   @override
@@ -47,22 +48,24 @@ class _listScenesState extends State<listScenes> {
 
   Future<void> updateScenes() async {
     if (auth != null) {
+      var newScenes = await IoT_Scene.get_scenes(
+        auth!,
+        VarHeader.baseUrl,
+      );
       setState(() {
-        scenes = IoT_Scene.get_scenes(
-          auth!,
-          "http://l3homeation.dyndns.org:2080",
-        );
+        scenes = Future.value(newScenes);
       });
     }
   }
 
   Future<void> updateDevices() async {
     if (auth != null) {
+      var newDevices = await IoT_Device.get_devices(
+        auth!,
+        VarHeader.baseUrl,
+      );
       setState(() {
-        devices = IoT_Device.get_devices(
-          auth!,
-          "http://l3homeation.dyndns.org:2080",
-        );
+        devices = Future.value(newDevices);
       });
     }
   }
@@ -73,7 +76,7 @@ class _listScenesState extends State<listScenes> {
       setState(() {
         scenes = IoT_Scene.get_scenes(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
         );
       });
     }
@@ -207,7 +210,7 @@ class _listScenesState extends State<listScenes> {
                         "[{\"conditions\":{\"operator\":\"all\",\"conditions\":[]},\"actions\":[{\"group\":\"device\",\"type\":\"single\",\"id\":${selectedDevice.id},\"action\":\"$action\",\"args\":[]}]}]",
                         'scene',
                         auth!,
-                        "http://l3homeation.dyndns.org:2080",
+                        VarHeader.baseUrl,
                       ).then((response) {
                         updateScenes();
                         setState(() {});
@@ -233,7 +236,7 @@ class _listScenesState extends State<listScenes> {
       child: FutureBuilder<List<IoT_Scene>>(
         future: scenes,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data != null) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -291,7 +294,7 @@ class _listScenesState extends State<listScenes> {
                   Text(
                     scene.name!, // Replace with your desired title text
                     style: const TextStyle(
-                        fontSize: 18.0), // Customize title text size
+                        fontSize: 15.0), // Customize title text size
                   ),
                 ],
               ),
@@ -417,7 +420,13 @@ class _listScenesState extends State<listScenes> {
     if (scene.description == "" || scene.description == null) {
       description = "No description";
     }
-    int countOfDevices = jsonDecode(scene.content)[0]['actions'].length;
+    int countOfDevices;
+    try {
+      countOfDevices = jsonDecode(scene.content)[0]['actions'].length;
+    } catch (e) {
+      countOfDevices = jsonDecode(scene.content)['actions'].length;
+    }
+
     return Row(
       children: [
         // child: buildRichText(description, scene.description!, countOfDevices)

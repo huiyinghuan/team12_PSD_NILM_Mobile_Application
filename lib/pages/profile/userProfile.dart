@@ -8,8 +8,8 @@ import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/base_layout.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 import 'package:l3homeation/pages/login/login_page.dart';
-import 'package:l3homeation/services/httphandle.dart';
 import 'package:l3homeation/components/error_dialog.dart';
+import 'package:l3homeation/services/varHeader.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -17,8 +17,6 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  String baseURL = "http://l3homeation.dyndns.org:2080";
-
   String? auth;
   // Initialize futureProfiles immediately with a safe placeholder
   Future<List<Map<String, dynamic>>> futureProfiles = Future.value([]);
@@ -44,7 +42,7 @@ class _UserProfileState extends State<UserProfile> {
   //add member
   Future<void> createProfile(_userNameController) async {
     if (auth != null) {
-      final url = Uri.parse('$baseURL/api/profiles');
+      final url = Uri.parse('${VarHeader.baseUrl}/profiles');
       final response = await http.post(
         url,
         headers: {
@@ -80,7 +78,7 @@ class _UserProfileState extends State<UserProfile> {
       String newConfirmPassword) async {
     String? userName = await UserPreferences.getString('username');
     String? userID = await UserPreferences.getString('userID');
-    var url = Uri.parse('$baseURL/api/users/$userID');
+    var url = Uri.parse('${VarHeader.baseUrl}/users/$userID');
     var response = await http.put(
       url,
       headers: {
@@ -109,7 +107,7 @@ class _UserProfileState extends State<UserProfile> {
   Future<List<Map<String, dynamic>>> getAllProfile() async {
     List<Map<String, dynamic>> profilesList = [];
     if (auth != null) {
-      final url = Uri.parse('http://l3homeation.dyndns.org:2080/api/profiles');
+      final url = Uri.parse('${VarHeader.baseUrl}/profiles');
       final response = await http.get(
         url,
         headers: {

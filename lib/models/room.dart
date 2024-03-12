@@ -33,7 +33,7 @@ class Room {
   static Future<List<Room>> fetchRooms(String credentials, String URL) async {
     List<Room> rooms = [];
     final response = await http.get(
-      Uri.parse('$URL/api/rooms'),
+      Uri.parse('$URL/rooms'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',

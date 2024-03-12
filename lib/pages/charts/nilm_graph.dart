@@ -25,7 +25,7 @@ class NILM_graph_state extends State<NILM_graph> {
   int touchedGroupIndex = -1;
   String credentials = auth!;
   // change to deployment url when done
-  String baseURL = "http://dereknan.click:27558";
+  String baseURL = "http://dereknan.click:27558/api";
   List<String> x_axis_titles = [];
   List<double> y_axis_titles = [];
   String? timestamp;

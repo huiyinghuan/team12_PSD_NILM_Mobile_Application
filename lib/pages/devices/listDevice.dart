@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
+import 'package:l3homeation/services/varHeader.dart';
 
 import 'list_device_lib.dart';
 import 'list_device_shared.dart';
@@ -25,7 +26,7 @@ class _ListDeviceState extends State<ListDevice> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
         );
       });
     }
@@ -37,7 +38,7 @@ class _ListDeviceState extends State<ListDevice> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
         );
       });
       callback();

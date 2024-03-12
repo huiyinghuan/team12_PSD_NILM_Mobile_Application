@@ -22,12 +22,13 @@ class NILM_appliance {
     List<NILM_appliance> appliances = [];
 
     final response = await http.get(
-      Uri.parse('$URL/api'),
+      Uri.parse(URL),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
     Map<String, dynamic> jsonResponses = jsonDecode(response.body);
+    print(jsonResponses);
 
     for (dynamic appliance in jsonResponses['appliances']) {
       NILM_appliance newAppliance = NILM_appliance(

@@ -42,9 +42,9 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.of(context).pop();
 
     if (response['status'] == true) {
-      print("Login successful");
-      print(base64Encode(
-          utf8.encode('${emailController.text}:${passwordController.text}')));
+      // print("Login successful");
+      // print(base64Encode(
+      // utf8.encode('${emailController.text}:${passwordController.text}')));
       // goToLogin(emailController.text, passwordController.text);
       await UserPreferences.setString('username', response['username']);
       await UserPreferences.setString('userID', response['userID'].toString());

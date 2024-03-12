@@ -16,11 +16,10 @@ class Energy_Consumption {
 
   static Future<List<Energy_Consumption>> get_energy_consumption_summary(
       String credentials, String URL) async {
-    List<Energy_Consumption> consumption_summary = [];
     // final year = 2023; for testing
     final year = DateTime.now().year;
     final response = await http.get(
-      Uri.parse('$URL/api/energy/consumption/summary?period=$year'),
+      Uri.parse('$URL/energy/consumption/summary?period=$year'),
       // Send authorization headers to the backend.
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',

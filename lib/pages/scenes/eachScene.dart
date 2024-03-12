@@ -10,6 +10,7 @@ import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 import 'package:l3homeation/services/userPreferences.dart';
+import 'package:l3homeation/services/varHeader.dart';
 
 class eachScene extends StatefulWidget {
   final dynamic scene;
@@ -61,7 +62,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         scenes = IoT_Scene.get_scenes(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
         );
       });
     }
@@ -72,7 +73,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
         );
       });
     }
@@ -83,7 +84,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         devices_in_scene = IoT_Device.get_devices_by_ids(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
           id,
         );
       });
@@ -107,7 +108,7 @@ class _eachSceneState extends State<eachScene> {
         // Assuming get_devices_by_ids is an async function that returns List<IoT_Device>
         var moreDevices = await IoT_Device.get_devices_by_ids(
           auth!,
-          "http://l3homeation.dyndns.org:2080",
+          VarHeader.baseUrl,
           [id],
         );
 
