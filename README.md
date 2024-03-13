@@ -1,9 +1,7 @@
-# NILM Smart Home Mobile Application Documentation
-
-## About the project
+# About the project
 Smart Home NILM is a mobile application development project that utilises the FIBARO API to provide homeowners with convenient access to the smart devices in their homes. Created using flutter to be used on cross platforms(Android and iOS), our primary feature is the ability to monitor household electrical consumption, offering insights into the usage patterns of individual devices. By integrating a specialised device into the circuit breaker, our application can analyse and identify the energy consumption of each device. This information allows us to calculate both the overall household cost and the running expenses associated with specific appliances. Armed with this data, homeowners can adjust their electrical usage habits and optimise their resource utilisation.
-
 ---
+
 ## Table of Contents
 - [About the project](#about-the-project)
 - [Table of Contents](#table-of-contents)
@@ -274,6 +272,7 @@ Provide information on configuration or settings (TODO)
 
 1. Flutter project contains many errors and unable to build
 - To fix this, run `flutter clean && fluter pub get`
+
 ![Flutter project unable to build and riddled with errors](readme_images/do_flutter_pub_get_and_clean.png)
 This occurs when you have downloaded/pulled the project from a repository and your local environment has yet to download the required flutter pub dependencies for this project. A similar comparison would be the dependency handler; gradle, where dependencies are required to be downloaded for the project to run successfully.
 
