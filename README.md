@@ -273,6 +273,7 @@ Provide information on configuration or settings (TODO)
 ### Common Issues that arise:
 
 1. Flutter project contains many errors and unable to build
+- To fix this, run `flutter clean && fluter pub get`
 ![Flutter project unable to build and riddled with errors](readme_images/do_flutter_pub_get_and_clean.png)
 This occurs when you have downloaded/pulled the project from a repository and your local environment has yet to download the required flutter pub dependencies for this project. A similar comparison would be the dependency handler; gradle, where dependencies are required to be downloaded for the project to run successfully.
 
