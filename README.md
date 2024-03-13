@@ -16,7 +16,7 @@
 
 ---
 ## About the project
-This mobile application utilises the FIBARO API to provide homeowners with convenient access to the smart devices in their homes. Our primary feature is the ability to monitor household electrical consumption, offering insights into the usage patterns of individual devices. By integrating a specialised device into the circuit breaker, our application can analyse and identify the energy consumption of each device. This information allows us to calculate both the overall household cost and the running expenses associated with specific appliances. Armed with this data, homeowners can adjust their electrical usage habits and optimise their resource utilisation.
+This mobile application utilises the FIBARO API to provide homeowners with convenient access to the smart devices in their homes. Created using flutter to be used on cross platforms(Android and iOS), our primary feature is the ability to monitor household electrical consumption, offering insights into the usage patterns of individual devices. By integrating a specialised device into the circuit breaker, our application can analyse and identify the energy consumption of each device. This information allows us to calculate both the overall household cost and the running expenses associated with specific appliances. Armed with this data, homeowners can adjust their electrical usage habits and optimise their resource utilisation.
 
 ---
 ## Features
