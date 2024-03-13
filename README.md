@@ -1,16 +1,18 @@
 # NILM Smart Home Mobile Application Documentation
 
 ## Table of Contents
-- [[#About the project]]
-- [[#Features]]
-- [[#Installation]]
-- [[#Flutter Installation]]
-- [[#Visual Studio Code Installation (Not for macOS)]]
-- [[#Android Studio and Emulator Setup]]
-- [[#iOS xCode simulator setup]]
-- [[#Running SMART OASIS]]
-- [[#Troubleshooting]]
-- [[#Additional Resources]]
+- [Prerequisites](#prerequisites)
+- [About the project](#about-the-project)
+- [Features](#features)
+- [Installation](#installation)
+  - [Flutter Installation](#flutter-installation)
+  - [Visual Studio Code Installation (Not for macOS)](#visual-studio-code-installation-not-for-macos)
+  - [Android Studio and Emulator Setup](#android-studio-and-emulator-setup)
+  - [iOS xCode simulator setup](#ios-xcode-simulator-setup)
+  - [Running SMART OASIS](#running-smart-oasis)
+  - [Troubleshooting](#troubleshooting)
+  - [Additional Resources](#additional-resources)
+- [Contact Information](#contact-information)
 
 ---
 ## About the project
