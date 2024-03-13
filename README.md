@@ -337,5 +337,4 @@ If you encounter any issues, consult the following resources:
   
 ---
 ## Contact Information
-If there are any clarifications, bugs or issues that are faced. You may contact the team at 
-homeationtest@gmail.com. We will do our best to respond in a timely manner.
+If you have any questions, feedback, or encounter any issues, please don't hesitate to reach out to us. You can contact our team at homeationtest@gmail.com. We're committed to providing timely assistance and addressing any concerns you may have.
