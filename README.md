@@ -288,6 +288,10 @@ The list of features are as shown below
 1. Explain how to use the software or library. Include code examples, if applicable.
 Provide information on configuration or settings (TODO)
 
+## LICENSE
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+- For licensing information, please see [LICENSE.md](./LICENSE).
+- To contribute, fork the repository and submit pull requests
 ---
 
 ## Troubleshooting
