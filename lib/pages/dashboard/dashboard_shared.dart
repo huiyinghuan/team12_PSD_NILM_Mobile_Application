@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types
 import 'package:flutter/material.dart';
-import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/iot_scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/services/userPreferences.dart';

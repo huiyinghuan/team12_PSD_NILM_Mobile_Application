@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/iot_scene.dart';
 import 'package:l3homeation/models/energy_consumption.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';

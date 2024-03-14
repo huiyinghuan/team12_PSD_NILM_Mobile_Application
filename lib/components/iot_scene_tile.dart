@@ -2,7 +2,7 @@
 
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
-import "package:l3homeation/models/IoT_Scene.dart";
+import "package:l3homeation/models/iot_scene.dart";
 import "../models/iot_device.dart";
 
 class IoT_Scene_Tile extends StatelessWidget {

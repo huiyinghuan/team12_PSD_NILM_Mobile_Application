@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:l3homeation/models/IoT_Scene.dart';
+import 'package:l3homeation/models/iot_scene.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/themes/colors.dart';
 import 'package:l3homeation/widget/navigation_drawer_widget.dart';
@@ -13,7 +13,7 @@ import 'package:l3homeation/services/userPreferences.dart';
 import 'package:l3homeation/services/varHeader.dart';
 
 class eachScene extends StatefulWidget {
-  final dynamic scene;
+  final IoT_Scene scene;
 
   eachScene({required this.scene});
 
