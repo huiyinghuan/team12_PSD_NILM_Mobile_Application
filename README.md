@@ -465,12 +465,18 @@ Main.dart:
 ### Code Standardisation:
 The creation of a header file for common variables used throughout files such as the API endpoint was created for centralised usage. Any other variables wished to be used can be referenced in this file (Varheader.dart).
 
-Snake Casing:
-- Functions inside the data models with an underscore will call API endpoints and retrieve the necessary data to return.
-![Snake_case](readme_images/snakecase.png)
+Cobra Casing:
+- Class names shall follow the Cobra_Case convention:
+Examples:
+1. `class IoT_Device`
+2. `class IoT_Scene`
+3. `class Energy_Consumption`
+4. `class NILM_Appliance`
+5. `class Room`
 
 Camel Casing:
 - Functions and variable names within the pages folder for each distinct page will follow the camel casing naming convention as per flutter's recommendations.
+
 ![camelCase](readme_images/camelCasing.png)
 
 ## LICENSE
@@ -480,8 +486,30 @@ Camel Casing:
 ---
 
 ## Acknowledgements
+We would like to acknowledge the following individuals and organizations for their contributions to this project:
 
 
+- Singapore Institute Of Technology - For providing us the opportunity to undertake the CSC2101-Professional Software Development module
+- L3Homeation - For allowing us to work with the company to develop this project and building the application upon the L3Homeation API endpoints
+- 
+- Ng Jia Hwee Cliff - For providing the networking connections and application authentication
+- Poh Kuang Yi -  For providing the backend logic integration with the frontend
+- Jason Tan Ze Guan - For backend logic integration
+- Quek Jinghui - Providing frontend UI
+- Huan Hui Ying - Providing the frontend UI
+- Farah Binte Mohamed Tajudeen - Providing the frontend UI
+
+- [Flutter's documentation](https://docs.flutter.dev) - For providing the API and libraries used for the entire project
+- [Flutter Pub Dev](https://pub.dev) - For providing the dependency packages used
+  - Packages used:
+   - [flutter_native_splash](https://pub.dev/packages/flutter_native_splash) - For providing asset change to the splash screen
+   - [fl_chart](https://pub.dev/packages/fl_chart) - For providing the API and library to render out graphical data
+   - [http](https://pub.dev/packages/http) - For providing libraries to process JSON data and making HTTP requests with dart:async
+   - [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) - For providing asset change to the launch icon
+   - [flutter_blue_plus](https://pub.dev/packages/flutter_blue_plus) - For providing bluetooth connectivity to the project `unimplemented but intended`
+   - [google_fonts](https://pub.dev/packages/google_fonts) - For providing the application with beautiful looking fonts
+   - [https://pub.dev/packages/shared_preferences](https://pub.dev/packages/shared_preferences) - For providing the application with interfacing to the phone's local storage
+   - [google_nav_bar](https://pub.dev/packages/google_nav_bar) - For providing the navbar layout provider
 
 ## Troubleshooting
 
@@ -522,7 +550,7 @@ If you encounter any other issues, consult the following resources:
 
 - [VS Code Troubleshooting](https://code.visualstudio.com/docs/supporting/troubleshoot)
 
-## Additional Resources
+### Additional Resources
 
 - [Flutter Documentation](https://flutter.dev/docs)
 
