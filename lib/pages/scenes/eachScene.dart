@@ -62,7 +62,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         scenes = IoT_Scene.get_scenes(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -73,7 +73,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -84,7 +84,7 @@ class _eachSceneState extends State<eachScene> {
       setState(() {
         devices_in_scene = IoT_Device.get_devices_by_ids(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
           id,
         );
       });
@@ -108,7 +108,7 @@ class _eachSceneState extends State<eachScene> {
         // Assuming get_devices_by_ids is an async function that returns List<IoT_Device>
         var moreDevices = await IoT_Device.get_devices_by_ids(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
           [id],
         );
 

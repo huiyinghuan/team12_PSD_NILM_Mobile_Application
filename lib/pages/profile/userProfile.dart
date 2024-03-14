@@ -42,7 +42,7 @@ class _UserProfileState extends State<UserProfile> {
   //add member
   Future<void> createProfile(_userNameController) async {
     if (auth != null) {
-      final url = Uri.parse('${VarHeader.baseUrl}/profiles');
+      final url = Uri.parse('${VarHeader.BASEURL}/profiles');
       final response = await http.post(
         url,
         headers: {
@@ -59,14 +59,12 @@ class _UserProfileState extends State<UserProfile> {
 
       if (response.statusCode == 200) {
         // Profile created successfully
-
         // print('Profile created successfully');
       } else {
         // Failed to create profile
         // print('Failed to create profile: ${response.statusCode}');
         // Print the response body for more details about the error
         // print('Response body: ${response.body}');
-        // You can handle errors appropriately
       }
     }
   }
@@ -78,7 +76,7 @@ class _UserProfileState extends State<UserProfile> {
       String newConfirmPassword) async {
     String? userName = await UserPreferences.getString('username');
     String? userID = await UserPreferences.getString('userID');
-    var url = Uri.parse('${VarHeader.baseUrl}/users/$userID');
+    var url = Uri.parse('${VarHeader.BASEURL}/users/$userID');
     var response = await http.put(
       url,
       headers: {
@@ -107,7 +105,7 @@ class _UserProfileState extends State<UserProfile> {
   Future<List<Map<String, dynamic>>> getAllProfile() async {
     List<Map<String, dynamic>> profilesList = [];
     if (auth != null) {
-      final url = Uri.parse('${VarHeader.baseUrl}/profiles');
+      final url = Uri.parse('${VarHeader.BASEURL}/profiles');
       final response = await http.get(
         url,
         headers: {

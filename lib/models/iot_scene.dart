@@ -309,7 +309,6 @@ class IoT_Scene {
     int id,
     dynamic requestBody,
   ) {
-    print("Putting request function scenes");
     final response = http.put(
       Uri.parse('$baseURL/scenes/$id'),
       headers: {

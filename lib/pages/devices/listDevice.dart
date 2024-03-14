@@ -26,7 +26,7 @@ class _ListDeviceState extends State<ListDevice> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -38,7 +38,7 @@ class _ListDeviceState extends State<ListDevice> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
       callback();

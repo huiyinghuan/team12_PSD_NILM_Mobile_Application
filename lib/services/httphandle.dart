@@ -11,7 +11,7 @@ class AuthService {
 
   Future<Map<String, dynamic>> checkLoginStatus(BuildContext context) async {
     var url = Uri.parse(
-        '${VarHeader.baseUrl}/loginStatus?action=login&tosAccepted=true');
+        '${VarHeader.BASEURL}/loginStatus?action=login&tosAccepted=true');
     var response = await http.post(
       url,
       headers: {

@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -55,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         allScenes = IoT_Scene.get_scenes(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -65,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
     if (auth != null) {
       setState(() {
         energies = Energy_Consumption.get_energy_consumption_summary(
-            auth!, VarHeader.baseUrl);
+            auth!, VarHeader.BASEURL);
       });
     }
   }
@@ -76,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         devices = IoT_Device.get_devices(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -99,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
     await scene.swapStates();
     if (auth != null) {
       setState(() {
-        allScenes = IoT_Scene.get_scenes(auth!, VarHeader.baseUrl);
+        allScenes = IoT_Scene.get_scenes(auth!, VarHeader.BASEURL);
       });
 
       // Scroll to the previous position after updating the UI

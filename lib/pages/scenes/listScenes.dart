@@ -50,7 +50,7 @@ class _listScenesState extends State<listScenes> {
     if (auth != null) {
       var newScenes = await IoT_Scene.get_scenes(
         auth!,
-        VarHeader.baseUrl,
+        VarHeader.BASEURL,
       );
       setState(() {
         scenes = Future.value(newScenes);
@@ -62,7 +62,7 @@ class _listScenesState extends State<listScenes> {
     if (auth != null) {
       var newDevices = await IoT_Device.get_devices(
         auth!,
-        VarHeader.baseUrl,
+        VarHeader.BASEURL,
       );
       setState(() {
         devices = Future.value(newDevices);
@@ -76,7 +76,7 @@ class _listScenesState extends State<listScenes> {
       setState(() {
         scenes = IoT_Scene.get_scenes(
           auth!,
-          VarHeader.baseUrl,
+          VarHeader.BASEURL,
         );
       });
     }
@@ -210,7 +210,7 @@ class _listScenesState extends State<listScenes> {
                         "[{\"conditions\":{\"operator\":\"all\",\"conditions\":[]},\"actions\":[{\"group\":\"device\",\"type\":\"single\",\"id\":${selectedDevice.id},\"action\":\"$action\",\"args\":[]}]}]",
                         'scene',
                         auth!,
-                        VarHeader.baseUrl,
+                        VarHeader.BASEURL,
                       ).then((response) {
                         updateScenes();
                         setState(() {});
