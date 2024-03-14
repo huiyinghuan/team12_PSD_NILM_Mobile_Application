@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names
+
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,10 +26,6 @@ class Energy_Consumption {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
-
-    // Print the raw JSON response to the console
-    // print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);

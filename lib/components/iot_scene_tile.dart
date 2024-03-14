@@ -10,18 +10,18 @@ class IoT_Scene_Tile extends StatelessWidget {
   final VoidCallback? onLongPress;
   final int count;
   const IoT_Scene_Tile({
-    Key? key,
+    super.key,
     required this.scene,
     required this.onTap,
     required this.count,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: onTap,
-        onLongPress: onLongPress != null ? onLongPress : () => {},
+        onLongPress: onLongPress ?? () => {},
         child: buildSceneCard(context));
   }
 
@@ -34,7 +34,7 @@ class IoT_Scene_Tile extends StatelessWidget {
       width:
           tileWidth, // Make the card width half of the screen width minus padding
       child: Card(
-        color: Color.fromRGBO(61, 165, 221, 1),
+        color: const Color.fromRGBO(61, 165, 221, 1),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -49,7 +49,7 @@ class IoT_Scene_Tile extends StatelessWidget {
                 width: 52.10625,
                 height: 53.12625,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               RichText(
                 text: TextSpan(
                   children: <TextSpan>[

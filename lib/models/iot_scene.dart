@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, empty_catches
+// ignore_for_file: camel_case_types, empty_catches, non_constant_identifier_names, avoid_print
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -66,25 +66,23 @@ class IoT_Scene {
   Future<Response> activateScenes() async {
     late Response? responsePut;
     responsePut = await http.get(
-      Uri.parse(URL + '/scenes/$id/execute'),
+      Uri.parse('$URL/scenes/$id/execute'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
-    print("Activate scene funciton");
     return responsePut;
   }
 
   Future<Response> putMethod(String updatedJSON) async {
     late Response responsePut;
     responsePut = await http.put(
-      Uri.parse(URL + '/scenes/$id'),
+      Uri.parse('$URL/scenes/$id'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
       body: updatedJSON,
     );
-    print("Putting method");
     return responsePut;
   }
 
@@ -215,10 +213,8 @@ class IoT_Scene {
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
-      body: JsonEncoder().convert(sceneData),
+      body: const JsonEncoder().convert(sceneData),
     );
-    print("calling post new scene");
-    print(response);
     return response;
   }
 
@@ -282,7 +278,6 @@ class IoT_Scene {
     String baseURL,
     int? id,
   ) async {
-    print("Fetching scenes");
     String url = id == null
         ? '$baseURL/scenes?alexaProhibited=true'
         : '$baseURL/scenes/$id';

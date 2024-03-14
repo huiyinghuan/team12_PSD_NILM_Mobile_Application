@@ -31,7 +31,7 @@ Widget buildDeviceStatusSection(
                   ),
                   IconButton(
                     icon: const Icon(Icons.add_circle_outline_outlined),
-                    onPressed: () => {navigateTo(List_Device())},
+                    onPressed: () => {navigateTo(const List_Device())},
                   ),
                 ],
               ),

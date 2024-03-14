@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, empty_catches
+// ignore_for_file: camel_case_types, empty_catches, non_constant_identifier_names, avoid_print
 import 'dart:io';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +28,18 @@ class IoT_Device {
   });
   Future<void> setToTrue() async {
     try {
+      Map<String, dynamic>? requestBody = {
+        'properties': {
+          'value': true,
+        },
+      };
+      await http.put(
+        Uri.parse('$URL/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -35,6 +47,18 @@ class IoT_Device {
 
   Future<void> setToFalse() async {
     try {
+      Map<String, dynamic>? requestBody = {
+        'properties': {
+          'value': false,
+        },
+      };
+      await http.put(
+        Uri.parse('$URL/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -42,6 +66,16 @@ class IoT_Device {
 
   Future<void> setToZero() async {
     try {
+      Map<String, dynamic>? requestBody = {
+        'properties': {'value': 0},
+      };
+      await http.put(
+        Uri.parse('$URL/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -49,6 +83,18 @@ class IoT_Device {
 
   Future<void> sendCurrentValue() async {
     try {
+      Map<String, dynamic>? requestBody = {
+        'properties': {
+          'value': value,
+        },
+      };
+      await http.put(
+        Uri.parse('$URL/devices/$id'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Basic $credentials',
+        },
+        body: jsonEncode(requestBody),
+      );
     } catch (e) {
       print("Http put request failed\n");
     }

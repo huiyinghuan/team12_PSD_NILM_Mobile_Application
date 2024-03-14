@@ -3,6 +3,7 @@ import 'package:l3homeation/pages/login/auth_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'provider/navigation_provider.dart';
 import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
 import 'package:provider/provider.dart';
 
 // void main() {
@@ -32,6 +33,8 @@ class MyApp extends StatelessWidget {
       fontSize: 12.0,
     ),
   );
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(

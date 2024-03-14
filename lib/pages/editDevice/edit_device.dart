@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_device.dart';
 
@@ -5,7 +7,7 @@ class Edit_Device_Page extends StatefulWidget {
   final IoT_Device device;
   final Function onTap;
 
-  const Edit_Device_Page({required this.device, required this.onTap});
+  const Edit_Device_Page({super.key, required this.device, required this.onTap});
 
   @override
   _Edit_Device_Page_State createState() => _Edit_Device_Page_State();
@@ -53,7 +55,7 @@ class _Edit_Device_Page_State extends State<Edit_Device_Page> {
                 style: const TextStyle(
                     fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 24), // For spacing
+              const SizedBox(height: 24), // For spacing
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

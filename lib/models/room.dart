@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, empty_catches
+// ignore_for_file: camel_case_types, empty_catches, non_constant_identifier_names
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

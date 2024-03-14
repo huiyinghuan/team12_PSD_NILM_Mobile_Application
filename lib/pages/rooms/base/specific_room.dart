@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/models/room.dart';
@@ -9,7 +11,7 @@ import 'rooms_shared.dart';
 class Specific_Room_Page extends StatefulWidget {
   final Room specificRoom;
 
-  const Specific_Room_Page({required this.specificRoom});
+  const Specific_Room_Page({super.key, required this.specificRoom});
 
   @override
   State<Specific_Room_Page> createState() => _Specific_Room_Page_State();

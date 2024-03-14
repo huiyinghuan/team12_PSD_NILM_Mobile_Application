@@ -1,10 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth_Page extends StatelessWidget {
-  const Auth_Page({Key? key}) : super(key: key);
+  const Auth_Page({super.key});
 
   Future<bool> checkLoginStatus() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,7 +28,7 @@ class Auth_Page extends StatelessWidget {
               if (snapshot.data == true) {
                 return const Dashboard();
               } else {
-                return Login_Page();
+                return const Login_Page();
               }
             }
           }

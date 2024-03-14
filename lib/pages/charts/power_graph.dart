@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, library_private_types_in_public_api
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/graphs/chart_sample.dart';
@@ -15,12 +17,14 @@ import 'package:l3homeation/components/graphs/radar_chart_sample1.dart';
 class ChartSamples {
   static final Map<ChartType, List<ChartSample>> samples = {
     ChartType.line: [
-      LineChartSample(10, (context) => LineChartSample10()),
+      LineChartSample(10, (context) => const LineChartSample10()),
     ],
   };
 }
 
 class Power_Graph extends StatefulWidget {
+  const Power_Graph({super.key});
+
   @override
   _Power_Graph_State createState() => _Power_Graph_State();
 }
@@ -59,7 +63,7 @@ class _Power_Graph_State extends State<Power_Graph>
             children: <Widget>[
               Container(
                 color: Colors.black,
-                child: LineChartSample10(),
+                child: const LineChartSample10(),
               ),
               Container(
                 color: const Color.fromARGB(255, 189, 223, 109),
@@ -78,7 +82,7 @@ class _Power_Graph_State extends State<Power_Graph>
           ),
           Container(
             color: const Color.fromARGB(255, 129, 134, 177),
-            child: RadarChartSample1(),
+            child: const RadarChartSample1(),
           ),
         ],
       ),
@@ -97,7 +101,7 @@ class _Power_Graph_State extends State<Power_Graph>
             children: <Widget>[
               Container(
                 color: const Color.fromARGB(255, 49, 83, 194),
-                child: NILM_Graph(),
+                child: const NILM_Graph(),
               ),
             ],
           ),
@@ -108,7 +112,7 @@ class _Power_Graph_State extends State<Power_Graph>
           ),
           Container(
             color: const Color.fromARGB(255, 74, 90, 231),
-            child: BarChartSample2(),
+            child: const BarChartSample2(),
           ),
         ],
       ),

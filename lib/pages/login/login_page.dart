@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_button.dart';
@@ -37,9 +37,9 @@ class _Login_Page_State extends State<Login_Page> {
         });
 
     // Login function
-    final Auth_Service _authService = Auth_Service(
+    final Auth_Service authService = Auth_Service(
         email: emailController.text, password: passwordController.text);
-    var response = await _authService.checkLoginStatus(context);
+    var response = await authService.checkLoginStatus(context);
 
     // Close the loading dialog
     Navigator.of(context).pop();
@@ -287,7 +287,7 @@ class _Login_Page_State extends State<Login_Page> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Register_User()),
+              MaterialPageRoute(builder: (context) => const Register_User()),
             );
           },
           child: const Text(

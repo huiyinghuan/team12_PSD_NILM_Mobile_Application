@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, file_names, camel_case_types, library_private_types_in_public_api
 
 import 'dart:convert';
 import 'dart:io';
@@ -14,6 +14,8 @@ import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/services/varHeader.dart';
 
 class User_Profile extends StatefulWidget {
+  const User_Profile({super.key});
+
   @override
   _User_Profile_State createState() => _User_Profile_State();
 }
@@ -45,7 +47,7 @@ class _User_Profile_State extends State<User_Profile> {
   Future<void> createProfile(userNameController) async {
     if (auth != null) {
       final url = Uri.parse('${Var_Header.BASEURL}/profiles');
-      final response = await http.post(
+      await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
@@ -58,16 +60,6 @@ class _User_Profile_State extends State<User_Profile> {
           // Name of the profile
         }),
       );
-
-      if (response.statusCode == 200) {
-        // Profile created successfully
-        // print('Profile created successfully');
-      } else {
-        // Failed to create profile
-        // print('Failed to create profile: ${response.statusCode}');
-        // Print the response body for more details about the error
-        // print('Response body: ${response.body}');
-      }
     }
   }
 
@@ -136,12 +128,6 @@ class _User_Profile_State extends State<User_Profile> {
             });
           }
         }
-      } else {
-        // Failed to create profile
-        // print('Failed to get all profile: ${response.statusCode}');
-        // Print the response body for more details about the error
-        // print('Response body: ${response.body}');
-        // You can handle errors appropriately
       }
     }
     return profilesList;
@@ -571,7 +557,7 @@ class _User_Profile_State extends State<User_Profile> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        TextEditingController _usernameController = TextEditingController();
+        TextEditingController usernameController = TextEditingController();
 
         return Dialog(
           shape: RoundedRectangleBorder(
@@ -595,7 +581,7 @@ class _User_Profile_State extends State<User_Profile> {
                 ),
                 const SizedBox(height: 15),
                 TextField(
-                  controller: _usernameController,
+                  controller: usernameController,
                   decoration: InputDecoration(
                     labelText: 'Enter Username',
                     enabledBorder: OutlineInputBorder(
@@ -612,7 +598,7 @@ class _User_Profile_State extends State<User_Profile> {
                 ElevatedButton(
                   onPressed: () {
                     // Logic to send invite
-                    createProfile(_usernameController.text);
+                    createProfile(usernameController.text);
                     Navigator.of(context).pop(); // Close the dialog after
                     setState(() {
                       // This will re-fetch the profiles

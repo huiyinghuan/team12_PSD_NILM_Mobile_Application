@@ -35,7 +35,7 @@ Row buildSceneInfo(IoT_Scene scene, bool enableScene, navigateTo) {
                       style: GoogleFonts.poppins(color: AppColors.primary2),
                     ),
                     TextSpan(
-                      text: '${countOfDevices}',
+                      text: '$countOfDevices',
                       style: GoogleFonts.poppins(),
                     ),
                   ],

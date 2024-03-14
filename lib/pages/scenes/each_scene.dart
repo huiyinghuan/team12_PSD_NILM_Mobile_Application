@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_scene.dart';
 import "package:google_fonts/google_fonts.dart";
@@ -10,7 +12,7 @@ import 'scene_lib.dart';
 class Each_Scene extends StatefulWidget {
   final IoT_Scene scene;
 
-  Each_Scene({required this.scene});
+  const Each_Scene({super.key, required this.scene});
 
   @override
   _Each_Scene_State createState() => _Each_Scene_State(scene: scene);
@@ -45,9 +47,6 @@ class _Each_Scene_State extends State<Each_Scene> {
   
   @override
   Widget build(BuildContext context) {
-    navigateTo(Widget page) => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => page,
-        ));
 
     TabBar tabNames() {
       return const TabBar(
@@ -86,7 +85,7 @@ class _Each_Scene_State extends State<Each_Scene> {
             scrolledUnderElevation: 4.0,
             shadowColor: Theme.of(context).shadowColor,
           ),
-          drawer: Navigation_Drawer_Widget(),
+          drawer: const Navigation_Drawer_Widget(),
           body: TabBarView(
             children: <Widget>[
               //---------------------------------FIRST TAB---------------------------------

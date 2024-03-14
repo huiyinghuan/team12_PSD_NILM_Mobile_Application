@@ -12,7 +12,7 @@ import 'package:l3homeation/pages/rooms/base/rooms_shared.dart';
 import 'rooms_lib.dart';
 
 class Rooms extends StatefulWidget {
-  const Rooms({Key? key}) : super(key: key);
+  const Rooms({super.key});
 
   @override
   State<Rooms> createState() => _RoomsState();

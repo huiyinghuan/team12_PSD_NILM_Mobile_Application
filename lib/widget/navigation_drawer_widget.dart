@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/drawer_item.dart';
 import 'package:l3homeation/pages/dashboard/dashboard.dart';
@@ -12,6 +14,8 @@ import 'package:l3homeation/data/drawer_items.dart';
 
 class Navigation_Drawer_Widget extends StatelessWidget {
   final padding = const EdgeInsets.symmetric(horizontal: 20);
+
+  const Navigation_Drawer_Widget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,15 +109,15 @@ class Navigation_Drawer_Widget extends StatelessWidget {
             case 0:
               return const Dashboard();
             case 1:
-              return List_Device();
+              return const List_Device();
             case 2:
-              return List_Scenes();
+              return const List_Scenes();
             case 3:
               return const Rooms();
             case 4:
-              return Power_Graph();
+              return const Power_Graph();
             case 5:
-              return User_Profile();
+              return const User_Profile();
             default:
               return const Dashboard(); // Default to Dashboard if the index is not handled
           }

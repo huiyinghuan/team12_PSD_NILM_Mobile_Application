@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_print
 
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/models/iot_scene.dart';

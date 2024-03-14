@@ -11,12 +11,12 @@ class IoT_Device_Tile extends StatelessWidget {
   final double textSize; // Add a parameter for text size
 
   const IoT_Device_Tile({
-    Key? key,
+    super.key,
     required this.device,
     required this.onTap,
     this.onLongPress,
     this.textSize = 12,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class IoT_Device_Tile extends StatelessWidget {
                 child: Row(
                   children: [
                     activityStatus(indicatorColor),
-                    SizedBox(width: 5.0),
+                    const SizedBox(width: 5.0),
                     Expanded(child: displayDeviceName()),
                   ],
                 ),
@@ -69,7 +69,7 @@ class IoT_Device_Tile extends StatelessWidget {
     if (device.value != 0 && device.value != false) {
       return const Color.fromARGB(255, 241, 177, 81);
     }
-    return Color.fromARGB(255, 240, 230, 188);
+    return const Color.fromARGB(255, 240, 230, 188);
   }
 
   String determineActivity(device) {
@@ -88,8 +88,7 @@ class IoT_Device_Tile extends StatelessWidget {
   String truncateString(String input, int toLength) {
     if (input.length > toLength) {
       // If the string is longer than 15 characters
-      return input.substring(0, toLength - 2) +
-          ".."; // Extract first 13 characters and append ".."
+      return "${input.substring(0, toLength - 2)}.."; // Extract first 13 characters and append ".."
     } else {
       // If the string is 15 characters or less
       return input; // Return the original string

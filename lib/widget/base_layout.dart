@@ -1,4 +1,6 @@
 // File: lib/widgets/base_layout.dart
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'navigation_drawer_widget.dart';
 
@@ -6,7 +8,7 @@ class Base_Layout extends StatelessWidget {
   final Widget child;
   final String title;
 
-  Base_Layout({required this.child, required this.title});
+  const Base_Layout({super.key, required this.child, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class Base_Layout extends StatelessWidget {
         automaticallyImplyLeading:
             false, // removes the hamburger icon on the nav bar
       ),
-      drawer: Navigation_Drawer_Widget(),
+      drawer: const Navigation_Drawer_Widget(),
       body: child,
     );
   }

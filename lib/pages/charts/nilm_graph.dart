@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names
+
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -8,7 +10,7 @@ import 'package:l3homeation/models/nilm_appliance.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 
 class NILM_Graph extends StatefulWidget {
-  NILM_Graph({super.key});
+  const NILM_Graph({super.key});
   final Color leftBarColor = AppColors_Graph.contentColorYellow;
   final Color rightBarColor = AppColors_Graph.contentColorRed;
   final Color avgColor = const Color.fromARGB(255, 255, 115, 0);

@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
@@ -133,7 +133,7 @@ class _Forget_Password_State extends State<Forget_Password> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Login_Page()),
+              MaterialPageRoute(builder: (context) => const Login_Page()),
             );
           },
           child: const Text(

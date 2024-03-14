@@ -1,10 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/room.dart';
 
 class Edit_Room_Page extends StatefulWidget {
   final Room room;
 
-  const Edit_Room_Page({required this.room});
+  const Edit_Room_Page({super.key, required this.room});
 
   @override
   State<Edit_Room_Page> createState() => _Edit_Room_Page_State();

@@ -63,7 +63,7 @@ Widget buildGreetingSection(BuildContext context) {
           onPressed: () async {
             await signUserOut(context);
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Login_Page()));
+                MaterialPageRoute(builder: (context) => const Login_Page()));
           },
           icon: const Icon(Icons.logout),
         ),

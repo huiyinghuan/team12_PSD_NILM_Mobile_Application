@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:intl/intl.dart';
@@ -28,12 +30,11 @@ class NILM_Appliance {
       },
     );
     Map<String, dynamic> jsonResponses = jsonDecode(response.body);
-    print(jsonResponses);
 
     for (dynamic appliance in jsonResponses['appliances']) {
       NILM_Appliance newAppliance = NILM_Appliance(
           name: appliance['name'],
-          powerKiloWatt: appliance['powerKiloWatt'],
+          powerKiloWatt: appliance['power_kW'],
           running: appliance['running'],
           timestamp: convertToTimestamp(jsonResponses['timestamp']),
           totalConsumption: jsonResponses['total_consumption_kW']);

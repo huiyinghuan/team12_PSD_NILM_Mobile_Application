@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:l3homeation/components/graphs/chart_sample.dart';
 
 class RadarChartSample1 extends StatefulWidget {
-  RadarChartSample1({super.key});
+  const RadarChartSample1({super.key});
 
   final gridColor = AppColors_Graph.contentColorPurple;
   final titleColor = AppColors_Graph.contentColorPurple;

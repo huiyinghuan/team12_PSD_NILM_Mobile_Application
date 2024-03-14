@@ -34,7 +34,7 @@ class CustomTextField extends StatelessWidget {
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color.fromARGB(255, 187, 187, 187)),
           ),
-          fillColor: Color.fromARGB(255, 236, 236, 236),
+          fillColor: const Color.fromARGB(255, 236, 236, 236),
           filled: true,
           hintText: hintText,
         ),
