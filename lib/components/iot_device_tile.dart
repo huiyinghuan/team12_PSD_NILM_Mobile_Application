@@ -86,13 +86,9 @@ class IoT_Device_Tile extends StatelessWidget {
   }
 
   String truncateString(String input, int toLength) {
-    if (input.length > toLength) {
-      // If the string is longer than 15 characters
-      return "${input.substring(0, toLength - 2)}.."; // Extract first 13 characters and append ".."
-    } else {
-      // If the string is 15 characters or less
-      return input; // Return the original string
-    }
+    return input.length > toLength
+        ? "${input.substring(0, toLength - 2)}.."
+        : input;
   }
 
   Container activityStatus(Color indicatorColor) {
