@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_scene.dart';
-import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/services/varHeader.dart';
 import "package:google_fonts/google_fonts.dart";
 import 'package:l3homeation/pages/scenes/scene_shared.dart';
@@ -24,12 +23,12 @@ class _listScenesState extends State<listScenes> {
   void initState() {
     super.initState();
     loadAuth().then((_) {
-      updateScenes();
-      updateDevices();
+      updateScenes(setState);
+      updateDevices(setState);
 
       dashboardUpdateTimer =
           Timer.periodic(const Duration(seconds: 5), (timer) {
-        updateScenes();
+        updateScenes(setState);
       });
     });
   }
@@ -38,30 +37,6 @@ class _listScenesState extends State<listScenes> {
   void dispose() {
     dashboardUpdateTimer.cancel();
     super.dispose();
-  }
-
-  Future<void> updateScenes() async {
-    if (auth != null) {
-      var newScenes = await IoT_Scene.get_scenes(
-        auth!,
-        VarHeader.BASEURL,
-      );
-      setState(() {
-        scenes = Future.value(newScenes);
-      });
-    }
-  }
-
-  Future<void> updateDevices() async {
-    if (auth != null) {
-      var newDevices = await IoT_Device.get_devices(
-        auth!,
-        VarHeader.BASEURL,
-      );
-      setState(() {
-        devices = Future.value(newDevices);
-      });
-    }
   }
 
   void sceneOnOff(IoT_Scene scene) async {
@@ -96,7 +71,7 @@ class _listScenesState extends State<listScenes> {
       ),
       drawer: NavigationDrawerWidget(),
       body: buildFutureSceneList(navigateTo, sceneOnOff), //passing the navigateTo function to buildEachRow
-      floatingActionButton: buildAddSceneFloatingButton(context, updateScenes),
+      floatingActionButton: buildAddSceneFloatingButton(context, updateScenes(setState)),
     );
   }
 }
