@@ -73,16 +73,11 @@ class IoT_Device_Tile extends StatelessWidget {
   }
 
   String determineActivity(device) {
-    if (device.value is int) {
-      if (device.value != 0) {
-        return "Active";
-      } else {
-        return "Inactive";
-      }
-    } else if (device.value is bool) {
-      if (device.value) return "Active";
-    }
-    return "Inactive";
+    return (device.value is int && device.value != 0)
+        ? "Active"
+        : (device.value is bool && device.value)
+            ? "Active"
+            : "Inactive";
   }
 
   String truncateString(String input, int toLength) {
