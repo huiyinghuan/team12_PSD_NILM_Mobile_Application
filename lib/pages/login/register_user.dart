@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 
 import 'package:l3homeation/components/custom_button.dart';
@@ -6,14 +8,14 @@ import 'package:l3homeation/pages/login/login_page.dart';
 
 import 'reuseable.dart';
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({super.key});
+class Register_User extends StatefulWidget {
+  const Register_User({super.key});
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<Register_User> createState() => _Register_User_State();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
+class _Register_User_State extends State<Register_User> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -34,31 +36,13 @@ class _RegisterUserState extends State<RegisterUser> {
           );
         });
 
-    // TODO handle the registration logic here
-
     // Close the loading dialog
     Navigator.of(context).pop();
-
-    // print("Sign up test successful");
-
-    // Handle login failure
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return const DialogBox(
-    //         title: "Success",
-    //         errorText: "Registration Successful. Please login again");
-    //   },
-    // );
-
-    // Changed message to a snackbar so it looks cleaner and can bring user to the login_page()
-
-    // if(successfulRegistration){ScaffoldMessenger....}
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => const Login_Page()),
     );
   }
 
@@ -152,7 +136,7 @@ class _RegisterUserState extends State<RegisterUser> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
+              MaterialPageRoute(builder: (context) => const Login_Page()),
             );
           },
           child: const Text(

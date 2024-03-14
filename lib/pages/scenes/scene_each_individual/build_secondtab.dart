@@ -1,6 +1,6 @@
 part of '../scene_lib.dart';
 
-ListView buildSecondTab(IoT_Scene scene, setState, List<bool> isAllowed_Scene_Actions) {
+ListView buildSecondTab(IoT_Scene scene, setState, List<bool> isallowedSceneActions) {
     List<int> collatedDeviceIds = [];
     List actions = jsonDecode(scene.content)[0]['actions'];
     for (var action in actions) {
@@ -16,7 +16,7 @@ ListView buildSecondTab(IoT_Scene scene, setState, List<bool> isAllowed_Scene_Ac
           padding: const EdgeInsets.all(20.0),
           child: contentTopHeader(),
         ),
-        contentBodyDevices(actions, scene, setState, isAllowed_Scene_Actions)
+        contentBodyDevices(actions, scene, setState, isallowedSceneActions)
       ],
     );
   }

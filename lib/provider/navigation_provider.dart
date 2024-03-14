@@ -1,6 +1,8 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 
-class NavigationProvider extends ChangeNotifier {
+class Navigation_Provider extends ChangeNotifier {
   bool _isCollapsed = false;
 
   bool get isCollapsed => _isCollapsed;

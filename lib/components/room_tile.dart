@@ -11,11 +11,11 @@ class Room_Tile extends StatelessWidget {
   final double textSize; // Add a parameter for text size
 
   const Room_Tile({
-    Key? key,
+    super.key,
     required this.room,
     required this.onTap,
     this.textSize = 12,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -90,13 +90,13 @@ FloatingActionButton buildAddSceneFloatingButton(BuildContext context, updateSce
                     ? "close"
                     : "turnOff";
                 // Add logic to save the new scene with the provided name and description
-                IoT_Scene.post_new_scene(
+                IoT_Scene.postNewScene(
                   name,
                   description,
                   "[{\"conditions\":{\"operator\":\"all\",\"conditions\":[]},\"actions\":[{\"group\":\"device\",\"type\":\"single\",\"id\":${selectedDevice.id},\"action\":\"$action\",\"args\":[]}]}]",
                   'scene',
                   auth!,
-                  VarHeader.BASEURL,
+                  Var_Header.BASEURL,
                 ).then((response) {
                   updateScenes();
                 });

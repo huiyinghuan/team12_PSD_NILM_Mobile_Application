@@ -1,9 +1,9 @@
 part of '../../scene_lib.dart';
 
-FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions, IoT_Scene scene, setState, List<bool> isAllowed_Scene_Actions) {
+FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions, IoT_Scene scene, setState, List<bool> isallowedSceneActions) {
   return FutureBuilder<List<IoT_Device>>(
     future:
-        devices_in_scene, // listing of all devices_in_scene for that scene
+        devicesInScene, // listing of all devicesInScene for that scene
     builder:
         (BuildContext context, AsyncSnapshot<List<IoT_Device>> snapshot) {
       if (snapshot.hasData) {
@@ -16,10 +16,10 @@ FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions, IoT_Scene scene
               snapshot.data!.length + 1, // Add 1 for the additional row
           itemBuilder: (BuildContext context, int index) {
             if (index != snapshot.data!.length) {
-              return Body_allDeviceRow(actions, index, snapshot, context, scene, setState, isAllowed_Scene_Actions);
+              return bodyAllDeviceRow(actions, index, snapshot, context, scene, setState, isallowedSceneActions);
             } else {
               // Render the additional row
-              return Body_addDeviceRow(index, context, scene, setState, isAllowed_Scene_Actions);
+              return bodyAddDeviceRow(index, context, scene, setState, isallowedSceneActions);
             }
           },
         );
@@ -27,7 +27,7 @@ FutureBuilder<List<IoT_Device>> contentBodyDevices(List actions, IoT_Scene scene
         return const Center(child: CircularProgressIndicator());
       } else {
         return Text(
-          'Failed to load devices_in_scene',
+          'Failed to load devicesInScene',
           style: GoogleFonts.poppins(fontSize: 18, color: Colors.grey[600]),
         );
       }

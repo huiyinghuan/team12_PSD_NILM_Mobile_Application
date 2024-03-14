@@ -10,23 +10,20 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:l3homeation/models/iot_device.dart';
 import 'package:l3homeation/models/iot_scene.dart';
-import 'package:l3homeation/pages/scenes/eachScene.dart';
+import 'package:l3homeation/pages/scenes/each_scene.dart';
 import 'package:l3homeation/services/varHeader.dart';
 import 'package:l3homeation/themes/colors.dart';
 
 import 'scene_shared.dart';
-// part 'device_status_section.dart';
-// part 'usage_section.dart';
-// part 'scene_section.dart';
 
-// for listScenes.dart 
+// for List_Scenes.dart 
 part './scene_list/add_floating_button.dart';
 part './scene_list/build_image_title.dart';
 part './scene_list/build_scene_info.dart';
 part './scene_list/build_button_switch.dart';
 part './scene_list/future_scene_list.dart';
 
-// for eachScene.dart
+// for Each_Scene.dart
 
 // first tab
 part 'scene_each_individual/icon_scene_name.dart';

@@ -9,5 +9,5 @@ Future<List<dynamic>> devices = Future.value([]);
 String? auth;
 
 Future<void> loadAuth() async {
-  auth = await UserPreferences.getString('auth');
+  auth = await User_Preferences.getString('auth');
 }

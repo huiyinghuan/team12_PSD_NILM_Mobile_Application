@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, no_logic_in_create_state
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/models/iot_scene.dart';
 import "package:google_fonts/google_fonts.dart";
@@ -7,18 +9,18 @@ import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 
 import 'scene_lib.dart';
 
-class eachScene extends StatefulWidget {
+class Each_Scene extends StatefulWidget {
   final IoT_Scene scene;
 
-  eachScene({required this.scene});
+  const Each_Scene({super.key, required this.scene});
 
   @override
-  _eachSceneState createState() => _eachSceneState(scene: scene);
+  _Each_Scene_State createState() => _Each_Scene_State(scene: scene);
 }
 
-class _eachSceneState extends State<eachScene> {
+class _Each_Scene_State extends State<Each_Scene> {
   final IoT_Scene scene;
-  List<bool> isAllowed_Scene_Actions = [];
+  List<bool> isAllowedSceneActions = [];
 
   List<String> tableAttributes = [
     'Description',
@@ -32,7 +34,7 @@ class _eachSceneState extends State<eachScene> {
     'Id',
   ];
 
-  _eachSceneState({required this.scene});
+  _Each_Scene_State({required this.scene});
 
   @override
   void initState() {
@@ -45,9 +47,6 @@ class _eachSceneState extends State<eachScene> {
   
   @override
   Widget build(BuildContext context) {
-    navigateTo(Widget page) => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => page,
-        ));
 
     TabBar tabNames() {
       return const TabBar(
@@ -86,14 +85,14 @@ class _eachSceneState extends State<eachScene> {
             scrolledUnderElevation: 4.0,
             shadowColor: Theme.of(context).shadowColor,
           ),
-          drawer: NavigationDrawerWidget(),
+          drawer: const Navigation_Drawer_Widget(),
           body: TabBarView(
             children: <Widget>[
               //---------------------------------FIRST TAB---------------------------------
               buildFirstTab(context, scene, setState, tableAttributes),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              buildSecondTab(scene, setState, isAllowed_Scene_Actions),
+              buildSecondTab(scene, setState, isAllowedSceneActions),
               //---------------------------------SECOND TAB---------------------------------
               //---------------------------------THIRD TAB---------------------------------
               buildThirdTab(),

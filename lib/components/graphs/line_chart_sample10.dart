@@ -5,10 +5,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class LineChartSample10 extends StatefulWidget {
-  LineChartSample10({super.key});
+  const LineChartSample10({super.key});
 
-  final Color sinColor = Color(0xFF2196F3);
-  final Color cosColor = Color(0xFFFF3AF2);
+  final Color sinColor = const Color(0xFF2196F3);
+  final Color cosColor = const Color(0xFFFF3AF2);
 
   @override
   State<LineChartSample10> createState() => _LineChartSample10State();

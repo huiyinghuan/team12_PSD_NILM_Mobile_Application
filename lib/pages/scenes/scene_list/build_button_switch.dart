@@ -11,7 +11,7 @@ ButtonBar buildButtonAndSwitch(BuildContext context, IoT_Scene scene, bool enabl
           children: [
             TextButton(
               onPressed: enableScene
-                  ? () => navigateTo(eachScene(scene: scene))
+                  ? () => navigateTo(Each_Scene(scene: scene))
                   : null,
               onLongPress: enableScene
                   ? () {
@@ -29,7 +29,7 @@ ButtonBar buildButtonAndSwitch(BuildContext context, IoT_Scene scene, bool enabl
             ),
             TextButton(
               onPressed: enableScene
-                  ? () => scene.activate_scenes()
+                  ? () => scene.activateScenes()
                   : null,
               onLongPress: enableScene
                   ? () {

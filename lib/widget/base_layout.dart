@@ -1,19 +1,21 @@
 // File: lib/widgets/base_layout.dart
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'navigation_drawer_widget.dart';
 
-class BaseLayout extends StatelessWidget {
+class Base_Layout extends StatelessWidget {
   final Widget child;
   final String title;
 
-  BaseLayout({required this.child, required this.title});
+  const Base_Layout({super.key, required this.child, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -23,14 +25,14 @@ class BaseLayout extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: TextStyle(fontSize: 22),
+          style: const TextStyle(fontSize: 22),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         automaticallyImplyLeading:
             false, // removes the hamburger icon on the nav bar
       ),
-      drawer: NavigationDrawerWidget(),
+      drawer: const Navigation_Drawer_Widget(),
       body: child,
     );
   }

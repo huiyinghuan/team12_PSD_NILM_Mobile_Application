@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l3homeation/models/iot_device.dart';
@@ -7,12 +9,15 @@ import 'package:l3homeation/services/varHeader.dart';
 import 'list_device_lib.dart';
 import 'list_device_shared.dart';
 
-class ListDevice extends StatefulWidget {
+class List_Device extends StatefulWidget {
+  const List_Device({super.key});
+
   @override
-  _ListDeviceState createState() => _ListDeviceState();
+  // ignore: library_private_types_in_public_api
+  _List_Device_State createState() => _List_Device_State();
 }
 
-class _ListDeviceState extends State<ListDevice> {
+class _List_Device_State extends State<List_Device> {
   @override
   void initState() {
     super.initState();
@@ -24,24 +29,23 @@ class _ListDeviceState extends State<ListDevice> {
   Future<void> updateDevices() async {
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
   }
 
-  void swapper(IoT_Device device, VoidCallback callback) async {
+  void swapper(IoT_Device device) async {
     await device.swapStates();
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
-      callback();
     }
   }
 
@@ -59,7 +63,7 @@ class _ListDeviceState extends State<ListDevice> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      drawer: NavigationDrawerWidget(),
+      drawer: const Navigation_Drawer_Widget(),
       body: ListView(
         children: <Widget>[
           buildDeviceList(swapper),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/components/custom_button.dart';
@@ -8,14 +10,14 @@ import 'package:http/http.dart' as http;
 
 import 'reuseable.dart';
 
-class ForgetPassword extends StatefulWidget {
-  const ForgetPassword({super.key});
+class Forget_Password extends StatefulWidget {
+  const Forget_Password({super.key});
 
   @override
-  State<ForgetPassword> createState() => _ForgetPasswordState();
+  State<Forget_Password> createState() => _Forget_Password_State();
 }
 
-class _ForgetPasswordState extends State<ForgetPassword> {
+class _Forget_Password_State extends State<Forget_Password> {
   final emailController = TextEditingController();
 
   // Sign up user method
@@ -31,7 +33,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
     // Make the REST API call
     final response = await http.post(Uri.parse(
-        '${VarHeader.BASEURL}/passwordForgotten/${emailController.text}'));
+        '${Var_Header.BASEURL}/passwordForgotten/${emailController.text}'));
 
     // Check the response status code
     if (response.statusCode == 200) {
@@ -131,7 +133,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
+              MaterialPageRoute(builder: (context) => const Login_Page()),
             );
           },
           child: const Text(
