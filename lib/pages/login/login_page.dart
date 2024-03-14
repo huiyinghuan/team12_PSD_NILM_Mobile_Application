@@ -7,6 +7,7 @@ import 'package:l3homeation/services/httphandle.dart';
 import 'package:l3homeation/services/userpreferences.dart';
 import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/pages/login/forget_password.dart';
+
 import 'dart:convert';
 
 import 'reuseable.dart';
@@ -122,7 +123,8 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 50),
 
               // Registration
-              displayRegistrationButton(),
+              // No API available for registration
+              // displayRegistrationButton(),
 
               const SizedBox(height: 500),
             ],
