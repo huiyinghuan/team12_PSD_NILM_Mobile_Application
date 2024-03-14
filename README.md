@@ -15,6 +15,10 @@ Smart Home NILM is a mobile application development project that utilises the FI
   - [Running Smart Home NILM](#running-smart-home-nilm)
 - [Usage](#usage)
   - [Features](#features)
+  - [API Routes](#api-routes)
+  - [Libraries](#libraries)
+  - [Code Organisation](#code-organisation)
+  - [Code Standarisation](#code-standardisation)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 - [Troubleshooting](#troubleshooting)
@@ -275,7 +279,7 @@ WARNING:
 ## Usage
 
 ### Features
-The list of features are as shown below
+The list of features and capabilities of the application are:
 1. Viewing of device status (On/Off, battery level, brightness level, etc.)
 2. Control of device
 3. Creation of scenes
@@ -284,15 +288,200 @@ The list of features are as shown below
 6. Running cost of electrical consumption in the house
 7. Adding family member controls
 
-### Core Understanding of Code
-1. Explain how to use the software or library. Include code examples, if applicable.
-Provide information on configuration or settings (TODO)
+### API Routes
+This section provides detailed information on the API routes available for the Smart Home Application. These routes allow for managing profiles, devices, scenes, login status, and rooms through the API. Each route supports specific operations essential for interacting with the smart home system programmatically.
+
+All API routes are used by the FIBARO API, below contains the routes and documentation of its usage in the application. Additionally, the cloud team's NILM API endpoint to retrieve electricity information is also shown. 
+
+Note that as currently the NILM electricity endpoint is not ready yet, an API placeholder is being used now to reference dummy data. This is to be replaced with the actual endpoint once it is ready located at nilm_graph.dart.
+
+`FIBARO API Endpoint: http://l3homeation.dyndns.org:2080/api`
+
+### Libraries
+Profiles:
+  Create Profiles:
+  - POST /profiles
+    1. Description: Create a new user profile within the application.
+    2. Payload: Requires user details such as name, sourceId, and iconId.
+    3. Response: Returns the created profile information.
+  Retrieve Profiles:
+  - GET /profiles/{userId}
+    1. Description: Retrieve the profile information of a specific user.
+    2. Parameters: userId is the unique identifier of the user.
+    3. Response: Returns profile details 
+
+Users:
+Documentation for managing users specifically, including adding, removing, or updating user information, would be expected here. This could involve routes for user authentication, authorization, and user-specific settings. The API for the registration of users is not available and as such is not available for creation on the application itself.
+
+  Change Password:
+  - PUT /users/{userId}
+    1. Description: Update the password for a user's profile.
+    2. Parameters: userId is the unique identifier of the user.
+    3. Payload: Requires the current password,the new password and the password confirmation.
+    4. Response: Returns a success message or error details.
+  Forget Password:
+  - GET /passwordForgotten/{username}
+    1. Description: Reset the password for a user, use their email or username to reset.
+    ##### Note: Password reset is done and a new password is generated and sent to the email of the account. If email access is not available, the owner cannot login.
+    2. Parameters: username is the unique identifier of the user.
+    3. Payload: Requires the username or email of the user that wants to be reset.
+    4. Response: Returns a success message or error details.
+
+Devices:
+General Device Management
+Operations related to adding, removing, updating, and retrieving the status of smart home devices would be defined here, including routes for turning devices on/off, adjusting settings, and monitoring their health and status.
+
+  Retrieve devices
+  - GET /devices/{deviceId}
+    1. Description: Retrieve details of a specific device.
+    2. Parameters: deviceId is the unique identifier of the scene.
+    3. Response: Returns device details.
+
+  Update devices:
+  - PUT /devices/{deviceId}
+    1. Description: Update the details of the device such as updating the state.
+    2. Parameters: deviceIdis the unique identifier of the device.
+    3. Payload: Requires the updated device details.
+    4. Response: Returns the updated device information.
+
+Scenes:
+  Retrieve Scene
+  - GET /scenes/{sceneId}
+    1. Description: Retrieve details of a specific scene.
+    2. Parameters: sceneId is the unique identifier of the scene.
+    3. Response: Returns scene details including associated devices and actions.
+
+  Activate Scene
+  - GET /scenes/{sceneId}/execute
+    1. Description: Triggers the activation of a specific scene, causing all associated devices to adjust to the predefined settings.
+    2. Parameters: sceneId is the unique identifier of the scene.
+    3. Response: Returns a success message indicating the scene has been activated.
+
+  Update Scene
+  - PUT /scenes/{sceneId}
+    1. Description: Update the details or device associations of a specific scene.
+    2. Parameters: sceneId is the unique identifier of the scene.
+    3. Payload: Requires the updated scene details or device associations.
+    4. Response: Returns the updated scene information.
+
+  Create New Scene
+  - POST /scenes
+    1. Description: Create a new scene with specified devices and settings.
+    2. Payload: Requires details of the new scene including name, associated devices, and their settings.
+    3. Response: Returns the created scene information.
+
+Login Status:
+  Check Login Status
+  - GET /loginStatus
+    1. Description: Check the current login status of a user.
+    2. Parameters:
+    3. Action: login
+    4. toAccepted: true
+    5. Response: Returns information about the user's current login state, including whether they are logged in and any session details.
+
+Energy:
+  Check Energy Consumption
+  - GET /energy/consumption/summary
+    1. Description: Check the overall energy consumption of the household based on the smart devices
+    2. Parameters:
+    3. Period: duration
+    4. Response: Returns information about the overall energy production and consumption and the list of top consuming devices.
+
+Rooms:
+  Get Rooms
+  - GET /rooms
+    1. Description: Retrieve a list of all rooms configured within the smart home system.
+    2. Response: Returns a list of rooms, each with its details and associated devices.
+
+  Get Devices from Room
+  - GET /rooms/{roomId}/devices
+    1. Description: Retrieve a list of devices associated with a specific room.
+    2. Parameters: roomId is the unique identifier of the room.
+    3. Response: Returns a list of devices located in the specified room, along with their status and control options.
+
+### Code Organisation
+![Code organisation](readme_images/file_structure.png)
+
+The main folder layout is shown in the diagram above. Each segment is separated according to functionality and purpose. 
+
+Images:
+- Houses all image assets used within the application. Includes placeholders for scenarios where images cannot be fetched from external APIs.
+
+Lib:
+- The core folder contains the source code for building Flutter components, ensuring the app functions seamlessly across both Android and iOS platforms.
+
+Components:
+- Contains reusable UI components such as tiles (device, room, scene tiles), graphs, dialog boxes (e.g., custom text fields, buttons, error dialogs), employed throughout the app for a consistent look and feel.
+
+Data:
+- Stores static data, for instance, sidebar drawer items, facilitating easy navigation and organisation within the app.
+
+Models:
+- Defines data models for interacting with the FIBARO API, including entities like rooms, scenes, devices, and utilities such as calculating energy consumption.
+
+Provider:
+- Manages state for dynamic UI elements, enabling functionalities like expand/collapse of components based on user interactions.
+
+Services:
+- Implements application-wide services, including authentication checks, persistent login state management, and configuration of global variables like API endpoints.
+
+Themes:
+- Centralises theme-related configurations (colours, text styles) decided during the design phase, for a cohesive visual experience across the app.
+
+Widgets:
+- Contains widgets that build parts of the UI such as the navigation drawer, integrating components from data and provider folders for dynamic content presentation.
+
+Pages:
+- Holds the main code for each page within the app, structuring the layout and integrating various components and widgets to form complete screens.
+
+Charts:
+- Dedicated to rendering charts and graphs, particularly for showcasing analytics like NILM and power consumption within the power tab.
+
+Dashboard:
+- Comprises components and logic specific to the dashboard view, ensuring modularity by segmenting functionality into distinct files.
+
+Devices:
+- Manages the devices page, including the UI and logic for API interactions to fetch and display device data.
+
+editDevice:
+- Contains UI and logic for the edit device page, facilitating modifications to device settings with dedicated helper functions.
+
+Login:
+- Handles user authentication processes including login, registration, and password recovery, with each functionality encapsulated in its distinct files
+- The registration of users is not handled conventionally and as such, is not available via API call. However, a registration page has been created and commented out if future updates allow for it.
+
+Profile:
+- Manages the profile page's UI and backend interactions, allowing users to view and update their profile information.
+
+Rooms:
+- Dedicated to the rooms page, handling both the rendering of room data and API interactions for room management.
+
+Scenes:
+- Manages scene creation and manipulation, enabling users to view and interact with individuals or lists of scenes.
+
+Main.dart:
+- Serves as the entry point of the application, initialising and running the app post-compilation, setting up necessary configurations like routing.
+
+### Code Standardisation:
+The creation of a header file for common variables used throughout files such as the API endpoint was created for centralised usage. Any other variables wished to be used can be referenced in this file (Varheader.dart).
+
+Snake Casing:
+- Functions inside the data models with an underscore will call API endpoints and retrieve the necessary data to return.
+![Snake_case](readme_images/snakecase.png)
+
+Camel Casing:
+- Functions and variable names within the pages folder for each distinct page will follow the camel casing naming convention as per flutter's recommendations.
+![camelCase](readme_images/camelCasing.png)
 
 ## LICENSE
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 - For licensing information, please see [LICENSE.md](./LICENSE).
 - To contribute, fork the repository and submit pull requests
 ---
+
+## Acknowledgements
+
+
 
 ## Troubleshooting
 
