@@ -311,7 +311,7 @@ Profiles:
     3. Response: Returns profile details 
 
 Users:
-Documentation for managing users specifically, including adding, removing, or updating user information, would be expected here. This could involve routes for user authentication, authorization, and user-specific settings. The API for the registration of users is not available and as such is not available for creation on the application itself.
+- Documentation for managing users specifically, including adding, removing, or updating user information, would be expected here. This could involve routes for user authentication, authorization, and user-specific settings. The API for the registration of users is not available and as such is not available for creation on the application itself.
 
   Change Password:
   - PUT /users/{userId}
@@ -328,7 +328,7 @@ Documentation for managing users specifically, including adding, removing, or up
     4. Response: Returns a success message or error details.
 
 Devices:
-General Device Management
+- General Device Management
 Operations related to adding, removing, updating, and retrieving the status of smart home devices would be defined here, including routes for turning devices on/off, adjusting settings, and monitoring their health and status.
 
   Retrieve devices
@@ -467,7 +467,6 @@ The creation of a header file for common variables used throughout files such as
 
 Cobra Casing:
 - Class names shall follow the Cobra_Case convention:
-Examples:
 1. `class IoT_Device`
 2. `class IoT_Scene`
 3. `class Energy_Consumption`
@@ -478,6 +477,11 @@ Camel Casing:
 - Functions and variable names within the pages folder for each distinct page will follow the camel casing naming convention as per flutter's recommendations.
 
 ![camelCase](readme_images/camelCasing.png)
+
+All Caps:
+- The main use case of all caps are to establish constant variables as per standard coding conventions from most languages
+
+![ALLCAPS](readme_images/ALLCAPS.png)
 
 ## LICENSE
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
