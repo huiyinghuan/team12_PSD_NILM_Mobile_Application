@@ -89,7 +89,7 @@ Widget buildSceneCard(IoT_Scene scene, navigateTo) {
     child: GestureDetector(
       onTap: () {
         // Handle the tap event here
-        navigateTo(eachScene(scene: scene));
+        navigateTo(Each_Scene(scene: scene));
       },
       child: Card(
         color: const Color.fromRGBO(0, 69, 107, 1),

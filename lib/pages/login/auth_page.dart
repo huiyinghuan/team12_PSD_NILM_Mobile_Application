@@ -3,8 +3,8 @@ import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthPage extends StatelessWidget {
-  const AuthPage({Key? key}) : super(key: key);
+class Auth_Page extends StatelessWidget {
+  const Auth_Page({Key? key}) : super(key: key);
 
   Future<bool> checkLoginStatus() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -26,7 +26,7 @@ class AuthPage extends StatelessWidget {
               if (snapshot.data == true) {
                 return const Dashboard();
               } else {
-                return LoginPage();
+                return Login_Page();
               }
             }
           }

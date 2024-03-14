@@ -2,8 +2,7 @@ part of 'dashboard_lib.dart';
 
 Widget buildDeviceStatusSection(
     BuildContext context, Function onTap, Function handleLongPress) {
-  final navigateTo =
-      (Widget page) => Navigator.of(context).push(MaterialPageRoute(
+  navigateTo(Widget page) => Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => page,
           ));
 
@@ -30,11 +29,9 @@ Widget buildDeviceStatusSection(
                     padding: const EdgeInsets.all(4.0),
                     child: displayDevicesOn(snapshot),
                   ),
-                  Container(
-                    child: IconButton(
-                      icon: const Icon(Icons.add_circle_outline_outlined),
-                      onPressed: () => {navigateTo(ListDevice())},
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle_outline_outlined),
+                    onPressed: () => {navigateTo(List_Device())},
                   ),
                 ],
               ),

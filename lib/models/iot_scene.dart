@@ -54,34 +54,30 @@ class IoT_Scene {
       print(e);
     }
     // ignore: unused_local_variable
-    late Response? response_put;
+    late Response? responsePut;
     try {
-      response_put =
+      responsePut =
           await putRequest(credentials, URL, id, {'enabled': !enable});
     } catch (e) {
       print(e);
     }
   }
 
-  String toString_IOT() {
-    return "IoT_Scene: $name, $description, $type, $mode, $icon, $enable, $created, $updated, $content, $id, $roomid";
-  }
-
-  Future<Response> activate_scenes() async {
-    late Response? response_put;
-    response_put = await http.get(
+  Future<Response> activateScenes() async {
+    late Response? responsePut;
+    responsePut = await http.get(
       Uri.parse(URL + '/scenes/$id/execute'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
       },
     );
     print("Activate scene funciton");
-    return response_put;
+    return responsePut;
   }
 
-  Future<Response> putmethod(String updatedJSON) async {
-    late Response response_put;
-    response_put = await http.put(
+  Future<Response> putMethod(String updatedJSON) async {
+    late Response responsePut;
+    responsePut = await http.put(
       Uri.parse(URL + '/scenes/$id'),
       headers: {
         HttpHeaders.authorizationHeader: 'Basic $credentials',
@@ -89,30 +85,30 @@ class IoT_Scene {
       body: updatedJSON,
     );
     print("Putting method");
-    return response_put;
+    return responsePut;
   }
 
-  Future<Response> change_description(String new_description) async {
+  Future<Response> changeDescription(String newDescription) async {
     // fetch data and change only description
     Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
-    wholeJSON['description'] = new_description;
-    Response response_put = await putmethod(jsonEncode(wholeJSON));
-    return response_put;
+    wholeJSON['description'] = newDescription;
+    Response responsePut = await putMethod(jsonEncode(wholeJSON));
+    return responsePut;
   }
 
-  Future<Response> change_icon(String newIcon) async {
+  Future<Response> changeIcon(String newIcon) async {
     // fetch data and change only description
     Map wholeJSON = (await fetchScenes(credentials, URL, id))[0];
     wholeJSON['icon'] = newIcon;
-    Response response_put = await putmethod(jsonEncode(wholeJSON));
-    return response_put;
+    Response responsePut = await putMethod(jsonEncode(wholeJSON));
+    return responsePut;
   }
 
-  Future<Response> change_action_state(String action_state, int index) async {
+  Future<Response> changeActionState(String actionState, int index) async {
     // content updates
     List jsonData = jsonDecode(content);
     Map<String, dynamic> action = jsonData[0]['actions'][index];
-    action['action'] = action_state;
+    action['action'] = actionState;
     jsonData[0]['actions'][index] = action;
     content = jsonEncode(jsonData);
 
@@ -120,24 +116,24 @@ class IoT_Scene {
     Map<String, dynamic> jsonData2 = jsonDecode(wholeJSON);
     List<dynamic> content2 = jsonDecode(jsonData2['content']);
     Map<String, dynamic> action2 = content2[0]['actions'][index];
-    action2['action'] = action_state;
+    action2['action'] = actionState;
     content2[0]['actions'][index] = action2;
     jsonData2['content'] = jsonEncode(content2);
     // Convert the modified JSON back to a string
     String updatedJSON = jsonEncode(jsonData2);
     wholeJSON = updatedJSON;
 
-    Response response_put = await putmethod(updatedJSON);
-    return response_put;
+    Response responsePut = await putMethod(updatedJSON);
+    return responsePut;
   }
 
-  Future<Response> add_devices_into_action(IoT_Device new_device) async {
+  Future<Response> addDevicesIntoAction(IoT_Device newDevice) async {
     // fetch data and change only description
     var dict = {
       "group": "device",
       "type": "single",
-      "id": new_device.id,
-      "action": (new_device.runtimeType == bool) ? "close" : "turnOff",
+      "id": newDevice.id,
+      "action": (newDevice.runtimeType == bool) ? "close" : "turnOff",
       "args": [],
     };
     // content updates
@@ -162,11 +158,11 @@ class IoT_Scene {
     String updatedJSON = jsonEncode(jsonData2);
     wholeJSON = updatedJSON;
 
-    Response response_put = await putmethod(updatedJSON);
-    return response_put;
+    Response responsePut = await putMethod(updatedJSON);
+    return responsePut;
   }
 
-  Future<Response> remove_devices_from_action(int index) async {
+  Future<Response> removeDevicesFromAction(int index) async {
     // content updates
     List jsonData = jsonDecode(content);
     List<dynamic> oldDataAction = jsonData[0]['actions'];
@@ -185,11 +181,11 @@ class IoT_Scene {
     String updatedJSON = jsonEncode(jsonData2);
     wholeJSON = updatedJSON;
 
-    Response response_put = await putmethod(updatedJSON);
-    return response_put;
+    Response responsePut = await putMethod(updatedJSON);
+    return responsePut;
   }
 
-  static Future<Response> post_new_scene(
+  static Future<Response> postNewScene(
     String name,
     String description,
     dynamic content,
@@ -226,14 +222,14 @@ class IoT_Scene {
     return response;
   }
 
-  static Future<List<IoT_Scene>> get_scenes(
+  static Future<List<IoT_Scene>> getScenes(
       String credentials, String URL) async {
     List<IoT_Scene> scenes = [];
     List<dynamic> jsonResponses = await fetchScenes(credentials, URL, null);
     for (Map<String, dynamic> response in jsonResponses) {
-      IoT_Scene new_scene;
+      IoT_Scene newScene;
       if (response['type'] == 'scenario') {
-        new_scene = IoT_Scene(
+        newScene = IoT_Scene(
           id: response['id'],
           name: response['name'],
           description: response['description'],
@@ -254,7 +250,7 @@ class IoT_Scene {
           wholeJSON: jsonEncode(response),
         );
       } else {
-        new_scene = IoT_Scene(
+        newScene = IoT_Scene(
           id: response['id'],
           name: response['name'],
           description: response['description'],
@@ -275,7 +271,7 @@ class IoT_Scene {
           wholeJSON: jsonEncode(response),
         );
       }
-      scenes.add(new_scene);
+      scenes.add(newScene);
       // }
     }
     return scenes;

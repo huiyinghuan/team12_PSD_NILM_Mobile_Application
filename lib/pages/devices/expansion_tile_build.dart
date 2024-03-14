@@ -102,17 +102,17 @@ List<Card> buildExpansionTiles(
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EditDevicePage(
+                                builder: (context) => Edit_Device_Page(
                                       device: device,
                                       onTap: onTap,
                                     )),
                           );
                         },
-                        child: Text('Edit Device'),
                         style: ElevatedButton.styleFrom(
                             // primary: AppColors.secondary2, // Button color
                             // onPrimary: Colors.white, // Text color
                             ),
+                        child: const Text('Edit Device'),
                       ),
                       Switch(
                         value:

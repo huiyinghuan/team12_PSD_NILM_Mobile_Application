@@ -24,14 +24,14 @@ class MyFlutterApp {
 }
 
 const itemsFirst = [
-  DrawerItem(title: 'Dashboard', icon: MyFlutterApp.dashboard),
-  DrawerItem(title: 'All Devices', icon: MyFlutterApp.list_devices),
-  DrawerItem(title: 'Scenes', icon: MyFlutterApp.scenes),
-  DrawerItem(title: 'Rooms', icon: MyFlutterApp.rooms_list),
-  DrawerItem(title: 'Power', icon: MyFlutterApp.power_consumption),
-  DrawerItem(title: 'Profile', icon: MyFlutterApp.profile_setting),
+  Drawer_Item(title: 'Dashboard', icon: MyFlutterApp.dashboard),
+  Drawer_Item(title: 'All Devices', icon: MyFlutterApp.list_devices),
+  Drawer_Item(title: 'Scenes', icon: MyFlutterApp.scenes),
+  Drawer_Item(title: 'Rooms', icon: MyFlutterApp.rooms_list),
+  Drawer_Item(title: 'Power', icon: MyFlutterApp.power_consumption),
+  Drawer_Item(title: 'Profile', icon: MyFlutterApp.profile_setting),
 ];
 
 const itemsSecond = [
-  DrawerItem(title: 'Searching...', icon: MyFlutterApp.router),
+  Drawer_Item(title: 'Searching...', icon: MyFlutterApp.router),
 ];

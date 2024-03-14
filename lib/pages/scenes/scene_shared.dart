@@ -8,18 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<List<IoT_Scene>> scenes = Future.value([]);
 Future<List<IoT_Device>> devices = Future.value([]);
-Future<List<IoT_Device>> devices_in_scene = Future.value([]);
+Future<List<IoT_Device>> devicesInScene = Future.value([]);
 String? auth;
 
 Future<void> loadAuth() async {
-  auth = await UserPreferences.getString('auth');
+  auth = await User_Preferences.getString('auth');
 }
 
 Future<void> updateScenes(setState) async {
   if (auth != null) {
-    var newScenes = await IoT_Scene.get_scenes(
+    var newScenes = await IoT_Scene.getScenes(
       auth!,
-      VarHeader.BASEURL,
+      Var_Header.BASEURL,
     );
     setState(() {
       scenes = Future.value(newScenes);
@@ -29,9 +29,9 @@ Future<void> updateScenes(setState) async {
 
 Future<void> updateDevices(setState) async {
   if (auth != null) {
-    var newDevices = await IoT_Device.get_devices(
+    var newDevices = await IoT_Device.getDevices(
       auth!,
-      VarHeader.BASEURL,
+      Var_Header.BASEURL,
     );
     setState(() {
       devices = Future.value(newDevices);
@@ -42,9 +42,9 @@ Future<void> updateDevices(setState) async {
 Future<void> updateSceneActionDevices(List<int?> id, setState) async {
   if (auth != null) {
     setState(() {
-      devices_in_scene = IoT_Device.get_devices_by_ids(
+      devicesInScene = IoT_Device.getDevicesByIds(
         auth!,
-        VarHeader.BASEURL,
+        Var_Header.BASEURL,
         id,
       );
     });
@@ -54,7 +54,7 @@ Future<void> updateSceneActionDevices(List<int?> id, setState) async {
 Future<void> removeDeviceFromScene(int index, setState) async {
   if (auth != null) {
     setState(() {
-      devices_in_scene = devices_in_scene.then((existingDevices) {
+      devicesInScene = devicesInScene.then((existingDevices) {
         // Remove the device at index from existingDevices
         return existingDevices..removeAt(index);
       });
@@ -65,21 +65,21 @@ Future<void> removeDeviceFromScene(int index, setState) async {
 Future<void> addSceneActionDevices(int? id, setState) async {
   if (auth != null) {
     try {
-      // Assuming get_devices_by_ids is an async function that returns List<IoT_Device>
-      var moreDevices = await IoT_Device.get_devices_by_ids(
+      // Assuming getDevicesByIds is an async function that returns List<IoT_Device>
+      var moreDevices = await IoT_Device.getDevicesByIds(
         auth!,
-        VarHeader.BASEURL,
+        Var_Header.BASEURL,
         [id],
       );
 
       setState(() {
-        devices_in_scene = devices_in_scene.then((existingDevices) {
+        devicesInScene = devicesInScene.then((existingDevices) {
           // Combine existing devices with moreDevices
           return [...existingDevices, ...moreDevices];
         });
       });
     } catch (error) {
-      // Handle any errors from IoT_Device.get_devices_by_ids
+      // Handle any errors from IoT_Device.getDevicesByIds
       print("Error fetching devices: $error");
     }
   }

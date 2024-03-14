@@ -42,9 +42,9 @@ class _DashboardState extends State<Dashboard> {
   Future<void> updateDevices() async {
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -53,9 +53,9 @@ class _DashboardState extends State<Dashboard> {
   Future<void> fetchScenes() async {
     if (auth != null) {
       setState(() {
-        allScenes = IoT_Scene.get_scenes(
+        allScenes = IoT_Scene.getScenes(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -64,19 +64,19 @@ class _DashboardState extends State<Dashboard> {
   Future<void> fetchEnergy() async {
     if (auth != null) {
       setState(() {
-        energies = Energy_Consumption.get_energy_consumption_summary(
-            auth!, VarHeader.BASEURL);
+        energies = Energy_Consumption.getEnergyConsumptionSummary(
+            auth!, Var_Header.BASEURL);
       });
     }
   }
 
-  void turn_on_off_device_tile(IoT_Device device) async {
+  void turnOnOffDeviceTile(IoT_Device device) async {
     await device.swapStates();
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -87,7 +87,7 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditDevicePage(
+        builder: (context) => Edit_Device_Page(
           device: device,
           onTap: toggleDeviceState,
         ),
@@ -99,13 +99,13 @@ class _DashboardState extends State<Dashboard> {
     await scene.swapStates();
     if (auth != null) {
       setState(() {
-        allScenes = IoT_Scene.get_scenes(auth!, VarHeader.BASEURL);
+        allScenes = IoT_Scene.getScenes(auth!, Var_Header.BASEURL);
       });
 
       // Scroll to the previous position after updating the UI
       scrollController.animateTo(
         scrollController.position.pixels,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
@@ -113,14 +113,14 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return Base_Layout(
       title: 'Dashboard',
       child: ListView(
         controller: scrollController,
         children: <Widget>[
           buildGreetingSection(context),
           buildDeviceStatusSection(
-              context, turn_on_off_device_tile, adjustDevice),
+              context, turnOnOffDeviceTile, adjustDevice),
           buildUsageSection(context),
           buildSceneSection(context, sceneSwap),
         ],

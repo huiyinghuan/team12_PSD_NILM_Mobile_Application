@@ -1,6 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
 part of '../../scene_lib.dart';
 
-ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Device>> snapshot, BuildContext context, IoT_Scene scene, setState, List<bool> isAllowed_Scene_Actions) {
+ListTile bodyAllDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Device>> snapshot, BuildContext context, IoT_Scene scene, setState, List<bool> isallowedSceneActions) {
   Map stateToChangeTo = {
     'turnOff': 'turnOn',
     'TurnOff': 'TurnOn',
@@ -18,7 +20,7 @@ ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Devic
           (actions[index]['action']) == 'unsecure'
       ? false
       : true;
-  isAllowed_Scene_Actions.add(Offoron);
+  isallowedSceneActions.add(Offoron);
 
   return ListTile(
     tileColor: (index % 2 == 1) ? AppColors.primary1 : AppColors.primary2,
@@ -38,11 +40,11 @@ ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Devic
                     onPressed: () {
                       setState(() {
                         Future<Response> changeResponse =
-                            scene.remove_devices_from_action(index);
+                            scene.removeDevicesFromAction(index);
                         changeResponse.then((value) {
                           if (value.statusCode == 204) {
                             updateScenes(setState);
-                            isAllowed_Scene_Actions.removeAt(index);
+                            isallowedSceneActions.removeAt(index);
                             removeDeviceFromScene(index, setState);
                             Navigator.pop(context);
                           }
@@ -79,17 +81,17 @@ ListTile Body_allDeviceRow(List actions, int index, AsyncSnapshot<List<IoT_Devic
         }
     },
     trailing: Switch(
-      value: isAllowed_Scene_Actions[index],
+      value: isallowedSceneActions[index],
       onChanged: (value) {
         setState(() {
-          Future<Response> changeResponse = scene.change_action_state(
+          Future<Response> changeResponse = scene.changeActionState(
             stateToChangeTo[actions[index]['action']],
             index,
           );
           changeResponse.then((value) {
             if (value.statusCode == 204) {
-              isAllowed_Scene_Actions[index] =
-                  !isAllowed_Scene_Actions[index];
+              isallowedSceneActions[index] =
+                  !isallowedSceneActions[index];
               updateScenes(setState);
             }
           });

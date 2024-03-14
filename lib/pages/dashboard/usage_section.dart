@@ -14,7 +14,7 @@ Widget buildUsageSection(BuildContext context) {
       if (snapshot.hasData &&
           snapshot.connectionState == ConnectionState.done) {
         // Process electrical consumption data
-        // List<NILM_appliance> appliances = snapshot.data!;
+        // List<NILM_Appliance> appliances = snapshot.data!;
 
         // Convert and format to two decimal places
         consumption = double.parse(snapshot.data!.first.consumptionKwh ?? '0')
@@ -65,7 +65,7 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
@@ -78,7 +78,7 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
                     color: Colors.grey.withOpacity(0.2),
                     spreadRadius: 2,
                     blurRadius: 4,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
@@ -90,18 +90,18 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
                     Text(date,
                         style: GoogleFonts.poppins(
                             fontSize: 16, fontWeight: FontWeight.w400)),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     RichText(
                       text: TextSpan(
                         children: [
                           TextSpan(
                               text: usageKWh,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFFD36E2F),
                               )),
-                          TextSpan(
+                          const TextSpan(
                               text: ' KWh',
                               style: TextStyle(
                                 fontSize: 15,
@@ -112,7 +112,7 @@ Widget containerWithConsumptionData(String date, String usageKWh, String cost) {
                         ],
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text('Cost : \$$cost',
                         style:
                             GoogleFonts.poppins(fontWeight: FontWeight.bold)),

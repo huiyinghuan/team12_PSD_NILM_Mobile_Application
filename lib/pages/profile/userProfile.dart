@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,17 +13,17 @@ import 'package:l3homeation/pages/login/login_page.dart';
 import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/services/varHeader.dart';
 
-class UserProfile extends StatefulWidget {
+class User_Profile extends StatefulWidget {
   @override
-  _UserProfileState createState() => _UserProfileState();
+  _User_Profile_State createState() => _User_Profile_State();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _User_Profile_State extends State<User_Profile> {
   String? auth;
   // Initialize futureProfiles immediately with a safe placeholder
   Future<List<Map<String, dynamic>>> futureProfiles = Future.value([]);
   Future<void> loadAuth() async {
-    auth = await UserPreferences.getString('auth');
+    auth = await User_Preferences.getString('auth');
     // Now that auth is loaded, update futureProfiles with the actual future
     setState(() {
       futureProfiles = getAllProfile();
@@ -40,9 +42,9 @@ class _UserProfileState extends State<UserProfile> {
   }
 
   //add member
-  Future<void> createProfile(_userNameController) async {
+  Future<void> createProfile(userNameController) async {
     if (auth != null) {
-      final url = Uri.parse('${VarHeader.BASEURL}/profiles');
+      final url = Uri.parse('${Var_Header.BASEURL}/profiles');
       final response = await http.post(
         url,
         headers: {
@@ -50,7 +52,7 @@ class _UserProfileState extends State<UserProfile> {
           HttpHeaders.authorizationHeader: 'Basic $auth',
         },
         body: jsonEncode(<String, dynamic>{
-          'name': _userNameController,
+          'name': userNameController,
           'iconId': 6,
           'sourceId': 3
           // Name of the profile
@@ -74,9 +76,9 @@ class _UserProfileState extends State<UserProfile> {
       String currentPassword,
       String newPassword,
       String newConfirmPassword) async {
-    String? userName = await UserPreferences.getString('username');
-    String? userID = await UserPreferences.getString('userID');
-    var url = Uri.parse('${VarHeader.BASEURL}/users/$userID');
+    String? userName = await User_Preferences.getString('username');
+    String? userID = await User_Preferences.getString('userID');
+    var url = Uri.parse('${Var_Header.BASEURL}/users/$userID');
     var response = await http.put(
       url,
       headers: {
@@ -105,7 +107,7 @@ class _UserProfileState extends State<UserProfile> {
   Future<List<Map<String, dynamic>>> getAllProfile() async {
     List<Map<String, dynamic>> profilesList = [];
     if (auth != null) {
-      final url = Uri.parse('${VarHeader.BASEURL}/profiles');
+      final url = Uri.parse('${Var_Header.BASEURL}/profiles');
       final response = await http.get(
         url,
         headers: {
@@ -147,9 +149,9 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap your content with BaseLayout instead of Scaffold
-    return BaseLayout(
-      title: 'Profile', // Pass the title to the BaseLayout
+    // Wrap your content with Base_Layout instead of Scaffold
+    return Base_Layout(
+      title: 'Profile', // Pass the title to the Base_Layout
       child: DefaultTabController(
         length: 2, // 2 tabs
         child: Column(
@@ -176,7 +178,7 @@ class _UserProfileState extends State<UserProfile> {
           // ),
           // SizedBox(height: 8),
           FutureBuilder<String?>(
-            future: UserPreferences.getString('username'),
+            future: User_Preferences.getString('username'),
             builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -209,7 +211,7 @@ class _UserProfileState extends State<UserProfile> {
                             await signUserOut(context);
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                                    builder: (context) => const Login_Page()));
                           },
                           style: TextButton.styleFrom(
                             // primary: Colors.white,
@@ -267,36 +269,9 @@ class _UserProfileState extends State<UserProfile> {
     TextEditingController currentPasswordController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
     TextEditingController confirmPasswordController = TextEditingController();
-    String? errorMessage;
-
-    // check if the password entered is the same
-    bool passwordsMatch() {
-      return passwordController.text == confirmPasswordController.text;
-    }
-
-    //check if current password entered matches the passowrd in the server
-    Future<bool> checkCurrentPassword(String currentPasswordController) async {
-      String? storedAuth = await UserPreferences.getString('auth');
-      if (storedAuth != null) {
-        List<int> decodedBytes = base64Decode(storedAuth);
-        String decodedString = utf8.decode(decodedBytes);
-
-        List<String> emailPassword = decodedString.split(':');
-        String password = emailPassword[1];
-
-        if (password == currentPasswordController) {
-          // Password entered matches the password in the user preference string
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    }
 
     return FutureBuilder<String?>(
-      future: UserPreferences.getString('username'),
+      future: User_Preferences.getString('username'),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -307,7 +282,7 @@ class _UserProfileState extends State<UserProfile> {
             nameController.text = snapshot.data ?? '';
 
             return ListView(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
@@ -441,13 +416,6 @@ class _UserProfileState extends State<UserProfile> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            if (errorMessage != null)
-                              Text(
-                                errorMessage!,
-                                style: const TextStyle(
-                                    color: Colors
-                                        .red), // Customize error text style
-                              ),
                             const SizedBox(height: 24),
                             ElevatedButton(
                               onPressed: () async {
@@ -490,8 +458,8 @@ class _UserProfileState extends State<UserProfile> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(18),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                minimumSize: Size(200, 48),
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                minimumSize: const Size(200, 48),
                               ),
                               child: const Text('Confirm Change'),
                             ),
@@ -556,7 +524,7 @@ class _UserProfileState extends State<UserProfile> {
                           backgroundImage:
                               NetworkImage(familyMembers[index]['imageUrl']),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           familyMembers[index]['name'],
                           style: const TextStyle(

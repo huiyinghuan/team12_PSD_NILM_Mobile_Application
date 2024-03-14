@@ -7,12 +7,12 @@ import 'package:l3homeation/services/varHeader.dart';
 import 'list_device_lib.dart';
 import 'list_device_shared.dart';
 
-class ListDevice extends StatefulWidget {
+class List_Device extends StatefulWidget {
   @override
-  _ListDeviceState createState() => _ListDeviceState();
+  _List_Device_State createState() => _List_Device_State();
 }
 
-class _ListDeviceState extends State<ListDevice> {
+class _List_Device_State extends State<List_Device> {
   @override
   void initState() {
     super.initState();
@@ -24,9 +24,9 @@ class _ListDeviceState extends State<ListDevice> {
   Future<void> updateDevices() async {
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -36,9 +36,9 @@ class _ListDeviceState extends State<ListDevice> {
     await device.swapStates();
     if (auth != null) {
       setState(() {
-        devices = IoT_Device.get_devices(
+        devices = IoT_Device.getDevices(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
       callback();
@@ -59,7 +59,7 @@ class _ListDeviceState extends State<ListDevice> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      drawer: NavigationDrawerWidget(),
+      drawer: Navigation_Drawer_Widget(),
       body: ListView(
         children: <Widget>[
           buildDeviceList(swapper),

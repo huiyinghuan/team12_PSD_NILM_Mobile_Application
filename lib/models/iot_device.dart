@@ -28,20 +28,6 @@ class IoT_Device {
   });
   Future<void> setToTrue() async {
     try {
-      late Response? putRequest;
-      Map<String, dynamic>? requestBody;
-      requestBody = {
-        'properties': {
-          'value': true,
-        },
-      };
-      putRequest = await http.put(
-        Uri.parse('$URL/devices/$id'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-        body: jsonEncode(requestBody),
-      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -49,20 +35,6 @@ class IoT_Device {
 
   Future<void> setToFalse() async {
     try {
-      late Response? putRequest;
-      Map<String, dynamic>? requestBody;
-      requestBody = {
-        'properties': {
-          'value': false,
-        },
-      };
-      putRequest = await http.put(
-        Uri.parse('$URL/devices/$id'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-        body: jsonEncode(requestBody),
-      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -70,18 +42,6 @@ class IoT_Device {
 
   Future<void> setToZero() async {
     try {
-      late Response? putRequest;
-      Map<String, dynamic>? requestBody;
-      requestBody = {
-        'properties': {'value': 0},
-      };
-      putRequest = await http.put(
-        Uri.parse('$URL/devices/$id'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-        body: jsonEncode(requestBody),
-      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -89,20 +49,6 @@ class IoT_Device {
 
   Future<void> sendCurrentValue() async {
     try {
-      late Response? putRequest;
-      Map<String, dynamic>? requestBody;
-      requestBody = {
-        'properties': {
-          'value': value,
-        },
-      };
-      putRequest = await http.put(
-        Uri.parse('$URL/devices/$id'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Basic $credentials',
-        },
-        body: jsonEncode(requestBody),
-      );
     } catch (e) {
       print("Http put request failed\n");
     }
@@ -160,7 +106,7 @@ class IoT_Device {
     }
   }
 
-  static Future<List<IoT_Device>> get_devices(
+  static Future<List<IoT_Device>> getDevices(
       String credentials, String URL) async {
     List<IoT_Device> devices = [];
     final response = await http.get(
@@ -175,7 +121,7 @@ class IoT_Device {
     for (Map<String, dynamic> response in jsonResponses) {
       if (response['properties'].containsKey('value') &&
           response['visible'] == true) {
-        IoT_Device new_device = IoT_Device(
+        IoT_Device newDevice = IoT_Device(
           id: response['id'],
           URL: URL,
           credentials: credentials,
@@ -186,13 +132,13 @@ class IoT_Device {
           propertiesMap: response['properties'],
         );
 
-        devices.add(new_device);
+        devices.add(newDevice);
       }
     }
     return devices;
   }
 
-  static Future<List<IoT_Device>> get_devices_by_ids(
+  static Future<List<IoT_Device>> getDevicesByIds(
       String credentials, String URL, List<int?> ids) async {
     List<IoT_Device> devices = [];
     if (ids.isEmpty) {
@@ -210,7 +156,7 @@ class IoT_Device {
           dynamic jsonResponses = jsonDecode(response.body);
           if (jsonResponses['properties'].containsKey('value') &&
               jsonResponses['visible'] == true) {
-            IoT_Device new_device = IoT_Device(
+            IoT_Device newDevice = IoT_Device(
               id: jsonResponses['id'],
               URL: URL,
               credentials: credentials,
@@ -221,7 +167,7 @@ class IoT_Device {
               roomId: jsonResponses['roomID'],
               propertiesMap: jsonResponses['properties'],
             );
-            devices.add(new_device);
+            devices.add(newDevice);
           }
         }
       }

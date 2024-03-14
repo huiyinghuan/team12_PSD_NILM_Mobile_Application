@@ -7,29 +7,29 @@ import 'package:l3homeation/components/graphs/chart_sample.dart';
 import 'package:l3homeation/models/nilm_appliance.dart';
 import 'package:l3homeation/pages/dashboard/dashboard_shared.dart';
 
-class NILM_graph extends StatefulWidget {
-  NILM_graph({super.key});
+class NILM_Graph extends StatefulWidget {
+  NILM_Graph({super.key});
   final Color leftBarColor = AppColors_Graph.contentColorYellow;
   final Color rightBarColor = AppColors_Graph.contentColorRed;
-  final Color avgColor = Color.fromARGB(255, 255, 115, 0);
+  final Color avgColor = const Color.fromARGB(255, 255, 115, 0);
   @override
-  State<StatefulWidget> createState() => NILM_graph_state();
+  State<StatefulWidget> createState() => NILM_Graph_State();
 }
 
-class NILM_graph_state extends State<NILM_graph> {
+class NILM_Graph_State extends State<NILM_Graph> {
   final double width = 15;
 
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
-  late Future<List<NILM_appliance>> appliances;
+  late Future<List<NILM_Appliance>> appliances;
   int touchedGroupIndex = -1;
   String credentials = auth!;
   // change to deployment url when done
   String baseURL = "http://dereknan.click:27558/api";
-  List<String> x_axis_titles = [];
-  List<double> y_axis_titles = [];
+  List<String> xAxisTitles = [];
+  List<double> yAxisTitles = [];
   String? timestamp;
-  double? total_power_consumption;
+  double? totalPowerConsumption;
 
   double? min;
   double? avg;
@@ -40,7 +40,7 @@ class NILM_graph_state extends State<NILM_graph> {
   void initState() {
     super.initState();
 
-    appliances = fetch_appliances(credentials, baseURL);
+    appliances = fetchAppliances(credentials, baseURL);
     updateNILMTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       updateNilmGraph();
     });
@@ -49,7 +49,7 @@ class NILM_graph_state extends State<NILM_graph> {
   Future<void> updateNilmGraph() async {
     if (auth != null) {
       setState(() {
-        appliances = NILM_appliance.get_appliances(
+        appliances = NILM_Appliance.getAppliances(
           auth!,
           baseURL,
         );
@@ -57,54 +57,54 @@ class NILM_graph_state extends State<NILM_graph> {
     }
   }
 
-  Future<List<NILM_appliance>> fetch_appliances(
+  Future<List<NILM_Appliance>> fetchAppliances(
       String credentials, String URL) async {
-    List<NILM_appliance> appliances = [];
-    appliances = await NILM_appliance.get_appliances(credentials, URL);
+    List<NILM_Appliance> appliances = [];
+    appliances = await NILM_Appliance.getAppliances(credentials, URL);
     return appliances;
   }
 
   Widget getGraph() {
-    return FutureBuilder<List<NILM_appliance>>(
+    return FutureBuilder<List<NILM_Appliance>>(
       future: appliances,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<NILM_appliance> appliances = snapshot.data!;
-          process_NILM_appliances(snapshot, appliances);
+          List<NILM_Appliance> appliances = snapshot.data!;
+          processNILMAppliances(snapshot, appliances);
           return displayScrollable(); // Return your widget here
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Or any other loading indicator
+          return const CircularProgressIndicator(); // Or any other loading indicator
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return Text('No data'); // Handle other states as needed
+          return const Text('No data'); // Handle other states as needed
         }
       },
     );
   }
 
-  void process_NILM_appliances(
-      AsyncSnapshot snapshot, List<NILM_appliance> appliances) {
+  void processNILMAppliances(
+      AsyncSnapshot snapshot, List<NILM_Appliance> appliances) {
     List<BarChartGroupData> localBarGroup = [];
-    List<String> local_x_titles = [];
-    List<double> local_y_titles = [];
+    List<String> localXTitles = [];
+    List<double> localYTitles = [];
     int i = 0;
     timestamp = appliances[0].timestamp;
-    total_power_consumption = appliances[0].total_consumption;
-    for (NILM_appliance appliance in appliances) {
-      local_x_titles.add(appliance.name!);
-      local_y_titles.add(appliance.power_kW!);
-      if (min == null) min = appliance.power_kW!;
-      if (max == null) max = appliance.power_kW!;
-      if (appliance.power_kW! < min!) min = appliance.power_kW!;
-      if (appliance.power_kW! > max!) max = appliance.power_kW!;
-      localBarGroup.add(makeGroupData(i, appliance.power_kW!));
+    totalPowerConsumption = appliances[0].totalConsumption;
+    for (NILM_Appliance appliance in appliances) {
+      localXTitles.add(appliance.name!);
+      localYTitles.add(appliance.powerKiloWatt!);
+      min ??= appliance.powerKiloWatt!;
+      max ??= appliance.powerKiloWatt!;
+      if (appliance.powerKiloWatt! < min!) min = appliance.powerKiloWatt!;
+      if (appliance.powerKiloWatt! > max!) max = appliance.powerKiloWatt!;
+      localBarGroup.add(makeGroupData(i, appliance.powerKiloWatt!));
       i++;
     }
     double number = max! + min!;
     avg = (i != 0) ? double.parse((number / i).toStringAsFixed(2)) : null;
-    x_axis_titles = local_x_titles;
-    y_axis_titles = local_y_titles;
+    xAxisTitles = localXTitles;
+    yAxisTitles = localYTitles;
     rawBarGroups = localBarGroup;
     showingBarGroups = rawBarGroups;
   }
@@ -136,8 +136,8 @@ class NILM_graph_state extends State<NILM_graph> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  'Total Energy Consumed: $total_power_consumption kW',
-                  style: TextStyle(
+                  'Total Energy Consumed: $totalPowerConsumption kW',
+                  style: const TextStyle(
                       color: Color.fromARGB(255, 236, 201, 42),
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
@@ -146,13 +146,13 @@ class NILM_graph_state extends State<NILM_graph> {
             ),
             Row(
               children: [
-                SizedBox(width: 70),
+                const SizedBox(width: 70),
                 Text(
                   '$timestamp',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color.fromARGB(255, 255, 255, 255), fontSize: 16),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 makeIcon()
               ],
             ),
@@ -167,12 +167,12 @@ class NILM_graph_state extends State<NILM_graph> {
               maxY: max,
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Color.fromARGB(255, 240, 148, 105),
+                  tooltipBgColor: const Color.fromARGB(255, 240, 148, 105),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     final yValue = rod.toY.toString();
                     return BarTooltipItem(
                       yValue,
-                      TextStyle(color: Colors.white),
+                      const TextStyle(color: Colors.white),
                     );
                   },
                 ),
@@ -285,7 +285,7 @@ class NILM_graph_state extends State<NILM_graph> {
     // final titles = <String>['Mn', 'Te', 'Wd', 'Tu'];
 
     final Widget text = Text(
-      x_axis_titles[value.toInt()],
+      xAxisTitles[value.toInt()],
       style: const TextStyle(
         color: Color.fromARGB(255, 255, 255, 255),
         fontWeight: FontWeight.bold,

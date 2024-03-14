@@ -38,7 +38,7 @@ class _RoomsState extends State<Rooms> {
       setState(() {
         rooms = Room.fetchRooms(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -48,7 +48,7 @@ class _RoomsState extends State<Rooms> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SpecificRoomPage(specificRoom: room),
+        builder: (context) => Specific_Room_Page(specificRoom: room),
       ),
     );
   }
@@ -57,21 +57,21 @@ class _RoomsState extends State<Rooms> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EditRoomPage(room: room),
+        builder: (context) => Edit_Room_Page(room: room),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
+    return Base_Layout(
       title: 'Rooms',
       child: ListView(
         children: <Widget>[
-          rooms_list_section(context, viewRoom),
+          roomsListSection(context, viewRoom),
           // buildGreetingSection(context),
           // buildDeviceStatusSection(
-          //     context, turn_on_off_device_tile, adjustDevice),
+          //     context, turnOnOffDeviceTile, adjustDevice),
           // buildUsageSection(context),
           // buildSceneSection(context),
         ],

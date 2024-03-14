@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,7 +13,7 @@ class Energy_Consumption {
     required this.credentials,
   });
 
-  static Future<List<Energy_Consumption>> get_energy_consumption_summary(
+  static Future<List<Energy_Consumption>> getEnergyConsumptionSummary(
       String credentials, String URL) async {
     // final year = 2023; for testing
     final year = DateTime.now().year;

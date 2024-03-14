@@ -1,7 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 part of '../../scene_lib.dart';
 
-ListTile Body_addDeviceRow(int index, BuildContext context, IoT_Scene scene, setState, List<bool> isAllowed_Scene_Actions) {
-  var selectedDeviceInDropdown;
+ListTile bodyAddDeviceRow(int index, BuildContext context, IoT_Scene scene, setState, List<bool> isallowedSceneActions) {
+  IoT_Device? selectedDeviceInDropdown;
   late var isEmpty = false;
   return ListTile(
     tileColor: AppColors.primary5,
@@ -36,7 +38,7 @@ ListTile Body_addDeviceRow(int index, BuildContext context, IoT_Scene scene, set
                   return const Text('Error loading devices');
                 } else {
                   return FutureBuilder<List<IoT_Device>>(
-                    future: devices_in_scene,
+                    future: devicesInScene,
                     builder: (context, sceneSnapshot) {
                       if (sceneSnapshot.connectionState ==
                           ConnectionState.waiting) {
@@ -90,14 +92,14 @@ ListTile Body_addDeviceRow(int index, BuildContext context, IoT_Scene scene, set
                       if (selectedDeviceInDropdown != null) {
                         // Add the selected device to the scene
                         Future<Response> changeResponse =
-                            scene.add_devices_into_action(
-                                selectedDeviceInDropdown);
+                            scene.addDevicesIntoAction(
+                                selectedDeviceInDropdown!);
                         changeResponse.then((value) {
                           if (value.statusCode == 204) {
                             updateScenes(setState);
                             Navigator.pop(context); // Close the dialog
-                            isAllowed_Scene_Actions.add(false);
-                            addSceneActionDevices(selectedDeviceInDropdown.id, setState);
+                            isallowedSceneActions.add(false);
+                            addSceneActionDevices(selectedDeviceInDropdown?.id, setState);
                           }
                         });
                       } else {

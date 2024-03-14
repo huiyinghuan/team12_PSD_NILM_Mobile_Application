@@ -7,18 +7,18 @@ import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 
 import 'scene_lib.dart';
 
-class eachScene extends StatefulWidget {
+class Each_Scene extends StatefulWidget {
   final IoT_Scene scene;
 
-  eachScene({required this.scene});
+  Each_Scene({required this.scene});
 
   @override
-  _eachSceneState createState() => _eachSceneState(scene: scene);
+  _Each_Scene_State createState() => _Each_Scene_State(scene: scene);
 }
 
-class _eachSceneState extends State<eachScene> {
+class _Each_Scene_State extends State<Each_Scene> {
   final IoT_Scene scene;
-  List<bool> isAllowed_Scene_Actions = [];
+  List<bool> isAllowedSceneActions = [];
 
   List<String> tableAttributes = [
     'Description',
@@ -32,7 +32,7 @@ class _eachSceneState extends State<eachScene> {
     'Id',
   ];
 
-  _eachSceneState({required this.scene});
+  _Each_Scene_State({required this.scene});
 
   @override
   void initState() {
@@ -86,14 +86,14 @@ class _eachSceneState extends State<eachScene> {
             scrolledUnderElevation: 4.0,
             shadowColor: Theme.of(context).shadowColor,
           ),
-          drawer: NavigationDrawerWidget(),
+          drawer: Navigation_Drawer_Widget(),
           body: TabBarView(
             children: <Widget>[
               //---------------------------------FIRST TAB---------------------------------
               buildFirstTab(context, scene, setState, tableAttributes),
               //---------------------------------FIRST TAB---------------------------------
               //---------------------------------SECOND TAB---------------------------------
-              buildSecondTab(scene, setState, isAllowed_Scene_Actions),
+              buildSecondTab(scene, setState, isAllowedSceneActions),
               //---------------------------------SECOND TAB---------------------------------
               //---------------------------------THIRD TAB---------------------------------
               buildThirdTab(),

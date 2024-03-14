@@ -6,14 +6,14 @@ import 'package:l3homeation/pages/login/login_page.dart';
 
 import 'reuseable.dart';
 
-class RegisterUser extends StatefulWidget {
-  const RegisterUser({super.key});
+class Register_User extends StatefulWidget {
+  const Register_User({super.key});
 
   @override
-  State<RegisterUser> createState() => _RegisterUserState();
+  State<Register_User> createState() => _Register_User_State();
 }
 
-class _RegisterUserState extends State<RegisterUser> {
+class _Register_User_State extends State<Register_User> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -58,7 +58,7 @@ class _RegisterUserState extends State<RegisterUser> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (context) => Login_Page()),
     );
   }
 
@@ -152,7 +152,7 @@ class _RegisterUserState extends State<RegisterUser> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
+              MaterialPageRoute(builder: (context) => Login_Page()),
             );
           },
           child: const Text(

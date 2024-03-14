@@ -1,25 +1,27 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:l3homeation/components/custom_button.dart';
 import 'package:l3homeation/components/custom_textfield.dart';
 import 'package:l3homeation/pages/dashboard/dashboard.dart';
 import 'package:l3homeation/pages/login/register_user.dart';
 import 'package:l3homeation/services/httphandle.dart';
-import 'package:l3homeation/services/userpreferences.dart';
 import 'package:l3homeation/components/error_dialog.dart';
 import 'package:l3homeation/pages/login/forget_password.dart';
+import 'package:l3homeation/services/userPreferences.dart';
 
 import 'dart:convert';
 
 import 'reuseable.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+class Login_Page extends StatefulWidget {
+  const Login_Page({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<Login_Page> createState() => _Login_Page_State();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _Login_Page_State extends State<Login_Page> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
         });
 
     // Login function
-    final AuthService _authService = AuthService(
+    final Auth_Service _authService = Auth_Service(
         email: emailController.text, password: passwordController.text);
     var response = await _authService.checkLoginStatus(context);
 
@@ -47,9 +49,9 @@ class _LoginPageState extends State<LoginPage> {
       // print(base64Encode(
       // utf8.encode('${emailController.text}:${passwordController.text}')));
       // goToLogin(emailController.text, passwordController.text);
-      await UserPreferences.setString('username', response['username']);
-      await UserPreferences.setString('userID', response['userID'].toString());
-      await UserPreferences.setString(
+      await User_Preferences.setString('username', response['username']);
+      await User_Preferences.setString('userID', response['userID'].toString());
+      await User_Preferences.setString(
           'auth',
           base64Encode(utf8
               .encode('${emailController.text}:${passwordController.text}')));
@@ -75,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
         alignment: Alignment.bottomCenter,
         children: [
           // Background image
-          AddBackgroundImage(),
+          addBackgroundImage(),
           safeAreaDisplay(),
         ],
       ),
@@ -100,12 +102,12 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 35),
 
               // Email field
-              display_email_field(),
+              displayEmailField(),
 
               const SizedBox(height: 35),
 
               // Password field
-              display_password_field(),
+              displayPasswordField(),
 
               const SizedBox(height: 10),
 
@@ -134,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Positioned AddBackgroundImage() {
+  Positioned addBackgroundImage() {
     return Positioned(
       bottom: 0,
       left: -15,
@@ -152,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Column display_email_field() {
+  Column displayEmailField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Column display_password_field() {
+  Column displayPasswordField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -256,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const ForgetPassword()),
+              MaterialPageRoute(builder: (context) => const Forget_Password()),
             );
           },
           child: Text('Forgot Password?',
@@ -285,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => RegisterUser()),
+              MaterialPageRoute(builder: (context) => Register_User()),
             );
           },
           child: const Text(

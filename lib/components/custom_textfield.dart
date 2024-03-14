@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -8,13 +10,13 @@ class CustomTextField extends StatelessWidget {
   final InputDecoration? decoration;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
     this.autofillHints,
     this.decoration,
-  }) : super(key: key);
+  });
 
 
   @override

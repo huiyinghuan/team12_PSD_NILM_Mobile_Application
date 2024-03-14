@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 part of '../../scene_lib.dart';
 
 Future<List<DataRow>> Body_buildDataRows(List<String> tableAttributes, IoT_Scene scene, context, setState) async {
@@ -14,7 +16,7 @@ Future<List<DataRow>> Body_buildDataRows(List<String> tableAttributes, IoT_Scene
         ),
         onTap: () async {
           changeDescriptionPromptBox(
-              'Edit ' + tableAttributes[i], data_cell, i, context, scene, setState);
+              'Edit ${tableAttributes[i]}', data_cell, i, context, scene, setState);
         },
       )
     ]));
@@ -101,7 +103,7 @@ Future<void> changeDescriptionPromptBox(String title, String content, int i, Bui
             onPressed: () {
               if (i == 0) {
                 Future<Response> changeResponse =
-                    scene.change_description(new_desc);
+                    scene.changeDescription(new_desc);
                 changeResponse.then((value) {
                   if (value.statusCode == 204) {
                     scene.description = new_desc;

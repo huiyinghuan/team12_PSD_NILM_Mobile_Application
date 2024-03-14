@@ -3,23 +3,23 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-class NILM_appliance {
+class NILM_Appliance {
   String? name;
-  double? power_kW;
+  double? powerKiloWatt;
   bool? running;
   String? timestamp;
-  double? total_consumption;
+  double? totalConsumption;
 
-  NILM_appliance(
+  NILM_Appliance(
       {required this.name,
-      required this.power_kW,
+      required this.powerKiloWatt,
       required this.running,
       required this.timestamp,
-      required this.total_consumption});
+      required this.totalConsumption});
 
-  static Future<List<NILM_appliance>> get_appliances(
+  static Future<List<NILM_Appliance>> getAppliances(
       String credentials, String URL) async {
-    List<NILM_appliance> appliances = [];
+    List<NILM_Appliance> appliances = [];
 
     final response = await http.get(
       Uri.parse(URL),
@@ -31,12 +31,12 @@ class NILM_appliance {
     print(jsonResponses);
 
     for (dynamic appliance in jsonResponses['appliances']) {
-      NILM_appliance newAppliance = NILM_appliance(
+      NILM_Appliance newAppliance = NILM_Appliance(
           name: appliance['name'],
-          power_kW: appliance['power_kW'],
+          powerKiloWatt: appliance['powerKiloWatt'],
           running: appliance['running'],
           timestamp: convertToTimestamp(jsonResponses['timestamp']),
-          total_consumption: jsonResponses['total_consumption_kW']);
+          totalConsumption: jsonResponses['total_consumption_kW']);
       appliances.add(newAppliance);
     }
     return appliances;

@@ -11,12 +11,12 @@ import 'package:l3homeation/widget/navigation_drawer_widget.dart';
 
 import 'scene_lib.dart';
 
-class listScenes extends StatefulWidget {
+class List_Scenes extends StatefulWidget {
   @override
-  _listScenesState createState() => _listScenesState();
+  _List_Scenes_State createState() => _List_Scenes_State();
 }
 
-class _listScenesState extends State<listScenes> {
+class _List_Scenes_State extends State<List_Scenes> {
   late Timer dashboardUpdateTimer;
 
   @override
@@ -43,9 +43,9 @@ class _listScenesState extends State<listScenes> {
     await scene.swapStates();
     if (auth != null) {
       setState(() {
-        scenes = IoT_Scene.get_scenes(
+        scenes = IoT_Scene.getScenes(
           auth!,
-          VarHeader.BASEURL,
+          Var_Header.BASEURL,
         );
       });
     }
@@ -69,7 +69,7 @@ class _listScenesState extends State<listScenes> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      drawer: NavigationDrawerWidget(),
+      drawer: Navigation_Drawer_Widget(),
       body: buildFutureSceneList(navigateTo, sceneOnOff), //passing the navigateTo function to buildEachRow
       floatingActionButton: buildAddSceneFloatingButton(context, updateScenes(setState)),
     );

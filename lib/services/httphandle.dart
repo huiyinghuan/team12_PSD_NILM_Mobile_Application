@@ -3,15 +3,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:l3homeation/services/varHeader.dart';
 
-class AuthService {
+class Auth_Service {
   final String email;
   final String password;
 
-  AuthService({required this.email, required this.password});
+  Auth_Service({required this.email, required this.password});
 
   Future<Map<String, dynamic>> checkLoginStatus(BuildContext context) async {
     var url = Uri.parse(
-        '${VarHeader.BASEURL}/loginStatus?action=login&tosAccepted=true');
+        '${Var_Header.BASEURL}/loginStatus?action=login&tosAccepted=true');
     var response = await http.post(
       url,
       headers: {

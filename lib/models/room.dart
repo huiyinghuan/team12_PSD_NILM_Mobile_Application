@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types, empty_catches
 import 'dart:io';
-import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -59,7 +58,7 @@ class Room {
 
   // get the devices tied only to this room
   Future<List<IoT_Device>> getThisRoomsDevices() async {
-    late Future<List<IoT_Device>> futureDevices = IoT_Device.get_devices(
+    late Future<List<IoT_Device>> futureDevices = IoT_Device.getDevices(
       credentials,
       URL,
     );

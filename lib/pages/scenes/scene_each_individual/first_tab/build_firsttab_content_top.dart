@@ -14,7 +14,7 @@ Row contentTopRow(BuildContext context, IoT_Scene scene, setState) {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     scrollable: true,
-                    title: Text('Change Icon'),
+                    title: const Text('Change Icon'),
                     content: SizedBox(
                       height: 300, // Set a fixed height for the AlertDialog
                       child: SingleChildScrollView(
@@ -35,7 +35,7 @@ Row contentTopRow(BuildContext context, IoT_Scene scene, setState) {
                                     child: GestureDetector(
                                       onTap: () {
                                         Future<Response> changeResponse =
-                                            scene.change_icon(
+                                            scene.changeIcon(
                                                 iconList[startIndex + index]);
                                         changeResponse.then((value) {
                                           if (value.statusCode == 204) {

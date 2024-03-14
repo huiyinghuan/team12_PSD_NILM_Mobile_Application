@@ -6,16 +6,16 @@ import 'package:l3homeation/components/iot_device_tile.dart';
 import 'package:l3homeation/pages/editDevice/edit_device.dart';
 import 'rooms_shared.dart';
 
-class SpecificRoomPage extends StatefulWidget {
+class Specific_Room_Page extends StatefulWidget {
   final Room specificRoom;
 
-  const SpecificRoomPage({required this.specificRoom});
+  const Specific_Room_Page({required this.specificRoom});
 
   @override
-  State<SpecificRoomPage> createState() => _SpecificRoomPageState();
+  State<Specific_Room_Page> createState() => _Specific_Room_Page_State();
 }
 
-class _SpecificRoomPageState extends State<SpecificRoomPage> {
+class _Specific_Room_Page_State extends State<Specific_Room_Page> {
   Future<List<IoT_Device>> devices = Future.value([]);
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
     devices = widget.specificRoom.getThisRoomsDevices();
   }
 
-  void turn_on_off_device_tile(IoT_Device device) async {
+  void turnOnOffDeviceTile(IoT_Device device) async {
     await device.swapStates();
     if (auth != null) {
       setState(() {
@@ -37,7 +37,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            EditDevicePage(device: device, onTap: turn_on_off_device_tile),
+            Edit_Device_Page(device: device, onTap: turnOnOffDeviceTile),
       ),
     );
   }
@@ -57,7 +57,7 @@ class _SpecificRoomPageState extends State<SpecificRoomPage> {
               style: const TextStyle(fontSize: 24.0),
             ),
             const SizedBox(height: 25),
-            displayDevicesInRoom(context, turn_on_off_device_tile),
+            displayDevicesInRoom(context, turnOnOffDeviceTile),
             // Add more settings widgets here
           ],
         ),
