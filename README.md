@@ -13,7 +13,6 @@ Smart Home NILM is a mobile application development project that utilises the FI
   - [Android Studio and Emulator Setup](#android-studio-and-emulator-setup)
   - [iOS xCode simulator setup](#ios-xcode-simulator-setup)
   - [Running Smart Home NILM](#running-smart-home-nilm)
-  - [Additional Resources](#additional-resources)
 - [Usage](#usage)
   - [Features](#features)
 - [License](#license)
@@ -246,6 +245,31 @@ WARNING:
 3. Click the Run button to start building the project
 
 ![Click run to build](readme_images/builder_button.jpg)
+
+#### For running on a physical iPhone
+
+1. Under xCode, double click the Runner folder which opens up the `Signing & Capabilities`
+
+2. Login into an apple id account (or pay $99 USD/year for a developer apple id). A certificate is issued to the user for a week (It can be refreshed every week).
+
+![Certificate issuing](readme_images/certificate.png)
+
+3. Enable developer mode on the phone
+
+- Go to `Settings` on the iPhone
+
+- Navigate to the `Privacy & Security` settings
+![privacy settings](readme_images/privacy_settings.png)
+
+- Scroll down to `Security` row and navigate to the `Developer Mode` toggle
+![Security](readme_images/developer_mode.png)
+
+4. Ensure that the laptop and phone are connected via a wire or on the same network (Cellular data works for wireless builds)
+
+5. Select the Builder to be the physical phone
+
+6. Click the Run button to start building the project
+
 ---
 
 ## Usage
@@ -276,10 +300,28 @@ Provide information on configuration or settings (TODO)
 ![Flutter project unable to build and riddled with errors](readme_images/do_flutter_pub_get_and_clean.png)
 This occurs when you have downloaded/pulled the project from a repository and your local environment has yet to download the required flutter pub dependencies for this project. A similar comparison would be the dependency handler; gradle, where dependencies are required to be downloaded for the project to run successfully.
 
-2. TODO continue
-![TODO]()
+### MacOS Common issues:
+1. iOS 17 Sonoma Failed to build Flutter app
+`launching lib/main.dart on Edu in debug mode... main.dart:1 Automatically signing iOS for device deployment using specified development team in Xcode project: 3X5JXMN7S9 Xcode build done. 51.1s Failed to build iOS app Could not build the precompiled application for the device.`
+    
+- To fix this issue:
+    1.    Open the Xcode project.
+    2.    Click on the project name in the left sidebar to open the project settings.
+    3.    Select the target you want to check in the "Targets" section.
+    4.    Click on the "Build Settings" tab.
+    5.    In the search bar, type "ENABLE_USER_SCRIPT_SANDBOXING".
+    6.    If the value of ENABLE_USER_SCRIPT_SANDBOXING is set to "No", then it is disabled. If it is set to "Yes", then it is enabled.`
 
-If you encounter any issues, consult the following resources:
+2. iOS Selection build failed
+- This occurs when the selected build settings for the iOS deployment target is lower than the current iOS version of the phone
+![deployment target](readme_images/deployment_target.png)
+- To fix ths issue, select the correct iOS deployment target version for the build (i.e) the default target is iOS 11.0, change it to iOS 17.0
+
+3. Module not found error
+- Ensure that cocoapods is installed [cocoapods installation](#3-upgrading-ruby-and-cocoapods)
+- `cd ios && pod install`
+
+If you encounter any other issues, consult the following resources:
 
 - [Flutter Installation Troubleshooting](https://flutter.dev/docs/get-started/install)
 
